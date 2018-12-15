@@ -1,4 +1,4 @@
-export default class Account  {
+export default class Account {
     constructor() {
         
     }
@@ -7,17 +7,20 @@ export default class Account  {
 
     }
     
-    async Login(req, res) {
-        await req.ParseBody()
-        console.log(req.body)
+    Login(req, res) {
+
     }
 
     Register(req, res) {
 
     }
 
-    GetAccount(req, res) {
+    GetAccountByID(req, res) {
 
+    }
+
+    GetAccountByName(req, res) {
+        
     }
 
     Edit(req, res) {

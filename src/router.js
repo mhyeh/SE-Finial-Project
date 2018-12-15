@@ -68,7 +68,8 @@ export default class Router {
                     })
                 }
                 req.index = index
-                return route.fn(req, res)
+                route.fn(req, res)
+                return true
             }
         }
         return false

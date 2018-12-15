@@ -2,20 +2,21 @@ import Router from '../router'
 
 import AccountController from '../Project/controllers/Account'
 
-class Account {
+class Account extends Router {
     constructor() {
-        this.router     = new Router()
+        super()
         this.controller = new AccountController()
         this.init()
     }
 
     init() {
-        this.router.get('/',       (req, res) => this.controller.GetAllAccounts(req, res))
-        this.router.get('/:id',    (req, res) => this.controller.GetAccount(req, res))
-        this.router.post('/',      (req, res) => this.controller.Register(req, res))
-        this.router.post('/login', (req, res) => this.controller.Login(req, res))
-        this.router.put('/:id',    (req, res) => this.controller.Edit(req, res))
-        this.router.delete('/:id', (req, res) => this.controller.Delete(req, res))
+        this.get('/',           (req, res) => this.controller.GetAllAccounts(req, res))
+        this.get('/:id',        (req, res) => this.controller.GetAccountByID(req, res))
+        this.get('/name/:name', (req, res) => this.controller.GetAccountByName(req, res))
+        this.post('/',          (req, res) => this.controller.Register(req, res))
+        this.post('/login',     (req, res) => this.controller.Login(req, res))
+        this.put('/:id',        (req, res) => this.controller.Edit(req, res))
+        this.delete('/:id',     (req, res) => this.controller.Delete(req, res))
     }
 }
 
