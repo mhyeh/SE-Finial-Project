@@ -7,8 +7,9 @@ export default class Account  {
 
     }
     
-    Login(req, res) {
-
+    async Login(req, res) {
+        await req.ParseBody()
+        console.log(req.body)
     }
 
     Register(req, res) {
