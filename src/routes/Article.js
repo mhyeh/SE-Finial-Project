@@ -21,6 +21,7 @@ class Article extends Router {
         this.get('/like/:id',                      (req, res) => this.controller.GetLike(req, res))
         this.get('/:id',                           (req, res) => this.controller.GetArticleByID(req, res))
         this.post('/',                             (req, res) => this.controller.Post(req, res))
+        this.post('/group/:id',                    (req, res) => this.controller.PostInGroup(req, res))
         this.post('/like/:id',                     (req, res) => this.controller.Like(req, res))
         this.put('/:id',                           (req, res) => this.controller.Edit(req, res))
         this.delete('/:id',                        (req, res) => this.controller.Delete(req, res))
