@@ -26,6 +26,12 @@ export default class Router {
     }
 
     setRoute(route, fn) {
+        if (route === '*') {
+            return {
+                path: '*',
+                fn:   fn
+            }
+        }
         const r = {
            path:  String(route).split('/'),
            fn:    fn,
@@ -41,17 +47,21 @@ export default class Router {
         return r
     }
 
-    Match(req, res) {
+    async Match(req, res) {
         const index = req.index
-        if (this.find('ANY', req, res)) {
+        if (await this.find('ANY', req, res)) {
             return true
         }
         req.index = index
-        return this.find(req.method, req, res)
+        return await this.find(req.method, req, res)
     }
 
-    find(method, req, res) {
+    async find(method, req, res) {
         for (const route of this.routeMap[method]) {
+            if (route.path === '*') {
+                route.fn(req, res)
+                continue
+            }
             let index = req.index
             let flag  = true
             for (const path of route.path) {

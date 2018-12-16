@@ -11,6 +11,7 @@ import GroupRouter   from './routes/Group'
 
 const router = new Router()
 
+router.use('*',        (req)      => req.ParseBody())
 router.use('/account', (req, res) => AccountRouter.Match(req, res))
 router.use('/article', (req, res) => ArticleRouter.Match(req, res))
 router.use('/comment', (req, res) => CommentRouter.Match(req, res))
