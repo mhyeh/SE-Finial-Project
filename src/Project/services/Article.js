@@ -36,15 +36,6 @@ export default class Article {
         await this.ArticleRepo.create(data)
     }
 
-    async Like(token, id) {
-        const ID = await this.RedisService.Verify(token)
-        if (ID === -1) {
-            throw 'like error'
-        }
-        const account = this.AccountRepo.getAccountByID(ID)
-        // TODO
-    }
-
     async Edit(token, id, data) {
         const ID      = await this.RedisService.Verify(token)
         const article = await this.ArticleRepo.getArticleByID(id)

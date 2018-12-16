@@ -97,15 +97,6 @@ export default class Article {
         }
     }
 
-    async Like(req, res) {
-        try {
-            await this.ArticleService.Like(req.header.authorization, req.prams.id)
-            res.status(200).json({ message: 'success' })
-        } catch (e) {
-            res.status(400).json({ error: e })
-        }
-    }
-
     async Edit(req, res) {
         try {
             await this.ArticleService.Edit(req.header.authorization, req.prams.id, req.body)
