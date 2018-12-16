@@ -11,6 +11,7 @@ export default class Request {
         this.prams  = {}
         this.query  = URL.query
         this.method = req.method
+        this.header = req.headers
         this.index  = 0
     }
 
