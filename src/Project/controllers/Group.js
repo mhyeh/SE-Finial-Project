@@ -14,6 +14,10 @@ export default class Group {
     GetGroupsByName(req, res) {
 
     }
+
+    GetFroupMembers(req, res) {
+
+    }
     
     Create(req, res) {
         
@@ -21,6 +25,10 @@ export default class Group {
 
     Edit(req, res) {
 
+    }
+
+    Join(req, res) {
+        
     }
 
     Delete(req, res) {
