@@ -1,12 +1,12 @@
 import * as crypto from 'crypto'
 
-import AccountRepo from '../repositories/Account'
+import AccountRepo  from '../repositories/Account'
+import RedisService from './Redis'
 
 export default class Account {
     constructor() {
-        this.AccountRepo = new AccountRepo()
-        this.hash = crypto.createHash('sha256')
-        this.tokenTable = new Map()
+        this.AccountRepo  = new AccountRepo()
+        this.RedisService = new RedisService()
     }
 
     async Login(data) {
@@ -21,8 +21,8 @@ export default class Account {
         if (hashPwd !== account.password) {
             throw 'login error'
         }
-        const token = this.createToken()
-        this.storeToken(token, account.id)
+        const token = this.RedisService.GenerateToken()
+        this.RedisService.Store(token, account.id)
         return token
     }
 
@@ -37,13 +37,13 @@ export default class Account {
         data.password = this.hash.update(data.password).digest(hex)
         await this.AccountRepo.create(data)
 
-        const token = this.createToken()
-        this.storeToken(token, account.id)
+        const token = this.RedisService.GenerateToken()
+        this.RedisService.Store(token, account.id)
         return token
     }
 
     async Edit(token, id, data) {
-        const ID = this.Verify(token)
+        const ID = await this.RedisService.Verify(token)
         if (ID === -1 || ID !== id) {
             throw 'edit error'
         }
@@ -61,33 +61,11 @@ export default class Account {
     }
 
     async Delete(token, id) {
-        const ID = this.Verify(token)
+        const ID = await this.RedisService.Verify(token)
         if (ID === -1 || ID !== id) {
             throw 'delete error'
         }
 
         await this.AccountRepo.Delete(id)
-    }
-
-    createToken() {
-        const rand = Math.random()
-        return this.hash.update(rand.toString()).digest('hex')
-    }
-
-    storeToken(token, id) {
-        for (const [key, value] of this.tokenTable) {
-            if (value === id) {
-                this.tokenTable.delete(key)
-                break
-            }
-        }
-        this.tokenTable.set(token, id)
-    }
-
-    Verify(token) {
-        if(this.tokenTable.has(token)) {
-            return this.tokenTable.get(token)
-        }
-        return -1
     }
 }
