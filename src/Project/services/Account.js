@@ -1,12 +1,12 @@
-import * as crypto from 'crypto'
-
 import AccountRepo  from '../repositories/Account'
 import RedisService from './Redis'
+import FileService  from './File'
 
 export default class Account {
     constructor() {
         this.AccountRepo  = new AccountRepo()
         this.RedisService = new RedisService()
+        this.FileService  = new FileService()
     }
 
     async Login(data) {

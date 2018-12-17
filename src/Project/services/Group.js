@@ -1,5 +1,6 @@
 import GroupRepo    from '../repositories/Group'
 import RedisService from './Redis'
+
 export default class Group {
     constructor() {
         this.GroupRepo    = new GroupRepo()

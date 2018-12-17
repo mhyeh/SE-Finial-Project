@@ -17,7 +17,7 @@ export default class Article {
     
     async GetArticleByID(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByID(req.prams.id) })
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByID(req.params.id) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -25,7 +25,7 @@ export default class Article {
 
     async GetArticlesByAuthor(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByAuthor(req.prams.author) })
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByAuthor(req.params.author) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -33,7 +33,7 @@ export default class Article {
 
     async GetArticlesByTitle(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByTitle(req.prams.title) })
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByTitle(req.params.title) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -41,7 +41,7 @@ export default class Article {
 
     async GetArticlesByContext(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByContext(req.prams.context) })
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByContext(req.params.context) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -49,7 +49,7 @@ export default class Article {
 
     async GetArticlesByGroup(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroup(req.prams.group) })
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroup(req.params.group) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -57,7 +57,7 @@ export default class Article {
 
     async GetArticlesByGroupAndAuthor(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndAuthor(req.prams.group, req.prams.author) })
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndAuthor(req.params.group, req.params.author) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -65,7 +65,7 @@ export default class Article {
 
     async GetArticlesByGroupAndTitle(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndTitle(req.prams.group, req.prams.title) })
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndTitle(req.params.group, req.params.title) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -73,7 +73,7 @@ export default class Article {
 
     async GetArticlesByGroupAndContext(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndContext(req.prams.group, req.prams.context) })
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndContext(req.params.group, req.params.context) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -90,7 +90,7 @@ export default class Article {
 
     async PostInGroup(req, res) {
         try {
-            await this.ArticleService.PostInGroup(req.header.authorization, req.prams.id, req.body)
+            await this.ArticleService.PostInGroup(req.header.authorization, req.params.id, req.body)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -99,7 +99,7 @@ export default class Article {
 
     async Edit(req, res) {
         try {
-            await this.ArticleService.Edit(req.header.authorization, req.prams.id, req.body)
+            await this.ArticleService.Edit(req.header.authorization, req.params.id, req.body)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -108,7 +108,7 @@ export default class Article {
 
     async Delete(req, res) {
         try {
-            await this.ArticleService.Delete(req.header.authorization, req.prams.id)
+            await this.ArticleService.Delete(req.header.authorization, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })

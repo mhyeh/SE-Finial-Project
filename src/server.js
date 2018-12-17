@@ -4,18 +4,21 @@ import Router   from './router'
 import Request  from './request'
 import Response from './response'
 
-import AccountRouter from './routes/Account'
-import ArticleRouter from './routes/Article'
-import CommentRouter from './routes/Comment'
-import GroupRouter   from './routes/Group'
+import AccountRouter   from './routes/Account'
+import ArticleRouter   from './routes/Article'
+import CommentRouter   from './routes/Comment'
+import GroupRouter     from './routes/Group'
+import AdvertiseRouter from './routes/Advertise'
 
 const router = new Router()
 
-router.use('*',        (req)      => req.ParseBody())
-router.use('/account', (req, res) => AccountRouter.Match(req, res))
-router.use('/article', (req, res) => ArticleRouter.Match(req, res))
-router.use('/comment', (req, res) => CommentRouter.Match(req, res))
-router.use('/group',   (req, res) => GroupRouter.Match(req, res))
+router.use('*', (req) => req.ParseBody())
+
+router.use('/account',   (req, res) => AccountRouter.Match(req, res))
+router.use('/article',   (req, res) => ArticleRouter.Match(req, res))
+router.use('/comment',   (req, res) => CommentRouter.Match(req, res))
+router.use('/group',     (req, res) => GroupRouter.Match(req, res))
+router.use('/advertise', (req, res) => AdvertiseRouter.Match(req, res))
 
 const server = http.createServer(async (req, res) => {
     const request  = new Request(req)

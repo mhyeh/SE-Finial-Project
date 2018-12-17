@@ -8,7 +8,7 @@ export default class Request {
         this.path   = URL.pathname.split('/')
         this.path.splice(0, 1)
         this.body   = {}
-        this.prams  = {}
+        this.params = {}
         this.query  = URL.query
         this.method = req.method
         this.header = req.headers

@@ -9,7 +9,7 @@ export default class Comment {
     
     async GetAllComments(req, res) {
         try {
-            res.status(200).json({ comments: await this.CommentRepo.getAllComments(req.prams.id) })
+            res.status(200).json({ comments: await this.CommentRepo.getAllComments(req.params.id) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -17,7 +17,7 @@ export default class Comment {
     
     async Post(req, res) {
         try {
-            await this.CommentService.Post(req.header.authorization, req.prams.id ,req.body)
+            await this.CommentService.Post(req.header.authorization, req.params.id ,req.body)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -26,7 +26,7 @@ export default class Comment {
 
     async Edit(req, res) {
         try {
-            await this.CommentService.Edit(req.header.authorization, req.prams.id, req.body)
+            await this.CommentService.Edit(req.header.authorization, req.params.id, req.body)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -35,7 +35,7 @@ export default class Comment {
 
     async Delete(req, res) {
         try {
-            await this.CommentService.Delete(req.header.authorization, req.prams.id)
+            await this.CommentService.Delete(req.header.authorization, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })

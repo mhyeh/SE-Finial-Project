@@ -33,7 +33,7 @@ export default class Account {
 
     async GetAccountByID(req, res) {
         try {
-            res.status(200).json({ account: await this.AccountRepo.getAccountByID(req.prams.id) })
+            res.status(200).json({ account: await this.AccountRepo.getAccountByID(req.params.id) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -41,7 +41,7 @@ export default class Account {
 
     async GetAccountsByName(req, res) {
         try {
-            res.status(200).json({ accounts: await this.AccountRepo.getAccountsByName(req.prams.name) })
+            res.status(200).json({ accounts: await this.AccountRepo.getAccountsByName(req.params.name) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -49,7 +49,7 @@ export default class Account {
 
     async Edit(req, res) {
         try {
-            await this.AccountService.Edit(req.header.authorization, req.prams.id, req.body)
+            await this.AccountService.Edit(req.header.authorization, req.params.id, req.body)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -58,7 +58,7 @@ export default class Account {
 
     async Delete(req, res) {
         try {
-            await this.AccountService.Delete(req.header.authorization, req.prams.id)
+            await this.AccountService.Delete(req.header.authorization, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })

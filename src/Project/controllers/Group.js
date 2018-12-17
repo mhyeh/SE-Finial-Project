@@ -17,7 +17,7 @@ export default class Group {
 
     async GetGroupByID(req, res) {
         try {
-            res.status(200).json({ groups: await this.GroupRepo.getGroupByID(req.prams.id) })
+            res.status(200).json({ groups: await this.GroupRepo.getGroupByID(req.params.id) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -25,7 +25,7 @@ export default class Group {
 
     async GetGroupsByName(req, res) {
         try {
-            res.status(200).json({ groups: await this.GroupRepo.getGroupByName(req.prams.name) })
+            res.status(200).json({ groups: await this.GroupRepo.getGroupByName(req.params.name) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -33,7 +33,7 @@ export default class Group {
 
     async GetFroupMembers(req, res) {
         try {
-            res.status(200).json({ members: await this.GroupRepo.getGroupMembers(req.prams.id) })
+            res.status(200).json({ members: await this.GroupRepo.getGroupMembers(req.params.id) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -50,7 +50,7 @@ export default class Group {
 
     async Edit(req, res) {
         try {
-            await this.GroupService.Edit(req.header.authorization, req.prams.id, req.body)
+            await this.GroupService.Edit(req.header.authorization, req.params.id, req.body)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -59,7 +59,7 @@ export default class Group {
 
     async Join(req, res) {
         try {
-            await this.GroupService.Join(req.header.authorization, req.prams.id)
+            await this.GroupService.Join(req.header.authorization, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -68,7 +68,7 @@ export default class Group {
 
     async Leave(req, res) {
         try {
-            await this.GroupService.Leave(req.header.authorization, req.prams.id)
+            await this.GroupService.Leave(req.header.authorization, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -77,7 +77,7 @@ export default class Group {
 
     async Delete(req, res) {
         try {
-            await this.GroupService.Delete(req.header.authorization, req.prams.id)
+            await this.GroupService.Delete(req.header.authorization, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
