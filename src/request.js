@@ -18,14 +18,18 @@ export default class Request {
     ParseBody() {
         return new Promise((resolve, reject) => {
             if (this.method === 'POST' || this.method === 'PUT') {
-                let jsonStr = ''
-                this.req.on('data', (data) => {
-                    jsonStr += data
-                })
-                this.req.on('end', () => {
-                    this.body = JSON.parse(jsonStr)
+                if (this.header['content-type'] === 'application/json') {
+                    let jsonStr = ''
+                    this.req.on('data', (data) => {
+                        jsonStr += data
+                    })
+                    this.req.on('end', () => {
+                        this.body = JSON.parse(jsonStr)
+                        resolve()
+                    })
+                } else {
                     resolve()
-                })
+                }
             } else {
                 resolve()
             }
