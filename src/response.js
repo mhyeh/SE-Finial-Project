@@ -4,6 +4,8 @@ import * as fs   from 'fs'
 export default class Response {
     constructor(res) {
         this.res = res
+        this.res.setHeader('Access-Control-Allow-Origin', '*')
+        this.res.setHeader('Access-Control-Allow-Credentials', 'true')
     }
 
     status(statusCode) {
