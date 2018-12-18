@@ -12,7 +12,8 @@ import AdvertiseRouter from './routes/Advertise'
 
 const router = new Router()
 
-router.use('*', (req) => req.ParseBody())
+router.use('*', (req, res) => req.ParseBody())
+router.use('*', (req, res) => res.cors())
 
 router.use('/account',   (req, res) => AccountRouter.Match(req, res))
 router.use('/article',   (req, res) => ArticleRouter.Match(req, res))
