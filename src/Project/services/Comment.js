@@ -1,11 +1,11 @@
-import CommentRepo  from '../repositories/Comment'
 import ArticleRepo  from '../repositories/Article'
+import CommentRepo  from '../repositories/Comment'
 import RedisService from './Redis'
 
 export default class Comment {
     constructor() {
-        this.CommentRepo  = new CommentRepo()
         this.ArticleRepo  = new ArticleRepo()
+        this.CommentRepo  = new CommentRepo()
         this.RedisService = new RedisService()
     }
 

@@ -1,12 +1,12 @@
 import AccountRepo  from '../repositories/Account'
-import RedisService from './Redis'
 import FileService  from './File'
+import RedisService from './Redis'
 
 export default class Account {
     constructor() {
         this.AccountRepo  = new AccountRepo()
-        this.RedisService = new RedisService()
         this.FileService  = new FileService()
+        this.RedisService = new RedisService()
     }
 
     async Login(data) {

@@ -1,5 +1,5 @@
-import * as redis  from 'redis'
 import * as crypto from 'crypto'
+import * as redis  from 'redis'
 
 export default class Redis {
     constructor() {

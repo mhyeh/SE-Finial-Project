@@ -17,7 +17,7 @@ export default class Account {
     
     async Login(req, res) {
         try {
-            res.status(200).json({ token: await this.AccountService.login(req.body) })
+            res.status(200).json({ token: await this.AccountService.Login(req.body) })
         } catch (e) {
             res.status(400).json({ error: e })
         }
@@ -25,7 +25,7 @@ export default class Account {
 
     async Register(req, res) {
         try {
-            res.status(200).json({ token: await this.AccountService.register(req.body) })
+            res.status(200).json({ token: await this.AccountService.Register(req.body) })
         } catch (e) {
             res.status(400).json({ error: e })
         }

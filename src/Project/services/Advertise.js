@@ -1,11 +1,11 @@
-import AdvertiseRepo from '../repositories/Advertise'
 import AccountRepo   from '../repositories/Account'
+import AdvertiseRepo from '../repositories/Advertise'
 import RedisService  from './Redis'
 
 export default class Advertise {
     constructor() {
-        this.AccountRepo   = new AccountRepo()
         this.AdvertiseRepo = new AdvertiseRepo()
+        this.AccountRepo   = new AccountRepo()
         this.RedisService  = new RedisService()
     }
 

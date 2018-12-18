@@ -1,16 +1,16 @@
 import AccountRepo  from '../repositories/Account'
 import ArticleRepo  from '../repositories/Article'
 import GroupRepo    from '../repositories/Group'
-import RedisService from './Redis'
 import FileService  from './File'
+import RedisService from './Redis'
 
 export default class Article {
     constructor() {
         this.AccountRepo  = new AccountRepo()
         this.ArticleRepo  = new ArticleRepo()
         this.GroupRepo    = new GroupRepo()
-        this.RedisService = new RedisService()
         this.FileService  = new FileService()
+        this.RedisService = new RedisService()
     }
 
     async Post(token, data) {
