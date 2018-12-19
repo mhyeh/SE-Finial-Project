@@ -9,24 +9,28 @@ export default class Comment {
         this.RedisService = new RedisService()
     }
 
-    async Post(token, id, data) {
+    async Post(token, id, req) {
         const ID      = await this.RedisService.Verify(token)
         const article = await this.ArticleRepo.getArticleByID(id)
+        const data    = req.body
         if (ID === -1 || article === undefined || data.type === undefined || data.comment === undefined) {
             throw 'post error'
         }
         data.author     = ID
         data.article_id = id
+        data.ip         = req.ip
         await this.CommentRepo.post(data)
     }
 
-    async Edit(token, id, data) {
+    async Edit(token, id, req) {
         const ID      = await this.RedisService.Verify(token)
         const comment = await this.CommentRepo.getCommentByID(id)
+        const data    = req.body
         if (ID === -1 || comment === undefined || comment.author !== ID || data.comment === undefined) {
             throw 'edit error'
         }
         comment.comment = data.comment
+        comment.ip      = req.ip
         await this.CommentRepo.edit(id, data)
     }
 

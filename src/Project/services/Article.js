@@ -19,7 +19,7 @@ export default class Article {
             throw 'post error'
         }
 
-        const formdata = await this.FileService.ProcFormData(req)
+        const formdata = await this.FileService.ProcFormData(req.req)
         const data     = formdata.fields
         const files    = formdata.files
 
@@ -39,6 +39,7 @@ export default class Article {
         }
         data.time   = new Date()
         data.author = ID
+        data.ip     = req.ip
         await this.ArticleRepo.create(data)
     }
 
@@ -52,7 +53,7 @@ export default class Article {
             throw 'post error'
         }
 
-        const formdata = await this.FileService.ProcFormData(req)
+        const formdata = await this.FileService.ProcFormData(req.req)
         const data     = formdata.fields
         const files    = formdata.files
 
@@ -74,6 +75,7 @@ export default class Article {
         data.time    = new Date()
         data.author  = ID
         data.GroupID = groupID
+        data.ip      = req.ip
         await this.ArticleRepo.create(data)
     }
 
@@ -84,7 +86,7 @@ export default class Article {
             throw 'edit error'
         }
 
-        const formdata = await this.FileService.ProcFormData(req)
+        const formdata = await this.FileService.ProcFormData(req.req)
         const data     = formdata.fields
         const files    = formdata.files
 
@@ -105,7 +107,7 @@ export default class Article {
                 article.imgs.push(this.FileService.GetBaseName(files.imgs))
             }
         }
-
+        article.ip = req.ip
         await this.ArticleRepo.edit(id, article)
     }
 

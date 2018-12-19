@@ -13,6 +13,7 @@ export default class Request {
         this.method = req.method
         this.header = req.headers
         this.index  = 0
+        this.ip     = req.header('x-forwarded-for') || req.connection.remoteAddress
     }
 
     ParseBody() {
