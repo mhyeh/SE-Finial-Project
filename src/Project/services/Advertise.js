@@ -37,7 +37,7 @@ export default class Advertise {
         await this.AdvertiseRepo.create(pos, data)
     }
 
-    async Edit(token, id, data) {
+    async Edit(token, id, req) {
         const ID        = await this.RedisService.Verify(token)
         const advertise = await this.AdvertiseRepo.getAdvertiseByID(id)
         if (ID === -1 || advertise.author !== ID) {

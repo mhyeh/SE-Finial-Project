@@ -42,7 +42,7 @@ export default class Article {
         await this.ArticleRepo.create(data)
     }
 
-    async PostInGroup(token, groupID, data) {
+    async PostInGroup(token, groupID, req) {
         const ID = await this.RedisService.Verify(token)
         if (ID === -1) {
             throw 'post error'

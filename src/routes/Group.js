@@ -15,8 +15,8 @@ class Group extends Router {
         this.get('/:id/account/',  (req, res) => this.controller.GetGroupMembers(req, res) )
         this.get('/:id',           (req, res) => this.controller.GetGroupByID(req, res))
         this.post('/',             (req, res) => this.controller.Create(req, res))
-        this.put('/Join/:id',      (req, res) => this.controller.Join(req, res))
-        this.put('/Leave/:id',     (req, res) => this.controller.Leave(req, res))
+        this.put('/join/:id',      (req, res) => this.controller.Join(req, res))
+        this.put('/leave/:id',     (req, res) => this.controller.Leave(req, res))
         this.put('/:id',           (req, res) => this.controller.Edit(req, res))
         this.delete('/:id',        (req, res) => this.controller.Delete(req, res))
     }
