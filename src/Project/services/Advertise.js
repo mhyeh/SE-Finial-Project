@@ -1,18 +1,20 @@
 import AccountRepo   from '../repositories/Account'
 import AdvertiseRepo from '../repositories/Advertise'
+import FileService   from './File'
 import RedisService  from './Redis'
 
 export default class Advertise {
     constructor() {
         this.AdvertiseRepo = new AdvertiseRepo()
         this.AccountRepo   = new AccountRepo()
+        this.FileService   = new FileService()
         this.RedisService  = new RedisService()
     }
 
-    async Create(token, pos, data) {
+    async Create(token, pos, req) {
         const ID     = await this.RedisService.Verify(token)
         const ad_pos = await this.AdvertiseRepo.getAdvertisePos(pos)
-        if (ID === -1 || ad_pos.ad !== -1 || data.context === undefined) {
+        if (ID === -1 || ad_pos.ad !== -1) {
             throw 'create error'
         }
         const account = await this.AccountRepo.getAccountByID(ID)
@@ -20,18 +22,42 @@ export default class Advertise {
             throw 'create error'
         }
 
+        const formdata = this.FileService.ProcFormData(req)
+        const data     = formdata.fields
+        const files    = formdata.files
+
+        if (data.context === undefined && files.img === undefined) {
+            throw 'create error'
+        }
+
         data.author = ID
+        if (files.img !== undefined) {
+            data.img = this.FileService.GetBaseName(files.img)
+        }
         await this.AdvertiseRepo.create(pos, data)
     }
 
     async Edit(token, id, data) {
         const ID        = await this.RedisService.Verify(token)
         const advertise = await this.AdvertiseRepo.getAdvertiseByID(id)
-        if (ID === -1 || advertise.author !== ID || data.context === undefined) {
+        if (ID === -1 || advertise.author !== ID) {
             throw 'create error'
         }
-        
-        advertise.context = data.context
+
+        const formdata = await this.FileService.ProcFormData(req)
+        const data     = formdata.fields
+        const files    = formdata.files
+
+        if (data.context === undefined && files.img === undefined) {
+            throw 'create error'
+        }
+
+        if (data.context !== undefined) {
+            advertise.context = data.context
+        }
+        if (files.img !== undefined) {
+            advertise.img = this.FileService.GetBaseName(files.img)
+        }
         await this.AdvertiseRepo.edit(id, advertise)
     }
 

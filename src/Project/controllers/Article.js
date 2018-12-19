@@ -81,7 +81,7 @@ export default class Article {
 
     async Post(req, res) {
         try {
-            await this.ArticleService.Post(req.header.authorization, req.body)
+            await this.ArticleService.Post(req.header.authorization, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -90,7 +90,7 @@ export default class Article {
 
     async PostInGroup(req, res) {
         try {
-            await this.ArticleService.PostInGroup(req.header.authorization, req.params.id, req.body)
+            await this.ArticleService.PostInGroup(req.header.authorization, req.params.id, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -99,7 +99,7 @@ export default class Article {
 
     async Edit(req, res) {
         try {
-            await this.ArticleService.Edit(req.header.authorization, req.params.id, req.body)
+            await this.ArticleService.Edit(req.header.authorization, req.params.id, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })

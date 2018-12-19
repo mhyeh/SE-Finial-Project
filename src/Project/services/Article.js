@@ -13,10 +13,29 @@ export default class Article {
         this.RedisService = new RedisService()
     }
 
-    async Post(token, data) {
+    async Post(token, req) {
         const ID = await this.RedisService.Verify(token)
-        if (ID === -1 || data.title === undefined || data.context === undefined) {
+        if (ID === -1) {
             throw 'post error'
+        }
+
+        const formdata = await this.FileService.ProcFormData(req)
+        const data     = formdata.fields
+        const files    = formdata.files
+
+        if (data.title === undefined || (data.context === undefined && (files.imgs ===  undefined || files.imgs === []))) {
+            throw 'post error'
+        }
+
+        if (files.imgs !==  undefined && files.imgs !== []) {
+            data.imgs = []
+            if (files.imgs instanceof Array) {
+                for (const img of files.imgs) {
+                    data.imgs.push(this.FileService.GetBaseName(img))
+                }
+            } else {
+                data.imgs.push(this.FileService.GetBaseName(files.imgs))
+            }
         }
         data.time   = new Date()
         data.author = ID
@@ -25,25 +44,49 @@ export default class Article {
 
     async PostInGroup(token, groupID, data) {
         const ID = await this.RedisService.Verify(token)
-        if (ID === -1 || data.title === undefined || data.context === undefined) {
+        if (ID === -1) {
             throw 'post error'
         }
         const group = await this.GroupRepo.getGroupByID(groupID)
         if (group.type === 'Family' && !(await this.GroupRepo.IsInGroup(groupID, ID))) {
             throw 'post error'
         }
+
+        const formdata = await this.FileService.ProcFormData(req)
+        const data     = formdata.fields
+        const files    = formdata.files
+
+        if (data.title === undefined || (data.context === undefined && (files.imgs ===  undefined || files.imgs === []))) {
+            throw 'post error'
+        }
+
+        if (files.imgs !==  undefined && files.imgs !== []) {
+            data.imgs = []
+            if (files.imgs instanceof Array) {
+                for (const img of files.imgs) {
+                    data.imgs.push(this.FileService.GetBaseName(img))
+                }
+            } else {
+                data.imgs.push(this.FileService.GetBaseName(files.imgs))
+            }
+        }
+
         data.time    = new Date()
         data.author  = ID
         data.GroupID = groupID
         await this.ArticleRepo.create(data)
     }
 
-    async Edit(token, id, data) {
+    async Edit(token, id, req) {
         const ID      = await this.RedisService.Verify(token)
         const article = await this.ArticleRepo.getArticleByID(id)
         if (ID === -1 || article === undefined || article.author !== ID) {
             throw 'edit error'
         }
+
+        const formdata = await this.FileService.ProcFormData(req)
+        const data     = formdata.fields
+        const files    = formdata.files
 
         if (data.title !== undefined) {
             article.title = data.title
@@ -51,6 +94,18 @@ export default class Article {
         if (data.context !== undefined) {
             article.context = data.context
         }
+
+        if (files.imgs !==  undefined && files.imgs !== []) {
+            article.imgs = []
+            if (files.imgs instanceof Array) {
+                for (const img of files.imgs) {
+                    article.imgs.push(this.FileService.GetBaseName(img))
+                }
+            } else {
+                article.imgs.push(this.FileService.GetBaseName(files.imgs))
+            }
+        }
+
         await this.ArticleRepo.edit(id, article)
     }
 

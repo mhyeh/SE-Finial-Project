@@ -49,7 +49,7 @@ export default class Account {
 
     async Edit(req, res) {
         try {
-            await this.AccountService.Edit(req.header.authorization, req.params.id, req.body)
+            await this.AccountService.Edit(req.header.authorization, req.params.id, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })

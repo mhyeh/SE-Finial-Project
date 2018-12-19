@@ -33,7 +33,7 @@ export default class Advertise {
     
     async Buy(req, res) {
         try {
-            await this.AdvertiseRepo.Create(req.header.authorization, req.params.pos, req.body)
+            await this.AdvertiseRepo.Create(req.header.authorization, req.params.pos, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })
@@ -42,7 +42,7 @@ export default class Advertise {
 
     async Edit(req, res) {
         try {
-            await this.AdvertiseRepo.Edit(req.header.authorization, req.params.id, req.body)
+            await this.AdvertiseRepo.Edit(req.header.authorization, req.params.id, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: e })

@@ -42,20 +42,26 @@ export default class Account {
         return token
     }
 
-    async Edit(token, id, data) {
+    async Edit(token, id, req) {
         const ID = await this.RedisService.Verify(token)
         if (ID === -1 || ID !== id) {
             throw 'edit error'
         }
-        const account = await this.AccountRepo.getAccountByID(id)
+        const account  = await this.AccountRepo.getAccountByID(id)
+        const formdata = await this.FileService.ProcFormData(req)
+        const data     = formdata.fields
+        const files    = formdata.files
         if (data.password !== undefined) {
             account.password = this.hash.update(data.password).digest('hex')
         }
-        const cols = ['name', 'department', 'class', 'birthday', 'sex', 'ID_card', 'address', 'photo', 'passport', 'credit_card', 'cvc', 'expire_data', 'interest']
+        const cols = ['name', 'department', 'class', 'birthday', 'sex', 'ID_card', 'address', 'passport', 'credit_card', 'cvc', 'expire_data', 'interest']
         for (const col of cols) {
             if (data[col] !== undefined) {
                 account[col] = data[col]
             }
+        }
+        if (files.photo !== undefined) {
+            account.photo = this.FileService.GetBaseName(files.photo.path)
         }
         await this.AccountRepo.edit(id, account)
     }

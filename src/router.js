@@ -35,12 +35,12 @@ export default class Router {
         const r = {
            path:  String(route).split('/'),
            fn:    fn,
-           prams: []
+           params: []
         }
         r.path.splice(0, 1)
         for (let i = 0; i < r.path.length; i++) {
             if (r.path[i][0] === ':') {
-                r.prams.push({index: i, name: r.path[i].slice(1)})
+                r.params.push({index: i, name: r.path[i].slice(1)})
                 r.path[i] = undefined
             }
         }
@@ -59,7 +59,7 @@ export default class Router {
     async find(method, req, res) {
         for (const route of this.routeMap[method]) {
             if (route.path === '*') {
-                route.fn(req, res)
+                await route.fn(req, res)
                 continue
             }
             let index = req.index
@@ -72,9 +72,9 @@ export default class Router {
                 index++
             }
             if (flag) {
-                for (const pram of route.prams) {
-                    Object.defineProperty(req.prams, String(pram.name), {
-                        value: req.path[req.index + pram.index]
+                for (const param of route.params) {
+                    Object.defineProperty(req.params, String(param.name), {
+                        value: req.path[req.index + param.index]
                     })
                 }
                 req.index = index

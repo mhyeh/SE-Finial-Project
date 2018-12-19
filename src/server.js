@@ -13,8 +13,8 @@ import GroupRouter     from './routes/Group'
 
 const router = new Router()
 
-router.use('*', (req, res) => req.ParseBody())
-router.use('*', (req, res) => res.cors())
+router.use('*', async (req, res) => await req.ParseBody())
+router.use('*',       (req, res) =>       res.cors())
 
 router.use('/account',   (req, res) => AccountRouter.Match(req, res))
 router.use('/advertise', (req, res) => AdvertiseRouter.Match(req, res))
@@ -26,7 +26,7 @@ router.use('/group',     (req, res) => GroupRouter.Match(req, res))
 const server = http.createServer(async (req, res) => {
     const request  = new Request(req)
     const response = new Response(res)
-    if (!router.Match(request, response)) {
+    if (!(await router.Match(request, response))) {
         res.writeHead(400)
         res.end()
     }

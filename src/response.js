@@ -73,7 +73,7 @@ export default class Response {
     sendFile(path) {
         const stat = fs.statSync(path)
         this.type(path)
-        this.setHeader('Content-Length', stat.size)
+        this.res.setHeader('Content-Length', stat.size)
         fs.createReadStream(path).pipe(this.res)
     }
 
