@@ -1,14 +1,9 @@
 import * as mime from 'mime'
 import * as fs   from 'fs'
 
-export default class Response {
+export class Response {
     constructor(res) {
         this.res = res
-    }
-
-    cors() {
-        this.res.setHeader('Access-Control-Allow-Origin', '*')
-        this.res.setHeader('Access-Control-Allow-Credentials', 'true')
     }
 
     status(statusCode) {
@@ -80,4 +75,9 @@ export default class Response {
     type(type) {
         this.res.setHeader('Content-Type', mime.getType(type))
     }
+}
+
+export function cors(_, res) {
+    res.res.setHeader('Access-Control-Allow-Origin', '*')
+    res.res.setHeader('Access-Control-Allow-Credentials', 'true')
 }

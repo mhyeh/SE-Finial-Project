@@ -9,8 +9,12 @@ export default class Router {
         }
     }
 
-    use(route, fn) {
-        this.routeMap['ANY'].push(this.setRoute(route, fn))
+    use() {
+        if (arguments.length === 1) {
+            this.routeMap['ANY'].push(this.setRoute('*', arguments[0]))
+        } else {
+            this.routeMap['ANY'].push(this.setRoute(arguments[0], arguments[1]))
+        }
     }
     get(route, fn) {
         this.routeMap['GET'].push(this.setRoute(route, fn))

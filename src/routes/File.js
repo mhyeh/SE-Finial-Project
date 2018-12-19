@@ -10,9 +10,9 @@ class File extends Router {
     }
 
     init() {
-        this.get('/:filePath', (req, res) => this.controller.GetFile(req, res))
+        this.get('/:filePath', this.controller.GetFile.bind(this.controller))
     }
 }
 
 const FileRouter = new File()
-export default FileRouter
+export default FileRouter.Match.bind(FileRouter)

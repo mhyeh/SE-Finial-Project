@@ -1,6 +1,6 @@
 import * as url from 'url'
 
-export default class Request {
+export class Request {
     constructor(req) {
         const URL = url.parse(req.url, true)
 
@@ -13,27 +13,27 @@ export default class Request {
         this.method = req.method
         this.header = req.headers
         this.index  = 0
-        this.ip     = req.header('x-forwarded-for') || req.connection.remoteAddress
+        this.ip     = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     }
+}
 
-    ParseBody() {
-        return new Promise((resolve, reject) => {
-            if (this.method === 'POST' || this.method === 'PUT') {
-                if (this.header['content-type'] === 'application/json') {
-                    let jsonStr = ''
-                    this.req.on('data', (data) => {
-                        jsonStr += data
-                    })
-                    this.req.on('end', () => {
-                        this.body = JSON.parse(jsonStr)
-                        resolve()
-                    })
-                } else {
+export function bodyParser(req) {
+    return new Promise((resolve, reject) => {
+        if (req.method === 'POST' || req.method === 'PUT') {
+            if (req.header['content-type'] === 'application/json') {
+                let jsonStr = ''
+                req.req.on('data', (data) => {
+                    jsonStr += data
+                })
+                req.req.on('end', () => {
+                    req.body = JSON.parse(jsonStr)
                     resolve()
-                }
+                })
             } else {
                 resolve()
             }
-        })
-    }
+        } else {
+            resolve()
+        }
+    })
 }

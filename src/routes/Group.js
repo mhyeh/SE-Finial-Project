@@ -10,17 +10,17 @@ class Group extends Router {
     }
 
     init() {
-        this.get('/',              (req, res) => this.controller.GetAllGroups(req, res))
-        this.get('/name/:name',    (req, res) => this.controller.GetGroupsByName(req, res))
-        this.get('/:id/account/',  (req, res) => this.controller.GetGroupMembers(req, res) )
-        this.get('/:id',           (req, res) => this.controller.GetGroupByID(req, res))
-        this.post('/',             (req, res) => this.controller.Create(req, res))
-        this.put('/join/:id',      (req, res) => this.controller.Join(req, res))
-        this.put('/leave/:id',     (req, res) => this.controller.Leave(req, res))
-        this.put('/:id',           (req, res) => this.controller.Edit(req, res))
-        this.delete('/:id',        (req, res) => this.controller.Delete(req, res))
+        this.get('/',              this.controller.GetAllGroups.bind(this.controller))
+        this.get('/name/:name',    this.controller.GetGroupsByName.bind(this.controller))
+        this.get('/:id/account/',  this.controller.GetGroupMembers.bind(this.controller))
+        this.get('/:id',           this.controller.GetGroupByID.bind(this.controller))
+        this.post('/',             this.controller.Create.bind(this.controller))
+        this.put('/join/:id',      this.controller.Join.bind(this.controller))
+        this.put('/leave/:id',     this.controller.Leave.bind(this.controller))
+        this.put('/:id',           this.controller.Edit.bind(this.controller))
+        this.delete('/:id',        this.controller.Delete.bind(this.controller))
     }
 }
 
 const GroupRouter = new Group()
-export default GroupRouter
+export default GroupRouter.Match.bind(GroupRouter)

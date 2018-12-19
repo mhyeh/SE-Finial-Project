@@ -31,7 +31,7 @@ export default class Group {
         }
     }
 
-    async GetFroupMembers(req, res) {
+    async GetGroupMembers(req, res) {
         try {
             res.status(200).json({ members: await this.GroupRepo.getGroupMembers(req.params.id) })
         } catch (e) {

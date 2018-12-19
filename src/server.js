@@ -1,8 +1,8 @@
 import * as http from 'http'
 
-import Request  from './request'
-import Response from './response'
-import Router   from './router'
+import { Request, bodyParser } from './request'
+import { Response, cors }      from './response'
+import Router                  from './router'
 
 import AccountRouter   from './routes/Account'
 import AdvertiseRouter from './routes/Advertise'
@@ -13,15 +13,15 @@ import GroupRouter     from './routes/Group'
 
 const router = new Router()
 
-router.use('*', async (req, res) => await req.ParseBody())
-router.use('*',       (req, res) =>       res.cors())
+router.use(bodyParser)
+router.use(cors)
 
-router.use('/account',   (req, res) => AccountRouter.Match(req, res))
-router.use('/advertise', (req, res) => AdvertiseRouter.Match(req, res))
-router.use('/article',   (req, res) => ArticleRouter.Match(req, res))
-router.use('/comment',   (req, res) => CommentRouter.Match(req, res))
-router.use('/file',      (req, res) => FileRouter.Match(req, res))
-router.use('/group',     (req, res) => GroupRouter.Match(req, res))
+router.use('/account',   AccountRouter)
+router.use('/advertise', AdvertiseRouter)
+router.use('/article',   ArticleRouter)
+router.use('/comment',   CommentRouter)
+router.use('/file',      FileRouter)
+router.use('/group',     GroupRouter)
 
 const server = http.createServer(async (req, res) => {
     const request  = new Request(req)

@@ -10,15 +10,15 @@ class Account extends Router {
     }
 
     init() {
-        this.get('/',           (req, res) => this.controller.GetAllAccounts(req, res))
-        this.get('/name/:name', (req, res) => this.controller.GetAccountsByName(req, res))
-        this.get('/:id',        (req, res) => this.controller.GetAccountByID(req, res))
-        this.post('/',          (req, res) => this.controller.Register(req, res))
-        this.post('/login',     (req, res) => this.controller.Login(req, res))
-        this.put('/:id',        (req, res) => this.controller.Edit(req, res))
-        this.delete('/:id',     (req, res) => this.controller.Delete(req, res))
+        this.get('/',           this.controller.GetAllAccounts.bind(this.controller))
+        this.get('/name/:name', this.controller.GetAccountsByName.bind(this.controller))
+        this.get('/:id',        this.controller.GetAccountByID.bind(this.controller))
+        this.post('/',          this.controller.Register.bind(this.controller))
+        this.post('/login',     this.controller.Login.bind(this.controller))
+        this.put('/:id',        this.controller.Edit.bind(this.controller))
+        this.delete('/:id',     this.controller.Delete.bind(this.controller))
     }
 }
 
 const AccountRouter = new Account()
-export default AccountRouter
+export default AccountRouter.Match.bind(AccountRouter)

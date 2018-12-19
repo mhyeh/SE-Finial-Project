@@ -10,12 +10,12 @@ class Comment extends Router {
     }
 
     init() {
-        this.get('/:id',    (req, res) => this.controller.GetAllComments(req, res))
-        this.post('/:id',   (req, res) => this.controller.Post(req, res))
-        this.put('/:id',    (req, res) => this.controller.Edit(req, res))
-        this.delete('/:id', (req, res) => this.controller.Delete(req, res))
+        this.get('/:id',    this.controller.GetAllComments.bind(this.controller))
+        this.post('/:id',   this.controller.Post.bind(this.controller))
+        this.put('/:id',    this.controller.Edit.bind(this.controller))
+        this.delete('/:id', this.controller.Delete.bind(this.controller))
     }
 }
 
 const CommentRouter = new Comment()
-export default CommentRouter
+export default CommentRouter.Match.bind(CommentRouter)

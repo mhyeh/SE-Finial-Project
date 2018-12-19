@@ -10,21 +10,21 @@ class Article extends Router {
     }
 
     init() {
-        this.get('/',                              (req, res) => this.controller.GetAllArticles(req, res))
-        this.get('/group/:group/author/:author',   (req, res) => this.controller.GetArticlesByGroupAndAuthor(req, res))
-        this.get('/group/:group/title/:title',     (req, res) => this.controller.GetArticlesByGroupAndTitle(req, res))
-        this.get('/group/:group/context/:context', (req, res) => this.controller.GetArticlesByGroupAndContext(req, res))
-        this.get('/author/:author',                (req, res) => this.controller.GetArticlesByAuthor(req, res))
-        this.get('/title/:title',                  (req, res) => this.controller.GetArticlesByTitle(req, res))
-        this.get('/context/:context',              (req, res) => this.controller.GetArticlesByContext(req, res))
-        this.get('/group/:group',                  (req, res) => this.controller.GetArticlesByGroup(req, res))
-        this.get('/:id',                           (req, res) => this.controller.GetArticleByID(req, res))
-        this.post('/',                             (req, res) => this.controller.Post(req, res))
-        this.post('/group/:id',                    (req, res) => this.controller.PostInGroup(req, res))
-        this.put('/:id',                           (req, res) => this.controller.Edit(req, res))
-        this.delete('/:id',                        (req, res) => this.controller.Delete(req, res))
+        this.get('/',                              this.controller.GetAllArticles.bind(this.controller))
+        this.get('/group/:group/author/:author',   this.controller.GetArticlesByGroupAndAuthor.bind(this.controller))
+        this.get('/group/:group/title/:title',     this.controller.GetArticlesByGroupAndTitle.bind(this.controller))
+        this.get('/group/:group/context/:context', this.controller.GetArticlesByGroupAndContext.bind(this.controller))
+        this.get('/author/:author',                this.controller.GetArticlesByAuthor.bind(this.controller))
+        this.get('/title/:title',                  this.controller.GetArticlesByTitle.bind(this.controller))
+        this.get('/context/:context',              this.controller.GetArticlesByContext.bind(this.controller))
+        this.get('/group/:group',                  this.controller.GetArticlesByGroup.bind(this.controller))
+        this.get('/:id',                           this.controller.GetArticleByID.bind(this.controller))
+        this.post('/',                             this.controller.Post.bind(this.controller))
+        this.post('/group/:id',                    this.controller.PostInGroup.bind(this.controller))
+        this.put('/:id',                           this.controller.Edit.bind(this.controller))
+        this.delete('/:id',                        this.controller.Delete.bind(this.controller))
     }
 }
 
 const ArticleRouter = new Article()
-export default ArticleRouter
+export default ArticleRouter.Match.bind(ArticleRouter)
