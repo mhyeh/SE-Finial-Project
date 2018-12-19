@@ -10,13 +10,13 @@ class Account extends Router {
     }
 
     init() {
-        this.get('/',           this.controller.GetAllAccounts.bind(this.controller))
-        this.get('/name/:name', this.controller.GetAccountsByName.bind(this.controller))
-        this.get('/:id',        this.controller.GetAccountByID.bind(this.controller))
-        this.post('/',          this.controller.Register.bind(this.controller))
-        this.post('/login',     this.controller.Login.bind(this.controller))
-        this.put('/:id',        this.controller.Edit.bind(this.controller))
-        this.delete('/:id',     this.controller.Delete.bind(this.controller))
+        this.get('/',           this.controller.GetAllAccounts)
+        this.get('/name/:name', this.controller.GetAccountsByName)
+        this.get('/:id',        this.controller.GetAccountByID)
+        this.post('/',          this.controller.Register)
+        this.post('/login',     this.controller.Login)
+        this.put('/:id',        this.controller.Edit)
+        this.delete('/:id',     this.controller.Delete)
     }
 }
 

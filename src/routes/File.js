@@ -10,7 +10,7 @@ class File extends Router {
     }
 
     init() {
-        this.get('/:filePath', this.controller.GetFile.bind(this.controller))
+        this.get('/:filePath', this.controller.GetFile)
     }
 }
 

@@ -10,12 +10,12 @@ class Advertise extends Router {
     }
 
     init() {
-        this.get('/',         this.controller.GetAllAdvertises.bind(this.controller))
-        this.get('/pos/:pos', this.controller.GetAdvertiseByPos.bind(this.controller))
-        this.get('/:id',      this.controller.GetAdvertiseByID.bind(this.controller))
-        this.post('/:pos',    this.controller.Buy.bind(this.controller))
-        this.put('/:id',      this.controller.Edit.bind(this.controller))
-        this.delete('/:id',   this.controller.Cancel.bind(this.controller))
+        this.get('/',         this.controller.GetAllAdvertises)
+        this.get('/pos/:pos', this.controller.GetAdvertiseByPos)
+        this.get('/:id',      this.controller.GetAdvertiseByID)
+        this.post('/:pos',    this.controller.Buy)
+        this.put('/:id',      this.controller.Edit)
+        this.delete('/:id',   this.controller.Cancel)
     }
 }
 
