@@ -11,6 +11,8 @@ export default class Account {
         this.Register          = this.register.bind(this)
         this.GetAccountsByName = this.getAccountsByName.bind(this)
         this.GetAccountByID    = this.getAccountByID.bind(this)
+        this.Edit              = this.edit.bind(this)
+        this.Delete            = this.delete.bind(this)
     }
     
     async getAllAccounts(req, res) {

@@ -4,23 +4,22 @@ import * as redis  from 'redis'
 export default class Redis {
     constructor() {
         this.client = redis.createClient()
-        this.hash   = crypto.createHash('sha256')
     }
 
     GenerateToken() {
         const rand = Math.random()
-        return this.hash.update(rand.toString()).digest('hex')
+        return crypto.createHash('sha256').update(rand.toString()).digest('hex')
     }
 
     async Store(token, id) {
         try {
             const token = await this.get(id)
-            await this.client.del(token)
+            await this.del(token)
         } catch (e) {
 
         }
-        await this.client.set(token, id)
-        await this.client.set(id, token)
+        await this.set(token, id)
+        await this.set(id, token)
     }
 
     async Verify(token) {
@@ -46,6 +45,18 @@ export default class Redis {
     set(key, val) {
         return new Promise((resolve, reject) => {
             this.client.set(key, val, (err, res) => {
+                if (err) {
+                    reject(err)
+                    return
+                }
+                resolve()
+            })
+        })
+    }
+
+    del(key) {
+        return new Promise((resolve, reject) => {
+            this.client.del(key, (err, res) => {
                 if (err) {
                     reject(err)
                     return

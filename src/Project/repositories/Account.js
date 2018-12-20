@@ -1,4 +1,4 @@
-import Model from '../models/Model'
+import Model from '../models/MySQL'
 
 export default class Account {
     constructor() {
@@ -14,7 +14,7 @@ export default class Account {
     }
 
     async getAccountByAccount(account) {
-        return (await this.AccountModel.select().where('account', account).query())[0]
+        return (await this.AccountModel.select('*').where('account', account).query())[0]
     }
 
     async getAccountsByName(name) {

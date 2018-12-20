@@ -1,3 +1,5 @@
+import * as crypto from 'crypto'
+
 import AccountRepo  from '../repositories/Account'
 import FileService  from './File'
 import RedisService from './Redis'
@@ -17,7 +19,7 @@ export default class Account {
         if (account === undefined) {
             throw 'login error'
         }
-        const hashPwd = this.hash.update(data.password).digest('hex')
+        const hashPwd = crypto.createHash('sha256').update(data.password).digest('hex')
         if (hashPwd !== account.password) {
             throw 'login error'
         }
@@ -30,12 +32,13 @@ export default class Account {
         if (data.account === undefined || data.password === undefined || data.name === undefined) {
             throw 'register error'
         }
-        const account = await this.AccountRepo.getAccountByAccount(data.account)
+        let account = await this.AccountRepo.getAccountByAccount(data.account)
         if (account !== undefined) {
             throw 'register error'
         }
-        data.password = this.hash.update(data.password).digest(hex)
+        data.password = crypto.createHash('sha256').update(data.password).digest('hex')
         await this.AccountRepo.create(data)
+        account = await this.AccountRepo.getAccountByAccount(data.account) 
 
         const token = this.RedisService.GenerateToken()
         this.RedisService.Store(token, account.id)
@@ -52,18 +55,13 @@ export default class Account {
         const data     = formdata.fields
         const files    = formdata.files
         if (data.password !== undefined) {
-            account.password = this.hash.update(data.password).digest('hex')
+            data.password = crypto.createHash('sha256').update(data.password).digest('hex')
         }
-        const cols = ['name', 'department', 'class', 'birthday', 'sex', 'ID_card', 'address', 'passport', 'credit_card', 'cvc', 'expire_data', 'interest']
-        for (const col of cols) {
-            if (data[col] !== undefined) {
-                account[col] = data[col]
-            }
-        }
+
         if (files.photo !== undefined) {
-            account.photo = this.FileService.GetBaseName(files.photo.path)
+            data.photo = this.FileService.GetBaseName(files.photo.path)
         }
-        await this.AccountRepo.edit(id, account)
+        await this.AccountRepo.edit(id, data)
     }
 
     async Delete(token, id) {
