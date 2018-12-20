@@ -1,24 +1,24 @@
-import AccountModel from '../models/Account'
+import Model from '../models/Model'
 
 export default class Account {
     constructor() {
-        this.AccountModel = new AccountModel()
+        this.AccountModel = new Model('account')
     }
 
     async getAllAccounts() {
-        return await this.AccountModel.select({})
+        return await this.AccountModel.select('*').query()
     }
 
     async getAccountByID(id) {
-        return await this.AccountModel.select({ where: { col: 'id', val: id } })[0]
+        return (await this.AccountModel.select('*').where('id', id).query())[0]
     }
 
     async getAccountByAccount(account) {
-        return await this.AccountModel.select({ where: {col: 'account', val: account } })[0]
+        return (await this.AccountModel.select().where('account', account).query())[0]
     }
 
     async getAccountsByName(name) {
-        return await this.AccountModel.select({ where: { col: 'name', val: name, op: 'like' } })
+        return await this.AccountModel.select('*').where('name', 'like', '%' + name + '%').query()
     }
 
     async create(data) {
@@ -26,10 +26,10 @@ export default class Account {
     }
 
     async edit(id, data) {
-        await this.AccountModel.update({ where: { col: 'id', val: id }, data: data })
+        this.AccountModel.where('id', id).update(data)
     }
 
     async Delete(id) {
-        return await this.AccountModel.Delete({ where: { col: 'id', val: id } })
+        await this.AccountModel.where('id', id).del()
     }
 }
