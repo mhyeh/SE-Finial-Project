@@ -1,16 +1,18 @@
-import AccountRepo  from '../repositories/Account'
-import ArticleRepo  from '../repositories/Article'
-import GroupRepo    from '../repositories/Group'
-import FileService  from './File'
-import RedisService from './Redis'
+import AccountRepo     from '../repositories/Account'
+import ArticleRepo     from '../repositories/Article'
+import GroupRepo       from '../repositories/Group'
+import DateTimeService from './DateTime'
+import FileService     from './File'
+import RedisService    from './Redis'
 
 export default class Article {
     constructor() {
-        this.AccountRepo  = new AccountRepo()
-        this.ArticleRepo  = new ArticleRepo()
-        this.GroupRepo    = new GroupRepo()
-        this.FileService  = new FileService()
-        this.RedisService = new RedisService()
+        this.AccountRepo     = new AccountRepo()
+        this.ArticleRepo     = new ArticleRepo()
+        this.GroupRepo       = new GroupRepo()
+        this.DateTimeService = new DateTimeService()
+        this.FileService     = new FileService()
+        this.RedisService    = new RedisService()
     }
 
     async Post(token, req) {
@@ -23,21 +25,22 @@ export default class Article {
         const data     = formdata.fields
         const files    = formdata.files
 
-        if (data.title === undefined || (data.context === undefined && (files.imgs ===  undefined || files.imgs === []))) {
+        if (data.title === undefined || (data.context === undefined && (files.imgs === undefined || files.imgs === []))) {
             throw 'post error'
         }
 
         if (files.imgs !==  undefined && files.imgs !== []) {
-            data.imgs = []
+            data.image = []
             if (files.imgs instanceof Array) {
                 for (const img of files.imgs) {
-                    data.imgs.push(this.FileService.GetBaseName(img))
+                    data.image.push(this.FileService.GetBaseName(img))
                 }
             } else {
-                data.imgs.push(this.FileService.GetBaseName(files.imgs))
+                data.image.push(this.FileService.GetBaseName(files.imgs))
             }
         }
-        data.time   = new Date()
+        data.image  = JSON.stringify(data.image)
+        data.time   = this.DateTimeService.getDateTime()
         data.author = ID
         data.ip     = req.ip
         await this.ArticleRepo.create(data)
@@ -57,25 +60,25 @@ export default class Article {
         const data     = formdata.fields
         const files    = formdata.files
 
-        if (data.title === undefined || (data.context === undefined && (files.imgs ===  undefined || files.imgs === []))) {
+        if (data.title === undefined || (data.context === undefined && (files.imgs === undefined || files.imgs === []))) {
             throw 'post error'
         }
 
         if (files.imgs !==  undefined && files.imgs !== []) {
-            data.imgs = []
+            data.image = []
             if (files.imgs instanceof Array) {
                 for (const img of files.imgs) {
-                    data.imgs.push(this.FileService.GetBaseName(img))
+                    data.image.push(this.FileService.GetBaseName(img))
                 }
             } else {
-                data.imgs.push(this.FileService.GetBaseName(files.imgs))
+                data.image.push(this.FileService.GetBaseName(files.imgs))
             }
         }
-
-        data.time    = new Date()
-        data.author  = ID
-        data.GroupID = groupID
-        data.ip      = req.ip
+        data.image    = JSON.stringify(data.image)
+        data.time     = this.DateTimeService.getDateTime()
+        data.author   = ID
+        data.board_id = groupID
+        data.ip       = req.ip
         await this.ArticleRepo.create(data)
     }
 
@@ -90,25 +93,20 @@ export default class Article {
         const data     = formdata.fields
         const files    = formdata.files
 
-        if (data.title !== undefined) {
-            article.title = data.title
-        }
-        if (data.context !== undefined) {
-            article.context = data.context
-        }
-
         if (files.imgs !==  undefined && files.imgs !== []) {
-            article.imgs = []
+            data.image = []
             if (files.imgs instanceof Array) {
                 for (const img of files.imgs) {
-                    article.imgs.push(this.FileService.GetBaseName(img))
+                    data.image.push(this.FileService.GetBaseName(img))
                 }
             } else {
-                article.imgs.push(this.FileService.GetBaseName(files.imgs))
+                data.image.push(this.FileService.GetBaseName(files.imgs))
             }
         }
-        article.ip = req.ip
-        await this.ArticleRepo.edit(id, article)
+        data.image = JSON.stringify(data.image)
+        data.time  = this.DateTimeService.getDateTime()
+        data.ip    = req.ip
+        await this.ArticleRepo.edit(id, data)
     }
 
     async Delete(token, id) {

@@ -8,8 +8,8 @@ export default class Group {
     }
 
     async Create(token, data) {
-        const ID    = await this.RedisService.Verify(token)
-        if (ID === -1 || data.name === undefined) {
+        const ID = await this.RedisService.Verify(token)
+        if (ID === -1 || data.name === undefined || (data.type !== 'Family' && data.type !== 'Board')) {
             throw 'create error'
         }
         const group = await this.GroupRepo.getGroupByName(data.name)
@@ -30,8 +30,7 @@ export default class Group {
         if (newGroup !== undefined) {
             throw 'edit error'
         }
-        group.name = data.name
-        await this.GroupRepo.edit(id, group)
+        await this.GroupRepo.edit(id, data)
     }
 
     async Join(token, id) {

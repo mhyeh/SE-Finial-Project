@@ -32,7 +32,7 @@ export default class Advertise {
 
         data.author = ID
         if (files.img !== undefined) {
-            data.img = this.FileService.GetBaseName(files.img)
+            data.image = this.FileService.GetBaseName(files.img)
         }
         await this.AdvertiseRepo.create(pos, data)
     }
@@ -52,13 +52,10 @@ export default class Advertise {
             throw 'create error'
         }
 
-        if (data.context !== undefined) {
-            advertise.context = data.context
-        }
         if (files.img !== undefined) {
-            advertise.img = this.FileService.GetBaseName(files.img)
+            data.image = this.FileService.GetBaseName(files.img)
         }
-        await this.AdvertiseRepo.edit(id, advertise)
+        await this.AdvertiseRepo.edit(id, data)
     }
 
     async Delete(token, id) {
