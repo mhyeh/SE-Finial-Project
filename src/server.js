@@ -1,8 +1,10 @@
 import * as http from 'http'
 
-import { Request, bodyParser } from './request'
-import { Response, cors }      from './response'
-import Router                  from './router'
+import bodyParser from './body-parser'
+import cors       from './cors'
+import Request    from './request'
+import Response   from './response'
+import Router     from './router'
 
 import AccountRouter   from './routes/Account'
 import AdvertiseRouter from './routes/Advertise'
@@ -13,8 +15,13 @@ import GroupRouter     from './routes/Group'
 
 const router = new Router()
 
+const corsConfig = {
+    origin: '*',
+    credentials: true
+}
+
 router.use(bodyParser)
-router.use(cors)
+router.use(cors(corsConfig))
 
 router.use('/account',   AccountRouter)
 router.use('/advertise', AdvertiseRouter)

@@ -25,7 +25,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getAllArticles() })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'get article error' })
         }
     }
     
@@ -33,7 +33,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByID(req.params.id) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'get article error' })
         }
     }
 
@@ -41,7 +41,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByAuthor(req.params.author) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'get article error' })
         }
     }
 
@@ -49,7 +49,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByTitle(req.params.title) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'get article error' })
         }
     }
 
@@ -57,7 +57,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByContext(req.params.context) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'get article error' })
         }
     }
 
@@ -65,7 +65,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroup(req.params.group) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'get article error' })
         }
     }
 
@@ -73,7 +73,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndAuthor(req.params.group, req.params.author) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'get article error' })
         }
     }
 
@@ -81,7 +81,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndTitle(req.params.group, req.params.title) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'get article error' })
         }
     }
 
@@ -89,7 +89,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndContext(req.params.group, req.params.context) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'get article error' })
         }
     }
 
@@ -98,7 +98,7 @@ export default class Article {
             await this.ArticleService.Post(req.header.authorization, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'post article error' })
         }
     }
 
@@ -107,7 +107,7 @@ export default class Article {
             await this.ArticleService.PostInGroup(req.header.authorization, req.params.id, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'post article error' })
         }
     }
 
@@ -116,7 +116,7 @@ export default class Article {
             await this.ArticleService.Edit(req.header.authorization, req.params.id, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'edit article error' })
         }
     }
 
@@ -125,7 +125,7 @@ export default class Article {
             await this.ArticleService.Delete(req.header.authorization, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: 'delete article error' })
         }
     }
 }

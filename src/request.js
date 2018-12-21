@@ -1,6 +1,6 @@
 import * as url from 'url'
 
-export class Request {
+export default class Request {
     constructor(req) {
         const URL = url.parse(req.url, true)
 
@@ -15,21 +15,4 @@ export class Request {
         this.index  = 0
         this.ip     = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     }
-}
-
-export function bodyParser(req) {
-    return new Promise((resolve, reject) => {
-        if ((req.method === 'POST' || req.method === 'PUT') && req.header['content-type'] === 'application/json') {
-            let jsonStr = ''
-            req.req.on('data', (data) => {
-                jsonStr += data
-            })
-            req.req.on('end', () => {
-                req.body = JSON.parse(jsonStr)
-                resolve()
-            })
-        } else {
-            resolve()
-        }
-    })
 }

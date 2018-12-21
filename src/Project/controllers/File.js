@@ -9,7 +9,7 @@ export default class File {
         try {
             res.status(200).sendFile(utils.getPath(['./uploadedFiles', req.params.filePath]))
         } catch (e) {
-            res.status(400).json({error: e})
+            res.status(400).json({ error: 'get file error' })
         }
     }
 }
