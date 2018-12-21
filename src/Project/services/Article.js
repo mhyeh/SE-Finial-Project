@@ -1,18 +1,18 @@
-import AccountRepo     from '../repositories/Account'
-import ArticleRepo     from '../repositories/Article'
-import GroupRepo       from '../repositories/Group'
-import DateTimeService from './DateTime'
-import FileService     from './File'
-import RedisService    from './Redis'
+import AccountRepo  from '../repositories/Account'
+import ArticleRepo  from '../repositories/Article'
+import GroupRepo    from '../repositories/Group'
+import FileService  from './File'
+import RedisService from './Redis'
+
+import utils from '../Utils'
 
 export default class Article {
     constructor() {
-        this.AccountRepo     = new AccountRepo()
-        this.ArticleRepo     = new ArticleRepo()
-        this.GroupRepo       = new GroupRepo()
-        this.DateTimeService = new DateTimeService()
-        this.FileService     = new FileService()
-        this.RedisService    = new RedisService()
+        this.AccountRepo  = new AccountRepo()
+        this.ArticleRepo  = new ArticleRepo()
+        this.GroupRepo    = new GroupRepo()
+        this.FileService  = new FileService()
+        this.RedisService = new RedisService()
     }
 
     async Post(token, req) {
@@ -33,14 +33,14 @@ export default class Article {
             data.image = []
             if (files.imgs instanceof Array) {
                 for (const img of files.imgs) {
-                    data.image.push(this.FileService.GetBaseName(img))
+                    data.image.push(utils.getBaseName(img))
                 }
             } else {
-                data.image.push(this.FileService.GetBaseName(files.imgs))
+                data.image.push(utils.getBaseName(files.imgs))
             }
         }
         data.image  = JSON.stringify(data.image)
-        data.time   = this.DateTimeService.getDateTime()
+        data.time   = utils.getDateTime()
         data.author = ID
         data.ip     = req.ip
         await this.ArticleRepo.create(data)
@@ -68,14 +68,14 @@ export default class Article {
             data.image = []
             if (files.imgs instanceof Array) {
                 for (const img of files.imgs) {
-                    data.image.push(this.FileService.GetBaseName(img))
+                    data.image.push(utils.getBaseName(img))
                 }
             } else {
-                data.image.push(this.FileService.GetBaseName(files.imgs))
+                data.image.push(utils.getBaseName(files.imgs))
             }
         }
         data.image    = JSON.stringify(data.image)
-        data.time     = this.DateTimeService.getDateTime()
+        data.time     = utils.getDateTime()
         data.author   = ID
         data.board_id = groupID
         data.ip       = req.ip
@@ -97,14 +97,14 @@ export default class Article {
             data.image = []
             if (files.imgs instanceof Array) {
                 for (const img of files.imgs) {
-                    data.image.push(this.FileService.GetBaseName(img))
+                    data.image.push(utils.getBaseName(img))
                 }
             } else {
-                data.image.push(this.FileService.GetBaseName(files.imgs))
+                data.image.push(utils.getBaseName(files.imgs))
             }
         }
         data.image = JSON.stringify(data.image)
-        data.time  = this.DateTimeService.getDateTime()
+        data.time  = utils.getDateTime()
         data.ip    = req.ip
         await this.ArticleRepo.edit(id, data)
     }

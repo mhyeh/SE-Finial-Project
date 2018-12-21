@@ -1,5 +1,6 @@
-import * as crypto from 'crypto'
-import * as redis  from 'redis'
+import * as redis from 'redis'
+
+import utils from '../Utils'
 
 export default class Redis {
     constructor() {
@@ -8,7 +9,7 @@ export default class Redis {
 
     GenerateToken() {
         const rand = Math.random()
-        return crypto.createHash('sha256').update(rand.toString()).digest('hex')
+        return utils.hash(String(rand))
     }
 
     async Store(token, id) {

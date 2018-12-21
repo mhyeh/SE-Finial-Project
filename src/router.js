@@ -37,8 +37,8 @@ export default class Router {
             }
         }
         const r = {
-           path:  String(route).split('/'),
-           fn:    fn,
+           path:   String(route).split('/'),
+           fn:     fn,
            params: []
         }
         r.path.splice(0, 1)

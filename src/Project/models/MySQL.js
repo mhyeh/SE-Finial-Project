@@ -25,12 +25,28 @@ export default class Model {
 
     where() {
         this.queryStr += ' where '
+        this.whereArg(arguments)
+        return this
+    }
+
+    andWhere() {
+        this.queryStr += ' and '
+        this.whereArg(arguments)
+        return this
+    }
+
+    orWhere() {
+        this.queryStr += ' or '
+        this.whereArg(arguments)
+        return this
+    }
+
+    whereArg() {
         if (arguments.length === 2) {
             this.queryStr += `\`${arguments[0]}\` = '${arguments[1]}'`
         } else {
             this.queryStr += `\`${arguments[0]}\` ${arguments[1]} '${arguments[2]}'`
         }
-        return this
     }
 
     query() {

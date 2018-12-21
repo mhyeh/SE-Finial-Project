@@ -1,16 +1,14 @@
-import * as crypto from 'crypto'
+import AccountRepo  from '../repositories/Account'
+import FileService  from './File'
+import RedisService from './Redis'
 
-import AccountRepo     from '../repositories/Account'
-import DateTimeService from './DateTime';
-import FileService     from './File'
-import RedisService    from './Redis'
+import utils from '../Utils'
 
 export default class Account {
     constructor() {
-        this.AccountRepo     = new AccountRepo()
-        this.DateTimeService = new DateTimeService()
-        this.FileService     = new FileService()
-        this.RedisService    = new RedisService()
+        this.AccountRepo  = new AccountRepo()
+        this.FileService  = new FileService()
+        this.RedisService = new RedisService()
     }
 
     async Login(data) {
@@ -21,7 +19,7 @@ export default class Account {
         if (account === undefined) {
             throw 'login error'
         }
-        const hashPwd = this.hash(data.password)
+        const hashPwd = utils.hash(data.password)
         if (hashPwd !== account.password) {
             throw 'login error'
         }
@@ -38,7 +36,7 @@ export default class Account {
         if (account !== undefined) {
             throw 'register error'
         }
-        data.password = this.hash(data.password)
+        data.password = utils.hash(data.password)
         await this.AccountRepo.create(data)
         account = await this.AccountRepo.getAccountByAccount(data.account) 
 
@@ -56,19 +54,19 @@ export default class Account {
         const data     = formdata.fields
         const files    = formdata.files
         if (data.password !== undefined) {
-            data.password = this.hash(data.password)
+            data.password = utils.hash(data.password)
         }
 
         if (data.birthday !== undefined) {
-            data.birthday = this.DateTimeService.getDate(data.birthday)
+            data.birthday = utils.getDate(data.birthday)
         }
 
         if (data.expire_date !== undefined) {
-            data.expire_date = this.DateTimeService.getDate(data.expire_date)
+            data.expire_date = utils.getDate(data.expire_date)
         }
 
         if (files.photo !== undefined) {
-            data.photo = this.FileService.GetBaseName(files.photo.path)
+            data.photo = utils.getBaseName(files.photo.path)
         }
         await this.AccountRepo.edit(id, data)
     }
@@ -80,9 +78,5 @@ export default class Account {
         }
 
         await this.AccountRepo.Delete(id)
-    }
-
-    hash(msg) {
-        return crypto.createHash('sha256').update(msg).digest('hex')
     }
 }

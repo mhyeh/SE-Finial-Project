@@ -1,14 +1,14 @@
-import ArticleRepo     from '../repositories/Article'
-import CommentRepo     from '../repositories/Comment'
-import DateTimeService from './DateTime'
-import RedisService    from './Redis'
+import ArticleRepo  from '../repositories/Article'
+import CommentRepo  from '../repositories/Comment'
+import RedisService from './Redis'
+
+import utils from '../Utils'
 
 export default class Comment {
     constructor() {
-        this.ArticleRepo     = new ArticleRepo()
-        this.CommentRepo     = new CommentRepo()
-        this.DateTimeService = new DateTimeService()
-        this.RedisService    = new RedisService()
+        this.ArticleRepo  = new ArticleRepo()
+        this.CommentRepo  = new CommentRepo()
+        this.RedisService = new RedisService()
     }
 
     async Post(token, id, req) {
@@ -18,7 +18,7 @@ export default class Comment {
         if (ID === -1 || article === undefined || data.types === undefined || (data.types !== 0 && data.types !== 1 && data.types !== 2) || data.comment === undefined) {
             throw 'post error'
         }
-        data.time       = this.DateTimeService.getDateTime()
+        data.time       = utils.getDateTime()
         data.author     = ID
         data.article_id = id
         data.ip         = req.ip
@@ -32,7 +32,7 @@ export default class Comment {
         if (ID === -1 || comment === undefined || comment.author !== ID || data.comment === undefined) {
             throw 'edit error'
         }
-        data.time = this.DateTimeService.getDateTime()
+        data.time = utils.getDateTime()
         data.ip   = req.ip
         await this.CommentRepo.edit(id, data)
     }

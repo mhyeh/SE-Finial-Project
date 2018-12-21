@@ -3,6 +3,8 @@ import AdvertiseRepo from '../repositories/Advertise'
 import FileService   from './File'
 import RedisService  from './Redis'
 
+import utils from '../Utils'
+
 export default class Advertise {
     constructor() {
         this.AdvertiseRepo = new AdvertiseRepo()
@@ -32,7 +34,7 @@ export default class Advertise {
 
         data.author = ID
         if (files.img !== undefined) {
-            data.image = this.FileService.GetBaseName(files.img)
+            data.image = utils.getBaseName(files.img)
         }
         await this.AdvertiseRepo.create(pos, data)
     }
@@ -53,7 +55,7 @@ export default class Advertise {
         }
 
         if (files.img !== undefined) {
-            data.image = this.FileService.GetBaseName(files.img)
+            data.image = utils.getBaseName(files.img)
         }
         await this.AdvertiseRepo.edit(id, data)
     }
