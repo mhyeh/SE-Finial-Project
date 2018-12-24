@@ -2,7 +2,7 @@ import Model from '../models/MySQL'
 
 export default class Advertise {
     constructor() {
-        this.AdModel = new Model('ad')
+        this.AdModel    = new Model('ad')
         this.AdposModel = new Model('ad_pos')
     }
 
@@ -20,8 +20,8 @@ export default class Advertise {
 
     async create(pos, data) {
         await this.AdModel.insert(data)
-        const AdData = await (this.AdModel.select('*').where('author', data.author).query())[0]
-        AdposData = {ad: AdData.id}
+        const AdData    = (await this.AdModel.select('*').where('author', data.author).query())[0]
+        const AdposData = { ad: AdData.id }
         await this.AdposModel.where('pos', pos).update(AdposData)
     }
 

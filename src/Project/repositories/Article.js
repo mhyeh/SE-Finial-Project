@@ -14,31 +14,31 @@ export default class Article {
     }
 
     async getArticleByAuthor(author) {
-        return (await this.ArticleModel.select('*').where('author', author).query())[0]
+        return await this.ArticleModel.select('*').where('author', author).query()
     }
 
     async getArticleByTitle(title) {
-        return (await this.ArticleModel.select('*').where('title', title).query())[0]
+        return await this.ArticleModel.select('*').where('title', 'like', `% ${title} %`).query()
     }
 
     async getArticleByContext(context) {
-        return (await this.ArticleModel.select('*').where('context', context).query())[0]
+        return await this.ArticleModel.select('*').where('context', 'like', `% ${context} %`).query()
     }
     
     async getArticleByGroup(group) {
-        return (await this.ArticleModel.select('*').where('group', group).query())[0]
+        return await this.ArticleModel.select('*').where('group', group).query()
     }
 
     async getArticleByGroupAndAuthor(group, author) {
-        return (await this.ArticleModel.select('*').andWhere('author', author, 'group', group).query())[0]
+        return await this.ArticleModel.select('*').where('author', author).andWhere('group', group).query()
     }
 
     async getArticleByGroupAndTitle(group, title) {
-        return (await this.ArticleModel.select('*').where('title', title).andWhere('group', group).query())[0]
+        return await this.ArticleModel.select('*').where('title', 'like', `% ${title} %`).andWhere('group', group).query()
     }
 
     async getArticleByGroupAndContext(group, context) {
-        return (await this.ArticleModel.select('*').where('context', context).andWhere('group', group).query())[0]        
+        return await this.ArticleModel.select('*').where('context', 'like', `% ${context} %`).andWhere('group', group).query()   
     }
 
     async create(data) {

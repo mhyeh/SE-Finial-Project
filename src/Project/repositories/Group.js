@@ -2,7 +2,7 @@ import Model from "../models/MySQL";
 
 export default class Group {
     constructor() {
-        this.GroupModel = new Model('groups')
+        this.GroupModel    = new Model('groups')
         this.GPMemberModel = new Model('gp_member')
     }
 
@@ -15,7 +15,7 @@ export default class Group {
     }
 
     async getGroupByName(name) {
-        return (await this.GroupModel.select('*').where('name', name).query())[0]
+        return await this.GroupModel.select('*').where('name', 'like', `% ${name} %`).query()
     }
 
     async getGroupMembers(id) {
@@ -31,7 +31,7 @@ export default class Group {
     }
 
     async Join(id, account) {
-        const data = {group_id: id, account:account}
+        const data = { group_id: id, account: account }
         await this.GPMemberModel.insert(data)
     }
 
@@ -41,5 +41,6 @@ export default class Group {
 
     async Delete(id) {
         await this.GroupModel.where('id', id).del()
+        await this.GPMemberModel.where('group_id', id).del()
     }
 }
