@@ -6,7 +6,7 @@ export default class Comment {
     }
 
     async getAllComments(article) {
-        this.CommentModel.select('*').query()
+        this.CommentModel.select('*').where('article_id', article).query()
     }
 
     async getCommentByID(id) {
@@ -21,7 +21,11 @@ export default class Comment {
         await this.CommentModel.where('id', id).update(data)
     }
 
-    async delete(id) {
+    async Delete(id) {
         await this.CommentModel.where('id', id).del()
+    }
+    
+    async deletebyArticle(article_id) {
+        await this.CommentModel.where('article_id', article_id).del()
     }
 }

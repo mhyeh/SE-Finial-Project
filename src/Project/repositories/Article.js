@@ -1,8 +1,10 @@
 import Model from '../models/MySQL'
+import Comment from './Comment'
 
 export default class Article {
     constructor() {
         this.ArticleModel = new Model('article')
+        this.CommentRepo  = new Comment()
     }
 
     async getAllArticles() {
@@ -49,7 +51,18 @@ export default class Article {
         await this.ArticleModel.where('id', id).update(data)
     }
 
-    async Delete(id) {
-        await this.ArticleModel.where('id', id).update(id)
+    async deletebyGroup(group_id) {
+        const articles = await this.ArticleModel.select('id').where('group', group_id).query()
+        const promise = []
+        promise.push(this.ArticleModel.where('board_id', group_id).del())
+        for (const article of articles) {
+            promise.push(this.CommentRepo.deletebyArticle(article.id))
+        }
+        await Promise.all(promise)
     }
+
+    async Delete(id) {
+        await Promise.all([this.ArticleModel.where('id', id).del(), this.CommentRepo.deletebyArticle(id)])
+    }
+    
 }

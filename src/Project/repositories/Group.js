@@ -1,9 +1,11 @@
-import Model from "../models/MySQL";
+import Model from '../models/MySQL';
+import Article from './Article'
 
 export default class Group {
     constructor() {
         this.GroupModel    = new Model('groups')
         this.GPMemberModel = new Model('gp_member')
+        this.ArticleRepo   = new Article()
     }
 
     async getAllGroups() {
@@ -40,7 +42,6 @@ export default class Group {
     }
 
     async Delete(id) {
-        await this.GroupModel.where('id', id).del()
-        await this.GPMemberModel.where('group_id', id).del()
+        await Promise.all([this.GroupModel.where('id', id).del(), this.GPMemberModel.where('group_id', id).del(), this.ArticleRepo.deletebyGroup(id)])
     }
 }
