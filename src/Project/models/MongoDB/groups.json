@@ -1,0 +1,7 @@
+{ 
+    "_id" : ObjectId("5c2225289a81774054957240"), 
+    "id" : NumberInt(1), 
+    "name" : "123", 
+    "leader" : NumberInt(123), 
+    "type" : "132"
+}

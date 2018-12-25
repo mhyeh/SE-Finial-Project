@@ -1,0 +1,8 @@
+{ 
+    "_id" : ObjectId("5c2224fb9a81774054957234"), 
+    "id" : NumberInt(1), 
+    "gamble" : NumberInt(123), 
+    "account" : NumberInt(123), 
+    "option" : NumberInt(13213), 
+    "money" : NumberInt(123)
+}
