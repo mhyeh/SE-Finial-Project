@@ -18,7 +18,7 @@ export default class Account {
     }
 
     async getAccountsByName(name) {
-        return await this.AccountModel.select('*').where('name', 'like', '%' + name + '%').query()
+        return await this.AccountModel.select('*').where('name', 'like', name).query()
     }
 
     async create(data) {

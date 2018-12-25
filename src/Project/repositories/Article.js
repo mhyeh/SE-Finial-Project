@@ -20,11 +20,11 @@ export default class Article {
     }
 
     async getArticleByTitle(title) {
-        return await this.ArticleModel.select('*').where('title', 'like', `% ${title} %`).query()
+        return await this.ArticleModel.select('*').where('title', 'like', title).query()
     }
 
     async getArticleByContext(context) {
-        return await this.ArticleModel.select('*').where('context', 'like', `% ${context} %`).query()
+        return await this.ArticleModel.select('*').where('context', 'like', context).query()
     }
     
     async getArticleByGroup(group) {
@@ -36,11 +36,11 @@ export default class Article {
     }
 
     async getArticleByGroupAndTitle(group, title) {
-        return await this.ArticleModel.select('*').where('title', 'like', `% ${title} %`).andWhere('group', group).query()
+        return await this.ArticleModel.select('*').where('title', 'like', title).andWhere('group', group).query()
     }
 
     async getArticleByGroupAndContext(group, context) {
-        return await this.ArticleModel.select('*').where('context', 'like', `% ${context} %`).andWhere('group', group).query()   
+        return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('group', group).query()   
     }
 
     async create(data) {

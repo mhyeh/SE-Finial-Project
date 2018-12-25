@@ -45,7 +45,7 @@ export default class Model {
         if (arguments.length === 2) {
             this.queryStr += `\`${arguments[0]}\` = '${arguments[1]}'`
         } else {
-            this.queryStr += `\`${arguments[0]}\` ${arguments[1]} '${arguments[2]}'`
+            this.queryStr += `\`${arguments[0]}\` ${arguments[1]} %'${arguments[2]}'%`
         }
     }
 

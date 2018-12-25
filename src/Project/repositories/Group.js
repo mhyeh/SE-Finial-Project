@@ -17,7 +17,7 @@ export default class Group {
     }
 
     async getGroupByName(name) {
-        return await this.GroupModel.select('*').where('name', 'like', `% ${name} %`).query()
+        return await this.GroupModel.select('*').where('name', 'like', name).query()
     }
 
     async getGroupMembers(id) {
