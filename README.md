@@ -11,6 +11,8 @@ npm v6.5.0
 
 mariaDB v10.3.11
 
+MongoDB v4.0.5
+
 redis-server v3.2.1
 ```
 
