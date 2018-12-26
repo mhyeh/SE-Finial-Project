@@ -1,20 +1,21 @@
 export default function bodyParser(req) {
     return new Promise((resolve, reject) => {
-        try {
-            if ((req.method === 'POST' || req.method === 'PUT') && req.header['content-type'] === 'application/json') {
-                let jsonStr = ''
-                req.req.on('data', (data) => {
-                    jsonStr += data
-                })
-                req.req.on('end', () => {
+        if ((req.method === 'POST' || req.method === 'PUT') && req.header['content-type'] === 'application/json') {
+            let jsonStr = ''
+            req.req.on('data', (data) => {
+                jsonStr += data
+            })
+            req.req.on('end', () => {
+                try {
                     req.body = JSON.parse(jsonStr)
-                    resolve()
-                })
-            } else {
+                } catch (e) {
+                    reject()
+                    return
+                }
                 resolve()
-            }
-        } catch (e) {
-            reject()
+            })
+        } else {
+            resolve()
         }
     })
 }

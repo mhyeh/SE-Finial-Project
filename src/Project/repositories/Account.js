@@ -27,6 +27,7 @@ export default class Account {
         if(!utils.allow(data, ['account', 'password', 'name'])) {
             throw 'not accept'
         }
+        console.log(123)
         await this.AccountModel.insert(data)
     }
 

@@ -39,7 +39,7 @@ const getPath = (args) => {
 
 const allow = (data, accept) => {
     for (const col in data) {
-        if (!(col in accept)) {
+        if (!accept.includes(col)) {
             return false
         }
     }
