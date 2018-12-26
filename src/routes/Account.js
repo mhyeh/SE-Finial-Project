@@ -10,7 +10,8 @@ class Account extends Router {
     }
 
     init() {
-        this.get('/',           this.controller.GetAllAccounts)
+        this.get('/',           this.controller.GetAccountByToken)
+        this.get('/all',        this.controller.GetAllAccounts)
         this.get('/name/:name', this.controller.GetAccountsByName)
         this.get('/:id',        this.controller.GetAccountByID)
         this.post('/',          this.controller.Register)

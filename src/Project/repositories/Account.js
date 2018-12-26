@@ -1,14 +1,22 @@
 import Model from '../models/MongoDB'
 
+import RedisService from '../services/Redis'
+
 import utils from '../Utils'
 
 export default class Account {
     constructor() {
         this.AccountModel = new Model('account')
+        this.RedisService = new RedisService()
     }
 
     async getAllAccounts() {
         return await this.AccountModel.select('*').query()
+    }
+
+    async getAccountByToken(token) {
+        const ID = this.RedisService.Verify(token)
+        return await this.getAccountByID(ID)
     }
 
     async getAccountByID(id) {

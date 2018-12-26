@@ -9,35 +9,49 @@
 
 ## Account
 
-### getAllAccounts
+### getAccountByToken
 
 ```
 Method: GET
 URL: /account
 
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: {
+    "id":          <user id>,
+    "account":     <user account>,
+    "password":    <hashed password>,
+    "name":        <user name>,
+    "department":  <user department>,
+    "class":       <user class>,
+    "birthday":    <user birthday>,
+    "sex":         <user sex>,
+    "ID_card":     <user ID_card>,
+    "address":     <user address>,
+    "photo":       <user photo>,
+    "passport":    <user passport>,
+    "credit_card": <user credit_card>,
+    "cvc":         <user cvc>,    
+    "expire_date": <user expire_date>,
+    "NTUST_coin":  <user NTUST_coin>,
+    "interst":     <user interst>
+}
+```
+
+### getAllAccounts
+
+```
+Method: GET
+URL: /account/all
+
 Response:
 
 Status Code: 200
 Data: [
-    {
-        "id":          <user id>,
-        "account":     <user account>,
-        "password":    <hashed password>,
-        "name":        <user name>,
-        "department":  <user department>,
-        "class":       <user class>,
-        "birthday":    <user birthday>,
-        "sex":         <user sex>,
-        "ID_card":     <user ID_card>,
-        "address":     <user address>,
-        "photo":       <user photo>,
-        "passport":    <user passport>,
-        "credit_card": <user credit_card>,
-        "cvc":         <user cvc>,    
-        "expire_date": <user expire_date>,
-        "NTUST_coin":  <user NTUST_coin>,
-        "interst":     <user interst>
-    }
+    同 getAccountByToken 的 Data
 ]
 ```
 
@@ -50,7 +64,7 @@ URL: /account/name/:name
 Response:
 
 Status Code: 200
-Data: 同 getAllAccounts
+Data: 同 getAccountByToken 的 Data
 ```
 
 ### getAccountByID
@@ -62,7 +76,7 @@ URL: /account/:id
 Response:
 
 Status Code: 200
-Data: 同 getAllAccounts
+Data: 同 getAccountByToken 的 Data
 ```
 
 ### register
@@ -106,7 +120,7 @@ Data: { "token": <token> }
 Method: PUT
 URL: /account/:id
 
-Header: { authorization: <token> }
+Header: { "authorization": <token> }
 
 FormData: {
     ["account":     <user account>],
@@ -138,7 +152,7 @@ Data: { "message": "success" }
 Method: DELETE
 URL: /account/:id
 
-Header: { authorization: <token> }
+Header: { "authorization": <token> }
 
 Response:
 
@@ -176,14 +190,7 @@ URL: /advertise/pos/:pos
 Response:
 
 Status Code: 200
-Data: [
-    {
-        "id":       <Adposition ID>,
-        "position": <AdPosition Slot>,
-        "ad":       <AdPosition Ad's ID>,
-        "price":    <Price of Position>
-    }
-]
+Data: 同 getAllAdervertise 的 Data
 ```
 
 ### getAdvertiseByID
@@ -195,7 +202,7 @@ URL: /advertise/:id
 Response:
 
 Status Code: 200
-Data: 同 getAllAdvertise
+Data: 同 getAllAdvertise 的 Data
 ```
 
 ### buyAdvertise
@@ -204,11 +211,9 @@ Data: 同 getAllAdvertise
 Method: POST
 URL: /advertise/:pos
 
-Body: {
-    "context":  <Ad context>,
-    "author":   <Ad author>,
-    "image":    <Ad image>,
-    "pos":      <Ad position>
+FormData: {
+    ["context":  <Ad context>],
+    ["image":    <Ad image>]
 }
 
 Response:
@@ -223,7 +228,7 @@ Data: { "message": "success" }
 Method: PUT
 URL: /advertise/:id
 
-Header: { authorization: <token> }
+Header: { "authorization": <token> }
 
 FormData: {
     ["context":  <Ad context>],
@@ -242,7 +247,7 @@ Data: { "message": "success" }
 Method: DELETE
 URL: /advertise/:id
 
-Header: { authorization: <token> }
+Header: { "authorization": <token> }
 
 Response:
 
@@ -285,7 +290,7 @@ URL: /article/group/:group/author/:author
 Response:
 
 Status Code: 200
-Data: 同getAllArticle
+Data: 同 getAllArticle 的 Data
 ```
 
 ### getArticleByGroupAndTitle
@@ -297,7 +302,7 @@ URL: /article/group/:group/title/:title
 Response:
 
 Status Code: 200
-Data: 同getAllArticle
+Data: 同 getAllArticle 的 Data
 ```
 
 ### getArticleByGroupAndContext
@@ -309,7 +314,7 @@ URL: /article/group/:group/context/:context
 Response:
 
 Status Code: 200
-Data: 同getAllArticle
+Data: 同 getAllArticle 的 Data
 ```
 
 ### getArticleByAuthor
@@ -321,7 +326,7 @@ URL: /article/author/:author
 Response:
 
 Status Code: 200
-Data: 同getAllArticle
+Data: 同 getAllArticle 的 Data
 ```
 
 ### getArticleByTitle
@@ -333,7 +338,7 @@ URL: /article/title/:title
 Response:
 
 Status Code: 200
-Data: 同getAllArticle
+Data: 同 getAllArticle 的 Data
 ```
 
 ### getArticleByContext
@@ -345,7 +350,7 @@ URL: /article/context/:context
 Response:
 
 Status Code: 200
-Data: 同getAllArticle
+Data: 同 getAllArticle 的 Data
 ```
 
 ### getArticleByGroup
@@ -357,66 +362,59 @@ URL: /article/group/:group
 Response:
 
 Status Code: 200
-Data: 同getAllArticle
+Data: 同 getAllArticle 的 Data
 ```
 
 ### getArticleByID
 
 ```
 Method: GET
-URL: /article/id/:id
+URL: /article/:id
 
 Response:
 
 Status Code: 200
-Data: 同getAllArticle
+Data: 同 getAllArticle 的 Data
 ```
 
-### postAnArticle
+### postArticle
 
 ```
 Method: POST
 URL: /article
 
+Header: { "authorization": <token> }
+
 Body: {
-    "title":    <Article title>,
-    "context":  <Article context>,
-    "author":   <Article author>,
-    "time":     <Article post time>,
-    "ip":       <Article post ip>,
-    "board_id": <Article board id>,
-    "visible":  <Article visible status>,
-    "image":    <Article image>
+    "title":   <Article title>,
+    "context": <Article context>,
+    ["image":  <Article image>]
 }
 
 Response:
 
 Status Code: 200
-Data: { "token": <token> }
+Data: { "message": "success" }
 ```
 
-### postAnArticle
+### postArticleInGroup
 
 ```
 Method: POST
-URL: /article
+URL: /article/group/:id
+
+Header: { "authorization": <token> }
 
 Body: {
-    "title":    <Article title>,
-    "context":  <Article context>,
-    "author":   <Article author>,
-    "group":    <Article group>,
-    "time":     <Article post time>,
-    "ip":       <Article post ip>,
-    "board_id": <Article board id>,
-    "visible":  <Article visible status>,
-    "image":    <Article image>
+    "title":   <Article title>,
+    "context": <Article context>,
+    ["image":  <Article image>]
 }
 
 Response:
 
 Status Code: 200
-Data: { "token": <token> }
+Data: { "message": "success" }
 ```
 
 ### editArticle
@@ -425,15 +423,12 @@ Data: { "token": <token> }
 Method: PUT
 URL: /article/:id
 
-Header: { authorization: <token> }
+Header: { "authorization": <token> }
 
 FormData: {
-    ["title":    <Article title>],
-    ["context":  <Article context>],
-    ["time":     <Article post time>],
-    ["ip":       <Article post ip>],
-    ["visible":  <Article visible status>],
-    ["image":    <Article image>]
+    ["title":   <Article title>],
+    ["context": <Article context>],
+    ["image":   <Article image>]
 }
 
 Response:
@@ -448,7 +443,7 @@ Data: { "message": "success" }
 Method: DELETE
 URL: /article/:id
 
-Header: { authorization: <token> }
+Header: { "authorization": <token> }
 
 Response:
 
@@ -468,36 +463,33 @@ Response:
 Status Code: 200
 Data: [
     {
-        "id":           <comment ID>,
-        "article_id":   <comment article ID>,
-        "author":       <comment author>,
-        "context":      <comment context>,
-        "time":         <comment time>,
-        "ip":           <comment ip>,
-        "types":        <comment types>
+        "id":         <comment ID>,
+        "article_id": <comment article ID>,
+        "author":     <comment author>,
+        "context":    <comment context>,
+        "time":       <comment time>,
+        "ip":         <comment ip>,
+        "types":      <comment types>
     }
 ]
 ```
 
-### PostCommentWithArticleID
+### postComment
 ```
 Method: POST
 URL: /comment/:id
 
+Header: { "authorization": <token> }
+
 Body: {
-    "id":           <comment ID>,
-    "article_id":   <comment article ID>,
-    "author":       <comment author>,
-    "context":      <comment context>,
-    "time":         <comment time>,
-    "ip":           <comment ip>,
-    "types":        <comment types>
+    "context": <comment context>,
+    "types":   <comment types>
 }
 
 Response:
 
 Status Code: 200
-Data: { "token": <token> }
+Data: { "message": "success" }
 ```
 
 ### editComment
@@ -506,13 +498,10 @@ Data: { "token": <token> }
 Method: PUT
 URL: /comment/:id
 
-Header: { authorization: <token> }
+Header: { "authorization": <token> }
 
 FormData: {
-    ["author":  <comment author>,]
-    ["context": <comment context>,]
-    ["time":    <comment time>,]
-    ["ip":      <comment ip>]
+    "context": <comment context>
 }
 
 Response:
@@ -527,7 +516,7 @@ Data: { "message": "success" }
 Method: DELETE
 URL: /comment/:id
 
-Header: { authorization: <token> }
+Header: { "authorization": <token> }
 
 Response:
 
@@ -537,7 +526,7 @@ Data: { "message": "success" }
 
 ## File
 
-### GetFileByFilePath
+### getFileByFilePath
 ```
 Method: GET
 URL: /file/:filePath
@@ -549,7 +538,7 @@ Data: file
 ```
 ## Group
 
-### getAllGroup
+### getAllGroups
 
 ```
 Method: GET
@@ -568,6 +557,32 @@ Data: [
 ]
 ```
 
+### joinGroup
+```
+Method: GET
+URL: /group/join/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
+
+### leaveGroup
+```
+Method: GET
+URL: /group/leave/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
+
 ### getGroupByName
 
 ```
@@ -577,19 +592,37 @@ URL: /group/name/:name
 Response:
 
 Status Code: 200
-Data: 同getAllGroup
+Data: 同 getAllGroups 的 Data
 ```
 
 ### getGroupByAccount
 
 ```
 Method: GET
-URL: /group/id/:account
+URL: /group/account/:account
 
 Response:
 
 Status Code: 200
-Data: 同getAllGroup
+Data: 同 getAllGroups 的 Data
+```
+
+### getGroupMembers
+
+```
+Method: GET
+URL: /group/:id/account
+
+Response:
+
+Status Code: 200
+Data: [
+    {
+        "id":       <group member id>,
+        "account":  <member account id>
+        "group_id": <group id>
+    }
+]
 ```
 
 ### getGroupByID
@@ -604,34 +637,18 @@ Status Code: 200
 Data: 同getAllGroup
 ```
 
-### CreateGroup
+### createGroup
 
 ```
 Method: POST
 URL: /group
 
+Header: { "authorization": <token> }
+
 Body: {
-    [name    <group name>],
-    [leader: <group leader>],
-    [type:   <group type>]
-}
-
-Response:
-
-Status Code: 200
-Data: { "token": <token> }
-```
-
-### JoinGroup
-```
-Method: PUT
-URL: /group/join/:id
-
-Header: { authorization: <token> }
-
-FormData: {
-    group_id: <group ID>,
-    account: <account ID>
+    name    <group name>,
+    leader: <group leader>,
+    type:   <group type>
 }
 
 Response:
@@ -640,34 +657,16 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### LeaveGroup
-```
-Method: PUT
-URL: /group/leave/:id
-
-Header: { authorization: <token> }
-
-FormData: {
-    group_id: <group ID>,
-    account: <account ID>
-}
-
-Response:
-
-Status Code: 200
-Data: { "message": "success" }
-```
-
-### LeaveGroup
+### editGroup
 ```
 Method: PUT
 URL: /group/:id
 
-Header: { authorization: <token> }
+Header: { "authorization": <token> }
 
 FormData: {
-    name:   <group name>,
-    leader: <leader account ID>
+    [name:   <group name>],
+    [leader: <leader account ID>]
 }
 
 Response:
@@ -682,7 +681,7 @@ Data: { "message": "success" }
 Method: DELETE
 URL: /group/:id
 
-Header: { authorization: <token> }
+Header: { "authorization": <token> }
 
 Response:
 

@@ -10,15 +10,16 @@ class Group extends Router {
     }
 
     init() {
-        this.get('/',              this.controller.GetAllGroups)
-        this.get('/name/:name',    this.controller.GetGroupsByName)
-        this.get('/:id/account/',  this.controller.GetGroupMembers)
-        this.get('/:id',           this.controller.GetGroupByID)
-        this.post('/',             this.controller.Create)
-        this.put('/join/:id',      this.controller.Join)
-        this.put('/leave/:id',     this.controller.Leave)
-        this.put('/:id',           this.controller.Edit)
-        this.delete('/:id',        this.controller.Delete)
+        this.get('/',                 this.controller.GetAllGroups)
+        this.get('/join/:id',         this.controller.Join)
+        this.get('/leave/:id',        this.controller.Leave)
+        this.get('/name/:name',       this.controller.GetGroupsByName)
+        this.get('/account/:account', this.controller.GetGroupMembers)
+        this.get('/:id/account',      this.controller.GetGroupMembers)
+        this.get('/:id',              this.controller.GetGroupByID)
+        this.post('/',                this.controller.Create)
+        this.put('/:id',              this.controller.Edit)
+        this.delete('/:id',           this.controller.Delete)
     }
 }
 

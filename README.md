@@ -36,7 +36,8 @@ npm install
 | Method | URL | Description |
 | --- | --- | --- |
 | **Account** |
-| GET | /account | get all accounts |
+| GET | /account | get account by token |
+| GET | /account/all | get all accounts |
 | GET | /account/name/:name | get accounts by name |
 | GET | /account/:id | get account by ID |
 | POST | /account | register |
@@ -73,11 +74,12 @@ npm install
 | GET | /file/:filePath | get file by filePath |
 | **Group** |
 | GET | /group | get all groups |
+| GET | /group/join/:id | join a group |
+| GET | /group/leave/:id | leave a group |
 | GET | /group/name/:name | get groups by group name |
-| GET | /group/id/:account | get groups by account ID |
+| GET | /group/account/:account | get groups by account ID |
+| GET | /group/:id/member | get group members |
 | GET | /group/:id | get group by ID |
 | POST | /group | create a new group |
-| PUT | /group/join/:id | join a group |
-| PUT | /group/leave/:id | leave a group |
 | PUT | /group/:id | edit group |
 | DELETE | /group/:id | delete group |

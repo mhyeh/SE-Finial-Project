@@ -22,6 +22,15 @@ export default class Group {
         return await this.GroupModel.select('*').where('name', 'like', name).query()
     }
 
+    async getGroupByAccount(accountID) {
+        const groups  = await this.GPMemberModel.select('*').where('account', accountID).query()
+        const promise = []
+        for (const group of groups) {
+            promise.push(this.getGroupByID(group.id))
+        }
+        return await Promise.all(promise)
+    }
+
     async getGroupMembers(id) {
         return await this.GPMemberModel.select('*').where('group_id', id).query()
     }

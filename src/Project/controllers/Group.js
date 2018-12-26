@@ -6,15 +6,16 @@ export default class Group {
         this.GroupRepo    = new GroupRepo()
         this.GroupService = new GroupService()
 
-        this.GetAllGroups    = this.getAllGroups.bind(this)
-        this.GetGroupByID    = this.getGroupByID.bind(this)
-        this.GetGroupsByName = this.getGroupsByName.bind(this)
-        this.GetGroupMembers = this.getGroupMembers.bind(this)
-        this.Create          = this.create.bind(this)
-        this.Join            = this.join.bind(this)
-        this.Leave           = this.leave.bind(this)
-        this.Edit            = this.edit.bind(this)
-        this.Delete          = this.delete.bind(this)
+        this.GetAllGroups      = this.getAllGroups.bind(this)
+        this.GetGroupByID      = this.getGroupByID.bind(this)
+        this.GetGroupsByName   = this.getGroupsByName.bind(this)
+        this.GetGroupByAccount = this.getGroupByAccount.bind(this)
+        this.GetGroupMembers   = this.getGroupMembers.bind(this)
+        this.Create            = this.create.bind(this)
+        this.Join              = this.join.bind(this)
+        this.Leave             = this.leave.bind(this)
+        this.Edit              = this.edit.bind(this)
+        this.Delete            = this.delete.bind(this)
     }
     
     async getAllGroups(req, res) {
@@ -36,6 +37,14 @@ export default class Group {
     async getGroupsByName(req, res) {
         try {
             res.status(200).json({ groups: await this.GroupRepo.getGroupByName(req.params.name) })
+        } catch (e) {
+            res.status(400).json({ error: 'get group error' })
+        }
+    }
+
+    async getGroupByAccount(req, res) {
+        try {
+            res.status(200).json({ groups: await this.GroupRepo.getGroupByAccount(req.params.account) })
         } catch (e) {
             res.status(400).json({ error: 'get group error' })
         }
