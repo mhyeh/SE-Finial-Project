@@ -1,6 +1,8 @@
 import Model from '../models/MongoDB'
 import Comment from './Comment'
 
+import utils from '../Utils'
+
 export default class Article {
     constructor() {
         this.ArticleModel = new Model('article')
@@ -44,21 +46,15 @@ export default class Article {
     }
 
     async create(data) {
-        const acceptList = ['title', 'context', 'author', 'time', 'ip', 'board_id', 'visible', 'image'] 
-        for (const col in data) {
-            if (!(col in acceptList)) {
-                throw 'not accept'
-            }
+        if(!utils.allow(data, ['title', 'context', 'author', 'time', 'ip', 'board_id', 'visible', 'image'])) {
+            throw 'not accept'
         }
         await this.ArticleModel.insert(data)
     }
 
     async edit(id, data) {
-        const acceptList = ['title', 'context', 'time', 'ip', 'visible', 'image'] 
-        for (const col in data) {
-            if (!(col in acceptList)) {
-                throw 'not accept'
-            }
+        if(!utils.allow(data, ['title', 'context', 'time', 'ip', 'visible', 'image'])) {
+            throw 'not accept'
         }
         await this.ArticleModel.where('id', id).update(data)
     }

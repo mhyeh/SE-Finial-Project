@@ -1,6 +1,8 @@
 import Model from '../models/MongoDB';
 import Article from './Article'
 
+import utils from '../Utils'
+
 export default class Group {
     constructor() {
         this.GroupModel    = new Model('groups')
@@ -25,21 +27,15 @@ export default class Group {
     }
 
     async create(data) {
-        const acceptList = ['name', 'leader', 'type'] 
-        for (const col in data) {
-            if (!(col in acceptList)) {
-                throw 'not accept'
-            }
+        if(!utils.allow(data, ['name', 'leader', 'type'])) {
+            throw 'not accept'
         }
         await this.GroupModel.insert(data)
     }
 
     async edit(id, data) {
-        const acceptList = ['name', 'leader'] 
-        for (const col in data) {
-            if (!(col in acceptList)) {
-                throw 'not accept'
-            }
+        if(!utils.allow(data, ['name', 'leader'])) {
+            throw 'not accept'
         }
         await this.GroupModel.where('id', id).update(data)
     }

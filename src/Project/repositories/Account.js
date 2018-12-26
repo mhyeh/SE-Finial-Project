@@ -1,5 +1,7 @@
 import Model from '../models/MongoDB'
 
+import utils from '../Utils'
+
 export default class Account {
     constructor() {
         this.AccountModel = new Model('account')
@@ -22,22 +24,15 @@ export default class Account {
     }
 
     async create(data) {
-        const acceptList = ['account', 'password', 'name']
-        for (const col in data) {
-            if (!(col in acceptList)) {
-                throw 'not accept'
-            }
+        if(!utils.allow(data, ['account', 'password', 'name'])) {
+            throw 'not accept'
         }
         await this.AccountModel.insert(data)
     }
 
     async edit(id, data) {
-        const acceptList = ['account', 'password', 'name', 'department', 'class', 'birthday', 'sex', 'ID_card', 
-            'address', 'photo', 'passport', 'credit_card', 'cvc', 'expire_date', 'NTUST_coin', 'interst'] 
-        for (const col in data) {
-            if (!(col in acceptList)) {
-                throw 'not accept'
-            }
+        if(!utils.allow(data, ['account', 'password', 'name', 'department', 'class', 'birthday', 'sex', 'ID_card', 'address', 'photo', 'passport', 'credit_card', 'cvc', 'expire_date', 'NTUST_coin', 'interst'])) {
+            throw 'not accept'
         }
         this.AccountModel.where('id', id).update(data)
     }

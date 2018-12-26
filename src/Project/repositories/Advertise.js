@@ -1,5 +1,7 @@
 import Model from '../models/MongoDB'
 
+import utils from '../Utils'
+
 export default class Advertise {
     constructor() {
         this.AdModel    = new Model('ad')
@@ -19,11 +21,8 @@ export default class Advertise {
     }
 
     async create(pos, data) {
-        const acceptList = ['context', 'author', 'image'] 
-        for (const col in data) {
-            if (!(col in acceptList)) {
-                throw 'not accept'
-            }
+        if(!utils.allow(data, ['context', 'author', 'image'])) {
+            throw 'not accept'
         }
         await this.AdModel.insert(data)
         const AdData    = (await this.AdModel.select('*').where('author', data.author).query())[0]
@@ -32,11 +31,8 @@ export default class Advertise {
     }
 
     async edit(id, data) {
-        const acceptList = ['context', 'image'] 
-        for (const col in data) {
-            if (!(col in acceptList)) {
-                throw 'not accept'
-            }
+        if(!utils.allow(data, ['context', 'image'])) {
+            throw 'not accept'
         }
         await this.AdModel.where('id', id).update(data)
     }

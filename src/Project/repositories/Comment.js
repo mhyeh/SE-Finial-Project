@@ -1,5 +1,7 @@
 import Model from "../models/MongoDB";
 
+import utils from '../Utils'
+
 export default class Comment {
     constructor() {
         this.CommentModel = new Model('comment')
@@ -14,21 +16,15 @@ export default class Comment {
     }
 
     async post(data) {
-        const acceptList = ['article_id', 'author', 'context', 'time', 'ip', 'types'] 
-        for (const col in data) {
-            if (!(col in acceptList)) {
-                throw 'not accept'
-            }
+        if(!utils.allow(data, ['article_id', 'author', 'context', 'time', 'ip', 'types'])) {
+            throw 'not accept'
         }
         await this.CommentModel.insert(data)
     }
 
     async edit(id, data) {
-        const acceptList = ['author', 'context', 'time', 'ip'] 
-        for (const col in data) {
-            if (!(col in acceptList)) {
-                throw 'not accept'
-            }
+        if(!utils.allow(data, ['author', 'context', 'time', 'ip'])) {
+            throw 'not accept'
         }
         await this.CommentModel.where('id', id).update(data)
     }
