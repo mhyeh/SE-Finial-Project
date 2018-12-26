@@ -19,6 +19,12 @@ export default class Advertise {
     }
 
     async create(pos, data) {
+        const acceptList = ['context', 'author', 'image'] 
+        for (const col in data) {
+            if (!(col in acceptList)) {
+                throw 'not accept'
+            }
+        }
         await this.AdModel.insert(data)
         const AdData    = (await this.AdModel.select('*').where('author', data.author).query())[0]
         const AdposData = { ad: AdData.id }
@@ -26,6 +32,12 @@ export default class Advertise {
     }
 
     async edit(id, data) {
+        const acceptList = ['context', 'image'] 
+        for (const col in data) {
+            if (!(col in acceptList)) {
+                throw 'not accept'
+            }
+        }
         await this.AdModel.where('id', id).update(data)
     }
     

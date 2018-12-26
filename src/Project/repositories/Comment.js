@@ -14,10 +14,22 @@ export default class Comment {
     }
 
     async post(data) {
+        const acceptList = ['article_id', 'author', 'context', 'time', 'ip', 'types'] 
+        for (const col in data) {
+            if (!(col in acceptList)) {
+                throw 'not accept'
+            }
+        }
         await this.CommentModel.insert(data)
     }
 
     async edit(id, data) {
+        const acceptList = ['author', 'context', 'time', 'ip'] 
+        for (const col in data) {
+            if (!(col in acceptList)) {
+                throw 'not accept'
+            }
+        }
         await this.CommentModel.where('id', id).update(data)
     }
 

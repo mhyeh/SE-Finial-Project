@@ -44,10 +44,22 @@ export default class Article {
     }
 
     async create(data) {
+        const acceptList = ['title', 'context', 'author', 'time', 'ip', 'board_id', 'visible', 'image'] 
+        for (const col in data) {
+            if (!(col in acceptList)) {
+                throw 'not accept'
+            }
+        }
         await this.ArticleModel.insert(data)
     }
 
     async edit(id, data) {
+        const acceptList = ['title', 'context', 'time', 'ip', 'visible', 'image'] 
+        for (const col in data) {
+            if (!(col in acceptList)) {
+                throw 'not accept'
+            }
+        }
         await this.ArticleModel.where('id', id).update(data)
     }
 
