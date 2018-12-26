@@ -1,4 +1,5 @@
 import { MongoDB } from './Connection'
+import * as mongo from 'mongodb'
 
 export default class Model {
     constructor(table) {
@@ -26,12 +27,12 @@ export default class Model {
     }
 
     where() {
-        this.whereArg(arguments)
+        this.whereArg(...arguments)
         return this
     }
 
     andWhere() {
-        this.whereArg(arguments)
+        this.whereArg(...arguments)
         return this
     }
 
@@ -39,6 +40,10 @@ export default class Model {
     }
 
     whereArg() {
+        if (arguments[0] === "id") {
+            arguments[0] = "_id"
+            arguments[arguments.length - 1] = new mongo.ObjectID(arguments[arguments.length - 1])
+        }
         if (arguments.length === 2) {
             this.whereStr[arguments[0]] = arguments[1]
         } else {
@@ -55,8 +60,13 @@ export default class Model {
 
     query() {
         return new Promise((resolve, reject) => {
-            this.connection.collection(this.table).find(this.whereStr, this.projStr).then(res => {
+            this.connection.then(db => {
+                return db.db().collection(this.table).find(this.whereStr, this.projStr).toArray()
+            }).then(res => {
                 this.flush()
+                for (const element of res) {
+                    element['id'] = String(element['_id'])
+                }
                 resolve(res)
             }).catch(err => {
                 this.flush()
@@ -67,10 +77,13 @@ export default class Model {
 
     insert(data) {
         return new Promise((resolve, reject) => {
-            this.connection.collection(this.table).insertOne(data).then(res => {
+            this.connection.then(db => {
+                return db.db().collection(this.table).insertOne(data)
+            }).then(() => {
                 this.flush()
-                resolve(res)
+                resolve()
             }).catch(err => {
+                console.log(err)
                 this.flush()
                 reject(err)
             })
@@ -79,9 +92,14 @@ export default class Model {
 
     update(data) {
         return new Promise((resolve, reject) => {
-            this.connection.collection(this.table).updateOne(this.whereStr, data).then(res => {
+            this.connection.then(db => {
+                const newVal = {
+                    $set: data
+                }
+                return db.db().collection(this.table).updateMany(this.whereStr, newVal)
+            }).then(() => {
                 this.flush()
-                resolve(res)
+                resolve()
             }).catch(err => {
                 this.flush()
                 reject(err)
@@ -91,9 +109,11 @@ export default class Model {
 
     del() {
         return new Promise((resolve, reject) => {
-            this.connection.collection(this.table).deleteMany(this.whereStr).then(res => {
+            this.connection.then(db => {
+                return db.db().collection(this.table).deleteMany(this.whereStr)
+            }).then(() => {
                 this.flush()
-                resolve(res)
+                resolve()
             }).catch(err => {
                 this.flush()
                 reject(err)

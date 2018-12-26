@@ -25,19 +25,19 @@ export default class Model {
 
     where() {
         this.queryStr += ' where '
-        this.whereArg(arguments)
+        this.whereArg(...arguments)
         return this
     }
 
     andWhere() {
         this.queryStr += ' and '
-        this.whereArg(arguments)
+        this.whereArg(...arguments)
         return this
     }
 
     orWhere() {
         this.queryStr += ' or '
-        this.whereArg(arguments)
+        this.whereArg(...arguments)
         return this
     }
 

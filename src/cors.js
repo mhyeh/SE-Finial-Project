@@ -116,7 +116,6 @@ let applyHeaders = function(headers, res) {
 let corsSetting = async function(req, res) {
     let headers  = []
     const method = req.method
-    console.log(options)
     if (method === 'OPTION') {
         headers.push(configureOrigin(options, req))
         headers.push(configureCredentials(options))

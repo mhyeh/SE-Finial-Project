@@ -1,4 +1,4 @@
-import Model from '../models/MySQL'
+import Model from '../models/MongoDB'
 
 export default class Account {
     constructor() {

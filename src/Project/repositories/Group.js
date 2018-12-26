@@ -1,4 +1,4 @@
-import Model from '../models/MySQL';
+import Model from '../models/MongoDB';
 import Article from './Article'
 
 export default class Group {

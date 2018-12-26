@@ -1,4 +1,4 @@
-import Model from '../models/MySQL'
+import Model from '../models/MongoDB'
 import Comment from './Comment'
 
 export default class Article {
