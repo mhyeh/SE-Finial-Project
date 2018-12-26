@@ -1,7 +1,0 @@
-{ 
-    "_id" : ObjectId("5c2224a19a8177405495721a"), 
-    "id" : NumberInt(1), 
-    "position" : NumberInt(123), 
-    "ad" : NumberInt(123), 
-    "price" : NumberInt(123)
-}
