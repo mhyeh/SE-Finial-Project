@@ -53,7 +53,7 @@ export default class Account {
         if (ID !== id) {
             throw 'edit error'
         }
-        const formdata = await this.FileService.ProcFormData(req, {photo: 1})
+        const formdata = await this.FileService.ProcFormData(req, { photo: 1 })
         const data     = formdata.fields
         const photo    = formdata.files.photo
         if (data.password !== undefined) {

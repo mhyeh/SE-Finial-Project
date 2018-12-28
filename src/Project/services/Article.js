@@ -14,7 +14,7 @@ export default class Article {
     }
 
     async Post(accountID, req) {
-        const data    = this.procPost(req)
+        const data    = await this.procPost(req)
         data.author   = accountID
         data.board_id = ''
         
@@ -30,7 +30,7 @@ export default class Article {
             throw 'post error'
         }
 
-        const data    = this.procPost(req)
+        const data    = await this.procPost(req)
         data.author   = accountID
         data.board_id = groupID
 
@@ -59,13 +59,13 @@ export default class Article {
             throw 'edit error'
         }
 
-        const data = this.procPost(req)
+        const data = await this.procPost(req)
 
         await this.ArticleRepo.edit(id, data)
     }
 
     async procArticle(req) {
-        const formdata = await this.FileService.ProcFormData(req.req, {imgs: -1})
+        const formdata = await this.FileService.ProcFormData(req.req, { imgs: -1 })
         const data     = formdata.fields
         const images   = formdata.files.imgs
 

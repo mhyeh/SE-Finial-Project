@@ -19,8 +19,8 @@ export default class Redis {
         } catch (e) {
 
         }
-        await this.set(token, id)
-        await this.set(id, token)
+        this.set(token, id)
+        this.set(id, token)
     }
 
     async Verify(token) {
@@ -40,6 +40,7 @@ export default class Redis {
                 }
                 if (val === null) {
                     reject()
+                    return
                 }
                 resolve(val)
             })

@@ -21,7 +21,7 @@ export default class Advertise {
             throw 'create error'
         }
 
-        const formdata = await this.FileService.ProcFormData(req, {img: 1})
+        const formdata = await this.FileService.ProcFormData(req, { img: 1 })
         const data     = formdata.fields
         const image    = formdata.files.img
 
@@ -42,7 +42,7 @@ export default class Advertise {
             throw 'create error'
         }
 
-        const formdata = await this.FileService.ProcFormData(req, {img: 1})
+        const formdata = await this.FileService.ProcFormData(req, { img: 1 })
         const data     = formdata.fields
         const image    = formdata.files.img
 

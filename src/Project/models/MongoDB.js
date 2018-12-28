@@ -73,7 +73,7 @@ export default class Model {
             whereObj[args[0]] = args[1]
         } else {
             if (args[1] === 'like') {
-                whereObj[args[0]] = `/${args[2]}/`
+                whereObj[args[0]] = new RegExp(args[2])
             } else {
                 if (!whereObj[args[0]]) {
                     whereObj[args[0]] = {}
