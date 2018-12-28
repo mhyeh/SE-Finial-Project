@@ -95,7 +95,7 @@ export default class Article {
 
     async post(req, res) {
         try {
-            await this.ArticleService.Post(req.header.authorization, req.req)
+            await this.ArticleService.Post(req.header.authorization, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'post article error' })
