@@ -47,10 +47,10 @@ export default class Account {
 
     async Edit(token, id, req) {
         const ID = await this.RedisService.Verify(token)
-        if (ID === -1 || ID !== id) {
+        if (ID !== id) {
             throw 'edit error'
         }
-        const formdata = await this.FileService.ProcFormData(req)
+        const formdata = await this.FileService.ProcFormData(req, 1)
         const data     = formdata.fields
         const files    = formdata.files
         if (data.password !== undefined) {

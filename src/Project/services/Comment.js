@@ -15,13 +15,14 @@ export default class Comment {
         const ID      = await this.RedisService.Verify(token)
         const article = await this.ArticleRepo.getArticleByID(id)
         const data    = req.body
-        if (ID === -1 || article === undefined || data.types === undefined || (data.types !== 0 && data.types !== 1 && data.types !== 2) || data.comment === undefined) {
+        if (article === undefined || data.types === undefined || (data.types !== 0 && data.types !== 1 && data.types !== 2) || data.comment === undefined) {
             throw 'post error'
         }
         data.time       = utils.getDateTime()
         data.author     = ID
         data.article_id = id
         data.ip         = req.ip
+        
         await this.CommentRepo.post(data)
     }
 
@@ -29,20 +30,22 @@ export default class Comment {
         const ID      = await this.RedisService.Verify(token)
         const comment = await this.CommentRepo.getCommentByID(id)
         const data    = req.body
-        if (ID === -1 || comment === undefined || comment.author !== ID || data.comment === undefined) {
+        if (comment === undefined || comment.author !== ID || data.comment === undefined) {
             throw 'edit error'
         }
         data.time = utils.getDateTime()
         data.ip   = req.ip
+        
         await this.CommentRepo.edit(id, data)
     }
 
     async Delete(token, id) {
         const ID      = await this.RedisService.Verify(token)
         const comment = await this.CommentRepo.getCommentByID(id)
-        if (ID === -1 || comment === undefined || comment.author !== ID) {
+        if (comment === undefined || comment.author !== ID) {
             throw 'delete error'
         }
+        
         await this.CommentRepo.Delete(id)
     }
 }

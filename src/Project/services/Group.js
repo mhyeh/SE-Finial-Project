@@ -9,7 +9,7 @@ export default class Group {
 
     async Create(token, data) {
         const ID = await this.RedisService.Verify(token)
-        if (ID === -1 || data.name === undefined || (data.type !== 'Family' && data.type !== 'Board')) {
+        if (data.name === undefined || (data.type !== 'Family' && data.type !== 'Board')) {
             throw 'create error'
         }
         const group = await this.GroupRepo.getGroupByName(data.name)
@@ -17,26 +17,28 @@ export default class Group {
             throw 'create error'
         }
         data.leader = ID
+        
         await this.GroupRepo.create(data)
     }
 
     async Edit(token, id, data) {
         const ID    = await this.RedisService.Verify(token)
         const group = await this.GroupRepo.getGroupByID(id)
-        if (ID === -1 || group === undefined || group.leader !== ID || data.name === undefined) {
+        if (group === undefined || group.leader !== ID || data.name === undefined) {
             throw 'edit error'
         }
         const newGroup = await this.GroupRepo.getGroupByName(data.name)
         if (newGroup !== undefined) {
             throw 'edit error'
         }
+        
         await this.GroupRepo.edit(id, data)
     }
 
     async Join(token, id) {
         const ID    = await this.RedisService.Verify(token)
         const group = await this.GroupRepo.getGroupByID(id)
-        if (ID === -1 || group === undefined || group.type !== 'Family') {
+        if (group === undefined || group.type !== 'Family') {
             throw 'join error'
         }
         const members = await this.GroupRepo.getGroupMembers(id)
@@ -45,13 +47,14 @@ export default class Group {
                 throw 'join error'
             }
         }
+        
         await this.GroupRepo.Join(id, ID)
     }
 
     async Leave(token, id) {
         const ID    = await this.RedisService.Verify(token)
         const group = await this.GroupRepo.getGroupByID(id)
-        if (ID === -1 || group === undefined || group.type !== 'Family') {
+        if (group === undefined || group.type !== 'Family') {
             throw 'leave error'
         }
         const members = await this.GroupRepo.getGroupMembers(id)
@@ -65,15 +68,17 @@ export default class Group {
         if (!flag) {
             throw 'leave error'
         }
+        
         await this.GroupRepo.leave(id, ID)
     }
 
     async Delete(token, id) {
         const ID    = await this.RedisService.Verify(token)
         const group = await this.GroupRepo.getGroupByID(id)
-        if (ID === -1 || group === undefined || group.leader !== ID) {
+        if (group === undefined || group.leader !== ID) {
             throw 'delete error'
         }
+        
         await this.GroupRepo.Delete(id)
     }
 }

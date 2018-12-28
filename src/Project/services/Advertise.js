@@ -16,7 +16,7 @@ export default class Advertise {
     async Create(token, pos, req) {
         const ID     = await this.RedisService.Verify(token)
         const ad_pos = await this.AdvertiseRepo.getAdvertisePos(pos)
-        if (ID === -1 || ad_pos.ad !== -1) {
+        if (ad_pos.ad !== -1) {
             throw 'create error'
         }
         const account = await this.AccountRepo.getAccountByID(ID)
@@ -24,7 +24,7 @@ export default class Advertise {
             throw 'create error'
         }
 
-        const formdata = this.FileService.ProcFormData(req)
+        const formdata = await this.FileService.ProcFormData(req, 1)
         const data     = formdata.fields
         const files    = formdata.files
 
@@ -42,11 +42,11 @@ export default class Advertise {
     async Edit(token, id, req) {
         const ID        = await this.RedisService.Verify(token)
         const advertise = await this.AdvertiseRepo.getAdvertiseByID(id)
-        if (ID === -1 || advertise.author !== ID) {
+        if (advertise.author !== ID) {
             throw 'create error'
         }
 
-        const formdata = await this.FileService.ProcFormData(req)
+        const formdata = await this.FileService.ProcFormData(req, 1)
         const data     = formdata.fields
         const files    = formdata.files
 
@@ -63,7 +63,7 @@ export default class Advertise {
     async Delete(token, id) {
         const ID        = await this.RedisService.Verify(token)
         const advertise = await this.AdvertiseRepo.getAdvertiseByID(id)
-        if (ID === -1 || advertise.author !== ID) {
+        if (advertise.author !== ID) {
             throw 'create error'
         }
         

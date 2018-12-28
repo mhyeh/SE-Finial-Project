@@ -1,4 +1,5 @@
 import * as crypto from 'crypto'
+import * as fs     from 'fs'
 import * as path   from 'path'
 
 const hash = (msg) => {
@@ -33,8 +34,8 @@ const getBaseName = (filePath) => {
     return path.basename(filePath)
 }
 
-const getPath = (args) => {
-    return path.join(path.dirname(require.main.filename), ...args)
+const getPath = () => {
+    return path.join(path.dirname(require.main.filename), ...arguments)
 }
 
 const allow = (data, accept) => {
@@ -46,6 +47,17 @@ const allow = (data, accept) => {
     return true
 } 
 
+const removeFile = (path) => {
+    return new Promise((resolve, reject) => {
+        fs.unlink(path, err => {
+            if (err) {
+                reject(err)
+                return
+            }
+            resolve()
+        })
+    });
+}
 export default {
     hash,
     getDate,
@@ -53,5 +65,6 @@ export default {
     getDateTime,
     getBaseName,
     getPath,
-    allow
+    allow,
+    removeFile
 }

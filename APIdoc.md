@@ -212,8 +212,8 @@ Method: POST
 URL: /advertise/:pos
 
 FormData: {
-    ["context":  <Ad context>],
-    ["image":    <Ad image>]
+    ["context": <Ad context>],
+    ["image":   <Ad image>]
 }
 
 Response:
@@ -231,8 +231,8 @@ URL: /advertise/:id
 Header: { "authorization": <token> }
 
 FormData: {
-    ["context":  <Ad context>],
-    ["image":    <Ad image>]
+    ["context": <Ad context>],
+    ["image":   <Ad image>]
 }
 
 Response:

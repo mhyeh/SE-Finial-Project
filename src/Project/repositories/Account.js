@@ -15,7 +15,7 @@ export default class Account {
     }
 
     async getAccountByToken(token) {
-        const ID = this.RedisService.Verify(token)
+        const ID = await this.RedisService.Verify(token)
         return await this.getAccountByID(ID)
     }
 

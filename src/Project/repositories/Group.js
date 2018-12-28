@@ -36,14 +36,14 @@ export default class Group {
     }
 
     async create(data) {
-        if(!utils.allow(data, ['name', 'leader', 'type'])) {
+        if (!utils.allow(data, ['name', 'leader', 'type'])) {
             throw 'not accept'
         }
         await this.GroupModel.insert(data)
     }
 
     async edit(id, data) {
-        if(!utils.allow(data, ['name', 'leader'])) {
+        if (!utils.allow(data, ['name', 'leader'])) {
             throw 'not accept'
         }
         await this.GroupModel.where('id', id).update(data)

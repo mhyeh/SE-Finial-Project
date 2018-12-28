@@ -46,14 +46,14 @@ export default class Article {
     }
 
     async create(data) {
-        if(!utils.allow(data, ['title', 'context', 'author', 'time', 'ip', 'board_id', 'visible', 'image'])) {
+        if (!utils.allow(data, ['title', 'context', 'author', 'time', 'ip', 'board_id', 'visible', 'image'])) {
             throw 'not accept'
         }
         await this.ArticleModel.insert(data)
     }
 
     async edit(id, data) {
-        if(!utils.allow(data, ['title', 'context', 'time', 'ip', 'visible', 'image'])) {
+        if (!utils.allow(data, ['title', 'context', 'time', 'ip', 'visible', 'image'])) {
             throw 'not accept'
         }
         await this.ArticleModel.where('id', id).update(data)
@@ -61,7 +61,7 @@ export default class Article {
 
     async deletebyGroup(group_id) {
         const articles = await this.ArticleModel.select('id').where('group', group_id).query()
-        const promise = []
+        const promise  = []
         promise.push(this.ArticleModel.where('board_id', group_id).del())
         for (const article of articles) {
             promise.push(this.CommentRepo.deletebyArticle(article.id))

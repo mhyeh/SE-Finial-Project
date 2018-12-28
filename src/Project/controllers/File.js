@@ -7,7 +7,7 @@ export default class File {
 
     async getFile(req, res) {
         try {
-            res.status(200).sendFile(utils.getPath(['./uploadedFiles', req.params.filePath]))
+            res.status(200).sendFile(utils.getPath('./uploadedFiles', req.params.filePath))
         } catch (e) {
             res.status(400).json({ error: 'get file error' })
         }

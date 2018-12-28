@@ -27,7 +27,7 @@ export default class Redis {
         try {
             return await this.get(token)
         } catch (e) {
-            return -1
+            throw 'token verify error'
         }
     }
 

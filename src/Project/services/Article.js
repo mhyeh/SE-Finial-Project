@@ -16,11 +16,7 @@ export default class Article {
     }
 
     async Post(token, req) {
-        const ID = await this.RedisService.Verify(token)
-        if (ID === -1) {
-            throw 'post error'
-        }
-
+        const ID       = await this.RedisService.Verify(token)
         const formdata = await this.FileService.ProcFormData(req.req)
         const data     = formdata.fields
         const files    = formdata.files
@@ -43,14 +39,12 @@ export default class Article {
         data.time   = utils.getDateTime()
         data.author = ID
         data.ip     = req.ip
+        
         await this.ArticleRepo.create(data)
     }
 
     async PostInGroup(token, groupID, req) {
-        const ID = await this.RedisService.Verify(token)
-        if (ID === -1) {
-            throw 'post error'
-        }
+        const ID    = await this.RedisService.Verify(token)
         const group = await this.GroupRepo.getGroupByID(groupID)
         if (group.type === 'Family' && !(await this.GroupRepo.IsInGroup(groupID, ID))) {
             throw 'post error'
@@ -79,13 +73,14 @@ export default class Article {
         data.author   = ID
         data.board_id = groupID
         data.ip       = req.ip
+
         await this.ArticleRepo.create(data)
     }
 
     async Edit(token, id, req) {
         const ID      = await this.RedisService.Verify(token)
         const article = await this.ArticleRepo.getArticleByID(id)
-        if (ID === -1 || article === undefined || article.author !== ID) {
+        if (article === undefined || article.author !== ID) {
             throw 'edit error'
         }
 
@@ -106,13 +101,14 @@ export default class Article {
         data.image = JSON.stringify(data.image)
         data.time  = utils.getDateTime()
         data.ip    = req.ip
+
         await this.ArticleRepo.edit(id, data)
     }
 
     async Delete(token, id) {
         const ID      = await this.RedisService.Verify(token)
         const article = await this.ArticleRepo.getArticleByID(id)
-        if (ID === -1 || article === undefined || article.author !== ID) {
+        if (article === undefined || article.author !== ID) {
             throw 'delete error'
         }
 

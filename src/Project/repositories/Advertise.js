@@ -21,7 +21,7 @@ export default class Advertise {
     }
 
     async create(pos, data) {
-        if(!utils.allow(data, ['context', 'author', 'image'])) {
+        if (!utils.allow(data, ['context', 'author', 'image'])) {
             throw 'not accept'
         }
         await this.AdModel.insert(data)
@@ -31,7 +31,7 @@ export default class Advertise {
     }
 
     async edit(id, data) {
-        if(!utils.allow(data, ['context', 'image'])) {
+        if (!utils.allow(data, ['context', 'image'])) {
             throw 'not accept'
         }
         await this.AdModel.where('id', id).update(data)
