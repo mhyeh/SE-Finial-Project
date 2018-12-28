@@ -1,5 +1,6 @@
+import * as uuid from 'uuid'
+
 import { MongoDB } from './Connection'
-import * as mongo from 'mongodb'
 
 export default class Model {
     constructor(table) {
@@ -40,10 +41,6 @@ export default class Model {
     }
 
     whereArg() {
-        if (arguments[0] === "id") {
-            arguments[0] = "_id"
-            arguments[arguments.length - 1] = new mongo.ObjectID(arguments[arguments.length - 1])
-        }
         if (arguments.length === 2) {
             this.whereStr[arguments[0]] = arguments[1]
         } else {
@@ -64,9 +61,6 @@ export default class Model {
                 return db.db().collection(this.table).find(this.whereStr, this.projStr).toArray()
             }).then(res => {
                 this.flush()
-                for (const element of res) {
-                    element['id'] = String(element['_id'])
-                }
                 resolve(res)
             }).catch(err => {
                 this.flush()
@@ -77,6 +71,7 @@ export default class Model {
 
     insert(data) {
         return new Promise((resolve, reject) => {
+            data.id = uuid.v4()
             this.connection.then(db => {
                 return db.db().collection(this.table).insertOne(data)
             }).then(() => {

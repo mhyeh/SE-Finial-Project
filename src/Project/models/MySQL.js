@@ -1,3 +1,5 @@
+import * as uuid from 'uuid'
+
 import { MySQL } from './Connection'
 
 export default class Model {
@@ -64,6 +66,8 @@ export default class Model {
 
     insert(data) {
         return new Promise((resolve, reject) => {
+            data.id = uuid.v4()
+            
             this.queryStr = `insert into \`${this.table}\` (`
             for (const prop in data) {
                 this.queryStr += `\`${prop}\`,`

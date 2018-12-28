@@ -20,24 +20,26 @@ Header: { "authorization": <token> }
 Response:
 
 Status Code: 200
-Data: {
-    "id":          <user id>,
-    "account":     <user account>,
-    "password":    <hashed password>,
-    "name":        <user name>,
-    "department":  <user department>,
-    "class":       <user class>,
-    "birthday":    <user birthday>,
-    "sex":         <user sex>,
-    "ID_card":     <user ID_card>,
-    "address":     <user address>,
-    "photo":       <user photo>,
-    "passport":    <user passport>,
-    "credit_card": <user credit_card>,
-    "cvc":         <user cvc>,    
-    "expire_date": <user expire_date>,
-    "NTUST_coin":  <user NTUST_coin>,
-    "interst":     <user interst>
+Data: { 
+    "account": {
+        "id":          <user id>,
+        "account":     <user account>,
+        "password":    <hashed password>,
+        "name":        <user name>,
+        "department":  <user department>,
+        "class":       <user class>,
+        "birthday":    <user birthday>,
+        "sex":         <user sex>,
+        "ID_card":     <user ID_card>,
+        "address":     <user address>,
+        "photo":       <user photo>,
+        "passport":    <user passport>,
+        "credit_card": <user credit_card>,
+        "cvc":         <user cvc>,    
+        "expire_date": <user expire_date>,
+        "NTUST_coin":  <user NTUST_coin>,
+        "interst":     <user interst>
+    }
 }
 ```
 
@@ -50,9 +52,11 @@ URL: /account/all
 Response:
 
 Status Code: 200
-Data: [
-    同 getAccountByToken 的 Data
-]
+Data: { 
+    "accounts": [
+        同 getAccountByToken 的 Data
+    ]
+}
 ```
 
 ### getAccountsByName
@@ -64,7 +68,7 @@ URL: /account/name/:name
 Response:
 
 Status Code: 200
-Data: 同 getAccountByToken 的 Data
+Data: 同 getAllAccounts 的 Data
 ```
 
 ### getAccountByID
@@ -124,7 +128,7 @@ Header: { "authorization": <token> }
 
 FormData: {
     ["account":     <user account>],
-    ["password":    <hashed password>],
+    ["password":    <user password>],
     ["name":        <user name>],
     ["department":  <user department>],
     ["class":       <user class>],
@@ -171,14 +175,11 @@ URL: /advertise
 Response:
 
 Status Code: 200
-Data: [
-    {
-        "id":       <Ad id>,
-        "context":  <Ad context>,
-        "author":   <Ad author>,
-        "image":    <Ad image's PATH>
-    }
-]
+Data: { 
+    "advertises": [
+        同 getAdvertiseByPosition 的 Data
+    ]
+}
 ```
 
 ### getAdvertiseByPosition
@@ -190,7 +191,14 @@ URL: /advertise/pos/:pos
 Response:
 
 Status Code: 200
-Data: 同 getAllAdervertise 的 Data
+Data: { 
+    "advertise": {
+        "id":      <ad id>,
+        "context": <ad context>,
+        "author":  <ad author account id>,
+        "image":   <ad image path>
+    }
+}
 ```
 
 ### getAdvertiseByID
@@ -202,7 +210,7 @@ URL: /advertise/:id
 Response:
 
 Status Code: 200
-Data: 同 getAllAdvertise 的 Data
+Data: 同 getAdvertiseByPosition 的 Data
 ```
 
 ### buyAdvertise
@@ -212,8 +220,8 @@ Method: POST
 URL: /advertise/:pos
 
 FormData: {
-    ["context": <Ad context>],
-    ["image":   <Ad image>]
+    ["context": <ad context>],
+    ["img":     <ad image>]
 }
 
 Response:
@@ -231,8 +239,8 @@ URL: /advertise/:id
 Header: { "authorization": <token> }
 
 FormData: {
-    ["context": <Ad context>],
-    ["image":   <Ad image>]
+    ["context": <ad context>],
+    ["img":     <ad image>]
 }
 
 Response:
@@ -257,7 +265,7 @@ Data: { "message": "success" }
 
 ## Article
 
-### getAllArticle
+### getAllArticlesNotInGroup
 
 ```
 Method: GET
@@ -266,22 +274,24 @@ URL: /article
 Response:
 
 Status Code: 200
-Data: [
-    {
-        "id":       <Article ID>,
-        "title":    <Article title>,
-        "context":  <Article context>,
-        "author":   <Article author>,
-        "time":     <Article post time>,
-        "ip":       <Article post ip>,
-        "board_id": <Article board id>,
-        "visible":  <Article visible status>,
-        "image":    <Article image>,
-    }
-]
+Data: { 
+    "articles": [
+        {
+            "id":       <article id>,
+            "title":    <article title>,
+            "context":  <article context>,
+            "author":   <article author>,
+            "time":     <article post time>,
+            "ip":       <article post ip>,
+            "board_id": <article board id>,
+            "visible":  <article visible status>,
+            "image":    <article image path>,
+        }
+    ]
+}
 ```
 
-### getArticleByGroupAndAuthor
+### getArticlesByGroupAndAuthor
 
 ```
 Method: GET
@@ -290,10 +300,10 @@ URL: /article/group/:group/author/:author
 Response:
 
 Status Code: 200
-Data: 同 getAllArticle 的 Data
+Data: 同 getAllArticles 的 Data
 ```
 
-### getArticleByGroupAndTitle
+### getArticlesByGroupAndTitle
 
 ```
 Method: GET
@@ -302,10 +312,10 @@ URL: /article/group/:group/title/:title
 Response:
 
 Status Code: 200
-Data: 同 getAllArticle 的 Data
+Data: 同 getAllArticles 的 Data
 ```
 
-### getArticleByGroupAndContext
+### getArticlesByGroupAndContext
 
 ```
 Method: GET
@@ -314,10 +324,10 @@ URL: /article/group/:group/context/:context
 Response:
 
 Status Code: 200
-Data: 同 getAllArticle 的 Data
+Data: 同 getAllArticles 的 Data
 ```
 
-### getArticleByAuthor
+### getArticlesByAuthor
 
 ```
 Method: GET
@@ -326,10 +336,10 @@ URL: /article/author/:author
 Response:
 
 Status Code: 200
-Data: 同 getAllArticle 的 Data
+Data: 同 getAllArticles 的 Data
 ```
 
-### getArticleByTitle
+### getArticlesByTitle
 
 ```
 Method: GET
@@ -338,10 +348,10 @@ URL: /article/title/:title
 Response:
 
 Status Code: 200
-Data: 同 getAllArticle 的 Data
+Data: 同 getAllArticles 的 Data
 ```
 
-### getArticleByContext
+### getArticlesByContext
 
 ```
 Method: GET
@@ -350,10 +360,10 @@ URL: /article/context/:context
 Response:
 
 Status Code: 200
-Data: 同 getAllArticle 的 Data
+Data: 同 getAllArticles 的 Data
 ```
 
-### getArticleByGroup
+### getArticlesByGroup
 
 ```
 Method: GET
@@ -362,7 +372,7 @@ URL: /article/group/:group
 Response:
 
 Status Code: 200
-Data: 同 getAllArticle 的 Data
+Data: 同 getAllArticles 的 Data
 ```
 
 ### getArticleByID
@@ -374,7 +384,19 @@ URL: /article/:id
 Response:
 
 Status Code: 200
-Data: 同 getAllArticle 的 Data
+Data: {
+    "articles": {
+        "id":       <article id>,
+        "title":    <article title>,
+        "context":  <article context>,
+        "author":   <article author account id>,
+        "time":     <article post time>,
+        "ip":       <article post ip>,
+        "board_id": <article board id>,
+        "visible":  <article visible status>,
+        "image":    <article image path>,
+    }
+}
 ```
 
 ### postArticle
@@ -386,9 +408,9 @@ URL: /article
 Header: { "authorization": <token> }
 
 Body: {
-    "title":   <Article title>,
-    "context": <Article context>,
-    ["image":  <Article image>]
+    "title":   <article title>,
+    "context": <article context>,
+    ["imgs":   <article image array>]
 }
 
 Response:
@@ -406,9 +428,9 @@ URL: /article/group/:id
 Header: { "authorization": <token> }
 
 Body: {
-    "title":   <Article title>,
-    "context": <Article context>,
-    ["image":  <Article image>]
+    "title":   <article title>,
+    "context": <article context>,
+    ["imgs":   <article image array>]
 }
 
 Response:
@@ -426,9 +448,9 @@ URL: /article/:id
 Header: { "authorization": <token> }
 
 FormData: {
-    ["title":   <Article title>],
-    ["context": <Article context>],
-    ["image":   <Article image>]
+    ["title":   <article title>],
+    ["context": <article context>],
+    ["imgs":    <article image array>]
 }
 
 Response:
@@ -461,17 +483,19 @@ URL: /comment/:id
 Response:
 
 Status Code: 200
-Data: [
-    {
-        "id":         <comment ID>,
-        "article_id": <comment article ID>,
-        "author":     <comment author>,
-        "context":    <comment context>,
-        "time":       <comment time>,
-        "ip":         <comment ip>,
-        "types":      <comment types>
-    }
-]
+Data: { 
+    "comments": [
+        {
+            "id":         <comment id>,
+            "article_id": <comment article id>,
+            "author":     <comment author account id>,
+            "context":    <comment context>,
+            "time":       <comment time>,
+            "ip":         <comment ip>,
+            "types":      <comment types>
+        }
+    ]
+}
 ```
 
 ### postComment
@@ -500,7 +524,7 @@ URL: /comment/:id
 
 Header: { "authorization": <token> }
 
-FormData: {
+Body: {
     "context": <comment context>
 }
 
@@ -547,14 +571,16 @@ URL: /group
 Response:
 
 Status Code: 200
-Data: [
-    {
-        id:     <group id>,
-        name    <group name>,
-        leader: <group leader>,
-        type:   <group type>
-    }
-]
+Data: {
+    "groups": [
+        {
+            id:     <group id>,
+            name    <group name>,
+            leader: <group leader account id>,
+            type:   <group type>
+        }
+    ]
+}
 ```
 
 ### joinGroup
@@ -583,7 +609,7 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### getGroupByName
+### getGroupsByName
 
 ```
 Method: GET
@@ -595,7 +621,7 @@ Status Code: 200
 Data: 同 getAllGroups 的 Data
 ```
 
-### getGroupByAccount
+### getGroupsByAccount
 
 ```
 Method: GET
@@ -616,13 +642,15 @@ URL: /group/:id/account
 Response:
 
 Status Code: 200
-Data: [
-    {
-        "id":       <group member id>,
-        "account":  <member account id>
-        "group_id": <group id>
-    }
-]
+Data: {
+    "members": [
+        {
+            "id":       <group_member id>,
+            "account":  <member account id>
+            "group_id": <group id>
+        }
+    ]
+}
 ```
 
 ### getGroupByID
@@ -634,7 +662,14 @@ URL: /group/:id
 Response:
 
 Status Code: 200
-Data: 同getAllGroup
+Data: { "group": 
+    {
+        id:     <group id>,
+        name    <group name>,
+        leader: <group leader account id>,
+        type:   <group type>
+    }
+}
 ```
 
 ### createGroup
@@ -647,7 +682,7 @@ Header: { "authorization": <token> }
 
 Body: {
     name    <group name>,
-    leader: <group leader>,
+    leader: <group leader account id>,
     type:   <group type>
 }
 
@@ -664,7 +699,7 @@ URL: /group/:id
 
 Header: { "authorization": <token> }
 
-FormData: {
+Body: {
     [name:   <group name>],
     [leader: <leader account ID>]
 }

@@ -4,7 +4,7 @@ USE `sefin`;
 
 -- 導出  表 sefin.account 結構
 CREATE TABLE IF NOT EXISTS `account` (
-  `id`          int(11)   NOT     NULL AUTO_INCREMENT,
+  `id`          text      NOT     NULL,
   `account`     text      NOT     NULL,
   `password`    text      NOT     NULL,
   `name`        text      NOT     NULL,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `account` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.ad 結構
 CREATE TABLE IF NOT EXISTS `ad` (
-  `id`      int(11) NOT     NULL AUTO_INCREMENT,
+  `id`      text      NOT     NULL,
   `context` text    DEFAULT NULL,
   `author`  int(11) NOT     NULL,
   `image`   text    DEFAULT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `ad` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.ad_pos 結構
 CREATE TABLE IF NOT EXISTS `ad_pos` (
-  `id`       int(11) NOT     NULL AUTO_INCREMENT,
+  `id`       text    NOT     NULL,
   `position` int(11) NOT     NULL,
   `ad`       int(11) DEFAULT NULL,
   `price`    int(11) NOT     NULL,
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `ad_pos` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.article 結構
 CREATE TABLE IF NOT EXISTS `article` (
-  `id`       int(11)  NOT     NULL AUTO_INCREMENT,
+  `id`       text     NOT     NULL,
   `title`    text     NOT     NULL,
   `context`  text     NOT     NULL,
   `author`   int(11)  NOT     NULL,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `article` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.comment 結構
 CREATE TABLE IF NOT EXISTS `comment` (
-  `id`         int(11)  NOT NULL AUTO_INCREMENT,
+  `id`         text     NOT NULL,
   `article_id` int(11)  NOT NULL,
   `author`     int(11)  NOT NULL,
   `context`    text     NOT NULL,
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `comment` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.gamble 結構
 CREATE TABLE IF NOT EXISTS `gamble` (
-  `id`       int(11)       NOT NULL AUTO_INCREMENT,
+  `id`       text          NOT NULL,
   `author`   int(11)       NOT NULL,
   `context`  text          NOT NULL,
   `option_1` decimal(18,0) NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `gamble` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.gamble_member 結構
 CREATE TABLE IF NOT EXISTS `gamble_member` (
-  `id`      int(11) NOT NULL AUTO_INCREMENT,
+  `id`      text    NOT NULL,
   `gamble`  int(11) NOT NULL,
   `account` int(11) NOT NULL,
   `option`  int(11) NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `gamble_member` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.gp_member 結構
 CREATE TABLE IF NOT EXISTS `gp_member` (
-  `id`       int(11) NOT NULL AUTO_INCREMENT,
+  `id`       text    NOT NULL,
   `account`  int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `gp_member` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.groups 結構
 CREATE TABLE IF NOT EXISTS `groups` (
-  `id`     int(11) NOT NULL AUTO_INCREMENT,
+  `id`     text    NOT NULL,
   `name`   text    NOT NULL,
   `leader` int(11) NOT NULL,
   `type`   text    NOT NULL,
