@@ -61,5 +61,7 @@ typings/
 .next
 dump*
 
-uploadFiles/
+uploadedFiles/
 configs/
+
+process.json

@@ -34,8 +34,8 @@ const getBaseName = (filePath) => {
     return path.basename(filePath)
 }
 
-const getPath = () => {
-    return path.join(path.dirname(require.main.filename), ...arguments)
+const getPath = (...arg) => {
+    return path.join(path.dirname(require.main.filename), ...arg)
 }
 
 const allow = (data, accept) => {
