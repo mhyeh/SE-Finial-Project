@@ -1,7 +1,6 @@
 import AccountRepo   from '../repositories/Account'
 import AdvertiseRepo from '../repositories/Advertise'
 import FileService   from './File'
-import RedisService  from './Redis'
 
 import utils from '../Utils'
 
@@ -10,16 +9,14 @@ export default class Advertise {
         this.AdvertiseRepo = new AdvertiseRepo()
         this.AccountRepo   = new AccountRepo()
         this.FileService   = new FileService()
-        this.RedisService  = new RedisService()
     }
 
-    async Create(token, pos, req) {
-        const ID     = await this.RedisService.Verify(token)
+    async Create(accountID, pos, req) {
         const ad_pos = await this.AdvertiseRepo.getAdvertisePos(pos)
         if (ad_pos.ad !== -1) {
             throw 'create error'
         }
-        const account = await this.AccountRepo.getAccountByID(ID)
+        const account = await this.AccountRepo.getAccountByID(accountID)
         if (account.NTUST_coin < ad_pos.ice) {
             throw 'create error'
         }
@@ -39,10 +36,9 @@ export default class Advertise {
         await this.AdvertiseRepo.create(pos, data)
     }
 
-    async Edit(token, id, req) {
-        const ID        = await this.RedisService.Verify(token)
+    async Edit(accountID, id, req) {
         const advertise = await this.AdvertiseRepo.getAdvertiseByID(id)
-        if (advertise.author !== ID) {
+        if (advertise.author !== accountID) {
             throw 'create error'
         }
 
@@ -60,10 +56,9 @@ export default class Advertise {
         await this.AdvertiseRepo.edit(id, data)
     }
 
-    async Delete(token, id) {
-        const ID        = await this.RedisService.Verify(token)
+    async Delete(accountID, id) {
         const advertise = await this.AdvertiseRepo.getAdvertiseByID(id)
-        if (advertise.author !== ID) {
+        if (advertise.author !== accountID) {
             throw 'create error'
         }
         

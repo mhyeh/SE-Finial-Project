@@ -8,19 +8,16 @@ export default class Friend {
         this.AccountRepo = new AccountRepo()
     }
 
-    async getAllFriends(token) {
-        const id = await this.AccountRepo.getAccountByToken(token)
-        return await this.FriendModel.select('*').where('account1', id).orWhere('account2', id).andWhere('isConfirm', 1).query()
+    async getAllFriends(ID) {
+        return await this.FriendModel.select('*').where('account1', ID).orWhere('account2', ID).andWhere('isConfirm', 1).query()
     }
 
-    async getUnconfirmedFriends(token) {
-        const id = await this.AccountRepo.getAccountByToken(token)
-        return await this.FriendModel.select('*').where('account2', id).andWhere('isConfirm', 0).query()
+    async getUnconfirmedFriends(ID) {
+        return await this.FriendModel.select('*').where('account2', ID).andWhere('isConfirm', 0).query()
     }
 
-    async getInvitationList(token) {
-        const id = await this.AccountRepo.getAccountByToken(token)
-        return await this.FriendModel.select('*').where('account1', id).andWhere('isConfirm', 0).query()
+    async getInvitationList(ID) {
+        return await this.FriendModel.select('*').where('account1', ID).andWhere('isConfirm', 0).query()
     }
 
     async getFriend(id1, id2) {
@@ -34,8 +31,7 @@ export default class Friend {
         return friend[1][0]
     }
 
-    async checkState(token, id2) {
-        const id1    = await this.AccountRepo.getAccountByToken(token)
+    async checkState(id1, id2) {
         const friend = await this.getFriend(id1, id2)
         if (friend === undefined) {
             return -1
@@ -44,8 +40,7 @@ export default class Friend {
         }
     }
 
-    async send(token, id2) {
-        const id1    = await this.AccountRepo.getAccountByToken(token)
+    async send(id1, id2) {
         const friend = await this.getFriend(id1, id2)
         if (friend === undefined) {
             await this.FriendModel.insert({ account1: id1, account2: id2, isConfirm: 0 })
@@ -54,8 +49,7 @@ export default class Friend {
         }
     }
 
-    async confirm(token, id2) {
-        const id1    = await this.AccountRepo.getAccountByToken(token)
+    async confirm(id1, id2) {
         const friend = await this.getFriend(id1, id2)
         if (friend === undefined || friend.isConfirm === 1) {
             throw 'no this invitation'
@@ -64,8 +58,7 @@ export default class Friend {
         }
     }
 
-    async delete(token, id2) {
-        const id1    = await this.AccountRepo.getAccountByToken(token)
+    async delete(id1, id2) {
         const friend = await this.getFriend(id1, id2)
         if (friend === undefined) {
             throw 'no this friend'

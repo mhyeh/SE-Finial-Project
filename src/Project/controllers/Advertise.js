@@ -1,10 +1,13 @@
 import AdvertiseRepo    from '../repositories/Advertise'
+
 import AdvertiseService from '../services/Advertise'
+import RedisService     from '../services/Redis'
 
 export default class Advertise {
     constructor() {
         this.AdvertiseRepo    = new AdvertiseRepo()
         this.AdvertiseService = new AdvertiseService()
+        this.RedisService     = new RedisService()
 
         this.GetAllAdvertises  = this.getAllAdvertises.bind(this)
         this.GetAdvertiseByPos = this.getAdvertiseByPos.bind(this)
@@ -40,7 +43,8 @@ export default class Advertise {
     
     async buy(req, res) {
         try {
-            await this.AdvertiseRepo.Create(req.header.authorization, req.params.pos, req.req)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.AdvertiseRepo.Create(ID, req.params.pos, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'buy ad error' })
@@ -49,7 +53,8 @@ export default class Advertise {
 
     async edit(req, res) {
         try {
-            await this.AdvertiseRepo.Edit(req.header.authorization, req.params.id, req.req)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.AdvertiseRepo.Edit(ID, req.params.id, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'edit ad error' })
@@ -58,7 +63,8 @@ export default class Advertise {
     
     async cancel(req, res) {
         try {
-            await this.AdvertiseRepo.Delete(req.header.authorization, req.params.id)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.AdvertiseRepo.Delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'cancel ad error' })

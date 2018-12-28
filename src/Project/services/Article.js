@@ -2,7 +2,6 @@ import AccountRepo  from '../repositories/Account'
 import ArticleRepo  from '../repositories/Article'
 import GroupRepo    from '../repositories/Group'
 import FileService  from './File'
-import RedisService from './Redis'
 
 import utils from '../Utils'
 
@@ -12,14 +11,11 @@ export default class Article {
         this.ArticleRepo  = new ArticleRepo()
         this.GroupRepo    = new GroupRepo()
         this.FileService  = new FileService()
-        this.RedisService = new RedisService()
     }
 
-    async Post(token, req) {
-        const ID = await this.RedisService.Verify(token)
-        
+    async Post(accountID, req) {
         const data    = this.procPost(req)
-        data.author   = ID
+        data.author   = accountID
         data.board_id = ''
         
         await this.ArticleRepo.create(data)
@@ -28,15 +24,14 @@ export default class Article {
         await this.giveCoin(data)
     }
 
-    async PostInGroup(token, groupID, req) {
-        const ID    = await this.RedisService.Verify(token)
+    async PostInGroup(accountID, groupID, req) {
         const group = await this.GroupRepo.getGroupByID(groupID)
-        if (group.type === 'Family' && !(await this.GroupRepo.isInGroup(groupID, ID))) {
+        if (group.type === 'Family' && !(await this.GroupRepo.isInGroup(groupID, accountID))) {
             throw 'post error'
         }
 
         const data    = this.procPost(req)
-        data.author   = ID
+        data.author   = accountID
         data.board_id = groupID
 
         await this.ArticleRepo.create(data)
@@ -58,10 +53,9 @@ export default class Article {
         await this.AccountRepo.edit(data.author, {NTUST_coin: account.NTUST_Coin + score})
     }
 
-    async Edit(token, id, req) {
-        const ID      = await this.RedisService.Verify(token)
+    async Edit(accountID, id, req) {
         const article = await this.ArticleRepo.getArticleByID(id)
-        if (article === undefined || article.author !== ID) {
+        if (article === undefined || article.author !== accountID) {
             throw 'edit error'
         }
 
@@ -96,10 +90,9 @@ export default class Article {
         return data
     }
 
-    async Delete(token, id) {
-        const ID      = await this.RedisService.Verify(token)
+    async Delete(accountID, id) {
         const article = await this.ArticleRepo.getArticleByID(id)
-        if (article === undefined || article.author !== ID) {
+        if (article === undefined || article.author !== accountID) {
             throw 'delete error'
         }
 

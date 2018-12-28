@@ -1,10 +1,13 @@
 import CommentRepo    from '../repositories/Comment'
+
 import CommentService from '../services/Comment'
+import RedisService   from '../services/Redis'
 
 export default class Comment {
     constructor() {
         this.CommentRepo    = new CommentRepo()
         this.CommentService = new CommentService()   
+        this.RedisService   = new RedisService()
         
         this.GetAllComments = this.getAllComments.bind(this)
         this.Post           = this.post.bind(this)
@@ -22,7 +25,8 @@ export default class Comment {
     
     async post(req, res) {
         try {
-            await this.CommentService.Post(req.header.authorization, req.params.id ,req)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.CommentService.Post(ID, req.params.id ,req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'post comment error' })
@@ -31,7 +35,8 @@ export default class Comment {
 
     async edit(req, res) {
         try {
-            await this.CommentService.Edit(req.header.authorization, req.params.id, req)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.CommentService.Edit(ID, req.params.id, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'edit comment error' })
@@ -40,7 +45,8 @@ export default class Comment {
 
     async delete(req, res) {
         try {
-            await this.CommentService.Delete(req.header.authorization, req.params.id)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.CommentService.Delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'delete comment error' })

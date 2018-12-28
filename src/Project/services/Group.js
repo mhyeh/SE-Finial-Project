@@ -1,14 +1,11 @@
 import GroupRepo    from '../repositories/Group'
-import RedisService from './Redis'
 
 export default class Group {
     constructor() {
         this.GroupRepo    = new GroupRepo()
-        this.RedisService = new RedisService()
     }
 
-    async Create(token, data) {
-        const ID = await this.RedisService.Verify(token)
+    async Create(accountID, data) {
         if (data.name === undefined || (data.type !== 'Family' && data.type !== 'Board')) {
             throw 'create error'
         }
@@ -16,15 +13,14 @@ export default class Group {
         if (group !== undefined) {
             throw 'create error'
         }
-        data.leader = ID
+        data.leader = accountID
         
         await this.GroupRepo.create(data)
     }
 
-    async Edit(token, id, data) {
-        const ID    = await this.RedisService.Verify(token)
+    async Edit(accountID, id, data) {
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.leader !== ID || data.name === undefined) {
+        if (group === undefined || group.leader !== accountID || data.name === undefined) {
             throw 'edit error'
         }
         const newGroup = await this.GroupRepo.getGroupByName(data.name)
@@ -35,30 +31,27 @@ export default class Group {
         await this.GroupRepo.edit(id, data)
     }
 
-    async Join(token, id) {
-        const ID    = await this.RedisService.Verify(token)
+    async Join(accountID, id) {
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.type !== 'Family' || await this.GroupRepo.isInGroup(ID, group.id)) {
+        if (group === undefined || group.type !== 'Family' || await this.GroupRepo.isInGroup(accountID, group.id)) {
             throw 'join error'
         }
         
-        await this.GroupRepo.Join(id, ID)
+        await this.GroupRepo.Join(id, accountID)
     }
 
-    async Leave(token, id) {
-        const ID    = await this.RedisService.Verify(token)
+    async Leave(accountID, id) {
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.type !== 'Family' || !(await this.GroupRepo.isInGroup(ID, group.id))) {
+        if (group === undefined || group.type !== 'Family' || !(await this.GroupRepo.isInGroup(accountID, group.id))) {
             throw 'leave error'
         }
         
-        await this.GroupRepo.leave(id, ID)
+        await this.GroupRepo.leave(id, accountID)
     }
 
-    async Delete(token, id) {
-        const ID    = await this.RedisService.Verify(token)
+    async Delete(accountID, id) {
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.leader !== ID) {
+        if (group === undefined || group.leader !== accountID) {
             throw 'delete error'
         }
         

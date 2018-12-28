@@ -1,8 +1,11 @@
-import FriendRepo from '../repositories/Friend'
+import FriendRepo   from '../repositories/Friend'
+
+import RedisService from '../services/Redis'
 
 export default class Friend {
     constructor() {
-        this.FriendRepo = new FriendRepo()
+        this.FriendRepo   = new FriendRepo()
+        this.RedisService = new RedisService()
         
         this.GetFriends            = this.getFriends.bind(this)
         this.GetUnconfirmedFriends = this.getUnconfirmedFriends.bind(this)
@@ -15,7 +18,8 @@ export default class Friend {
     
     async getFriends(req, res) {
         try {
-            res.status(200).json({ friends: await this.FriendRepo.getAllFriends(req.header.authorization) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ friends: await this.FriendRepo.getAllFriends(ID) })
         } catch (e) {
             res.status(400).json({ error: 'get friends error' })
         }
@@ -23,7 +27,8 @@ export default class Friend {
     
     async getUnconfirmedFriends(req, res) {
         try {
-            res.status(200).json({ unconfrimed: await this.FriendRepo.getUnconfirmedFriends(req.header.authorization) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ unconfrimed: await this.FriendRepo.getUnconfirmedFriends(ID) })
         } catch (e) {
             res.status(400).json({ error: 'get friends error' })
         }
@@ -31,7 +36,8 @@ export default class Friend {
 
     async getInvitationList(req, res) {
         try {
-            res.status(200).json({ invitation: await this.FriendRepo.getInvitationList(req.header.authorization) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ invitation: await this.FriendRepo.getInvitationList(ID) })
         } catch (e) {
             res.status(400).json({ error: 'get friends error' })
         }
@@ -39,7 +45,8 @@ export default class Friend {
 
     async checkState(req, res) {
         try {
-            res.status(200).json({ state: await this.FriendRepo.CheckState(req.header.authorization, req.params.id) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ state: await this.FriendRepo.CheckState(ID, req.params.id) })
         } catch (e) {
             res.status(400).json({ error: 'get friends error' })
         }
@@ -47,7 +54,8 @@ export default class Friend {
 
     async sendInvitation(req, res) {
         try {
-            await this.FriendRepo.send(req.header.authorization, req.params.id)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.FriendRepo.send(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'send invitation error' })
@@ -56,7 +64,8 @@ export default class Friend {
 
     async confirm(req, res) {
         try {
-            await this.FriendRepo.confirm(req.header.authorization, req.params.id)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.FriendRepo.confirm(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'confirm invitation error' })
@@ -65,7 +74,8 @@ export default class Friend {
 
     async delete(req, res) {
         try {
-            await this.FriendService.delete(req.header.authorization, req.params.id)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.FriendService.delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'delete friend error' })

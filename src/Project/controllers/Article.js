@@ -1,10 +1,13 @@
 import ArticleRepo    from '../repositories/Article'
+
 import ArticleService from '../services/Article'
+import RedisService   from '../services/Redis'
 
 export default class Article {
     constructor() {
         this.ArticleRepo    = new ArticleRepo()
         this.ArticleService = new ArticleService()
+        this.RedisService   = new RedisService()
 
         this.GetFriendsArticles           = this.getFriendsArticles.bind(this)
         this.GetArticleByID               = this.getArticleByID.bind(this)
@@ -63,7 +66,8 @@ export default class Article {
 
     async getArticlesByGroup(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroup(req.params.group) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroup(ID, req.params.group) })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
@@ -71,7 +75,8 @@ export default class Article {
 
     async getArticlesByGroupAndAuthor(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndAuthor(req.params.group, req.params.author) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndAuthor(ID, req.params.group, req.params.author) })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
@@ -79,7 +84,8 @@ export default class Article {
 
     async getArticlesByGroupAndTitle(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndTitle(req.params.group, req.params.title) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndTitle(ID, req.params.group, req.params.title) })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
@@ -87,7 +93,8 @@ export default class Article {
 
     async getArticlesByGroupAndContext(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndContext(req.params.group, req.params.context) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndContext(ID, req.params.group, req.params.context) })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
@@ -95,7 +102,8 @@ export default class Article {
 
     async post(req, res) {
         try {
-            await this.ArticleService.Post(req.header.authorization, req)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.ArticleService.Post(ID, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'post article error' })
@@ -104,7 +112,8 @@ export default class Article {
 
     async postInGroup(req, res) {
         try {
-            await this.ArticleService.PostInGroup(req.header.authorization, req.params.id, req)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.ArticleService.PostInGroup(ID, req.params.id, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'post article error' })
@@ -113,7 +122,8 @@ export default class Article {
 
     async edit(req, res) {
         try {
-            await this.ArticleService.Edit(req.header.authorization, req.params.id, req)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.ArticleService.Edit(ID, req.params.id, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'edit article error' })
@@ -122,7 +132,8 @@ export default class Article {
 
     async delete(req, res) {
         try {
-            await this.ArticleService.Delete(req.header.authorization, req.params.id)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.ArticleService.Delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'delete article error' })

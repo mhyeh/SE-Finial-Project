@@ -1,7 +1,6 @@
 import AccountRepo  from '../repositories/Account'
 import ArticleRepo  from '../repositories/Article'
 import CommentRepo  from '../repositories/Comment'
-import RedisService from './Redis'
 
 import utils from '../Utils'
 
@@ -10,29 +9,26 @@ export default class Comment {
         this.AccountRepo  = new AccountRepo()
         this.ArticleRepo  = new ArticleRepo()
         this.CommentRepo  = new CommentRepo()
-        this.RedisService = new RedisService()
     }
 
-    async Post(token, id, req) {
-        const ID      = await this.RedisService.Verify(token)
+    async Post(accountID, id, req) {
         const article = await this.ArticleRepo.getArticleByID(id)
         const data    = req.body
         if (article === undefined || data.types === undefined || (data.types !== 0 && data.types !== 1 && data.types !== 2) || data.comment === undefined) {
             throw 'post error'
         }
         data.time       = utils.getDateTime()
-        data.author     = ID
+        data.author     = accountID
         data.article_id = id
         data.ip         = req.ip
         
         await this.CommentRepo.post(data)
     }
 
-    async Edit(token, id, req) {
-        const ID      = await this.RedisService.Verify(token)
+    async Edit(accountID, id, req) {
         const comment = await this.CommentRepo.getCommentByID(id)
         const data    = req.body
-        if (comment === undefined || comment.author !== ID || data.comment === undefined) {
+        if (comment === undefined || comment.author !== accountID || data.comment === undefined) {
             throw 'edit error'
         }
         data.time = utils.getDateTime()
@@ -41,10 +37,9 @@ export default class Comment {
         await this.CommentRepo.edit(id, data)
     }
 
-    async Delete(token, id) {
-        const ID      = await this.RedisService.Verify(token)
+    async Delete(accountID, id) {
         const comment = await this.CommentRepo.getCommentByID(id)
-        if (comment === undefined || comment.author !== ID) {
+        if (comment === undefined || comment.author !== accountID) {
             throw 'delete error'
         }
         

@@ -4,8 +4,6 @@ import CommentRepo from './Comment'
 import FriendRepo  from './Friend'
 import GroupRepo   from './Group'
 
-import RedisServer from '../services/Redis'
-
 import utils from '../Utils'
 
 export default class Article {
@@ -14,7 +12,6 @@ export default class Article {
         this.CommentRepo  = new CommentRepo()
         this.FriendRepo   = new FriendRepo()
         this.GroupRepo    = new GroupRepo()
-        this.RedisServer  = new RedisServer()
     }
 
     async getAllArticles() {
@@ -49,23 +46,23 @@ export default class Article {
         return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', '').query()
     }
     
-    async getArticleByGroup(token, group) {
-        await this.auth(token, group)
+    async getArticleByGroup(accountID, group) {
+        await this.auth(accountID, group)
         return await this.ArticleModel.select('*').where('board_id', group).query()
     }
 
-    async getArticleByGroupAndAuthor(token, group, author) {
-        await this.auth(token, group)
+    async getArticleByGroupAndAuthor(accountID, group, author) {
+        await this.auth(accountID, group)
         return await this.ArticleModel.select('*').where('author', author).andWhere('board_id', group).query()
     }
 
-    async getArticleByGroupAndTitle(token, group, title) {
-        await this.auth(token, group)
+    async getArticleByGroupAndTitle(accountID, group, title) {
+        await this.auth(accountID, group)
         return await this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', group).query()
     }
 
-    async getArticleByGroupAndContext(token, group, context) {
-        await this.auth(token, group)
+    async getArticleByGroupAndContext(accountID, group, context) {
+        await this.auth(accountID, group)
         return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', group).query()   
     }
 
@@ -97,10 +94,9 @@ export default class Article {
         await Promise.all([this.ArticleModel.where('id', id).del(), this.CommentRepo.deletebyArticle(id)])
     }
     
-    async auth(token, group) {
+    async auth(accountID, group) {
         const groupType = (await this.GroupRepo.getGroupByID(group)).type
-        const ID        = await this.RedisServer.Verify(token)
-        if (groupType === 'Family' && !(await this.GroupRepo.isInGroup(ID, group))) {
+        if (groupType === 'Family' && !(await this.GroupRepo.isInGroup(accountID, group))) {
             throw 'not in group'
         }
     }

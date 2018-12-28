@@ -1,10 +1,13 @@
 import GroupRepo    from '../repositories/Group'
+
 import GroupService from '../services/Group'
+import RedisService from '../services/Redis'
 
 export default class Group {
     constructor() {
         this.GroupRepo    = new GroupRepo()
         this.GroupService = new GroupService()
+        this.RedisService = new RedisService()
 
         this.GetAllGroups      = this.getAllGroups.bind(this)
         this.GetGroupByID      = this.getGroupByID.bind(this)
@@ -60,7 +63,8 @@ export default class Group {
     
     async create(req, res) {
         try {
-            await this.GroupService.Create(req.header.authorization, req.body)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.GroupService.Create(ID, req.body)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'create group error' })
@@ -69,7 +73,8 @@ export default class Group {
 
     async edit(req, res) {
         try {
-            await this.GroupService.Edit(req.header.authorization, req.params.id, req.body)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.GroupService.Edit(ID, req.params.id, req.body)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'edit group error' })
@@ -78,7 +83,8 @@ export default class Group {
 
     async join(req, res) {
         try {
-            await this.GroupService.Join(req.header.authorization, req.params.id)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.GroupService.Join(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'join group error' })
@@ -87,7 +93,8 @@ export default class Group {
 
     async leave(req, res) {
         try {
-            await this.GroupService.Leave(req.header.authorization, req.params.id)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.GroupService.Leave(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'leave group error' })
@@ -96,7 +103,8 @@ export default class Group {
 
     async delete(req, res) {
         try {
-            await this.GroupService.Delete(req.header.authorization, req.params.id)
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.GroupService.Delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'delete group error' })

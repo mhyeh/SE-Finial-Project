@@ -1,10 +1,13 @@
 import AccountRepo    from '../repositories/Account'
+
 import AccountService from '../services/Account'
+import RedisService   from '../services/Redis'
 
 export default class Account {
     constructor() {
         this.AccountRepo    = new AccountRepo()
         this.AccountService = new AccountService()
+        this.RedisService   = new RedisService()
 
         this.GetAllAccounts    = this.getAllAccounts.bind(this)
         this.GetAccountByToken = this.getAccountByToken.bind(this)
@@ -27,7 +30,8 @@ export default class Account {
 
     async getAccountByToken(req, res) {
         try {
-            res.status(200).json({ account: await this.AccountRepo.getAccountByToken(req.header.authorization) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ account: await this.AccountRepo.getAccountByID(ID) })
         } catch (e) {
             res.status(400).json({ error: 'get account error' })
         }
