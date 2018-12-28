@@ -17,28 +17,29 @@ export default class Article {
 
     async Post(token, req) {
         const ID       = await this.RedisService.Verify(token)
-        const formdata = await this.FileService.ProcFormData(req.req)
+        const formdata = await this.FileService.ProcFormData(req.req, {imgs: -1})
         const data     = formdata.fields
-        const files    = formdata.files
+        const images   = formdata.files.imgs
 
-        if (data.title === undefined || (data.context === undefined && (files.imgs === undefined || files.imgs === []))) {
+        if (data.title === undefined || (data.context === undefined && (images === undefined || images === []))) {
             throw 'post error'
         }
 
-        if (files.imgs !==  undefined && files.imgs !== []) {
+        if (images !== undefined && images !== []) {
             data.image = []
-            if (files.imgs instanceof Array) {
-                for (const img of files.imgs) {
-                    data.image.push(utils.getBaseName(img))
+            if (images instanceof Array) {
+                for (const image of images) {
+                    data.image.push(utils.getBaseName(image.path))
                 }
             } else {
-                data.image.push(utils.getBaseName(files.imgs))
+                data.image.push(utils.getBaseName(images.path))
             }
         }
-        data.image  = JSON.stringify(data.image)
-        data.time   = utils.getDateTime()
-        data.author = ID
-        data.ip     = req.ip
+        data.image    = JSON.stringify(data.image)
+        data.time     = utils.getDateTime()
+        data.author   = ID
+        data.ip       = req.ip
+        data.board_id = ''
         
         await this.ArticleRepo.create(data)
     }
@@ -50,22 +51,22 @@ export default class Article {
             throw 'post error'
         }
 
-        const formdata = await this.FileService.ProcFormData(req.req)
+        const formdata = await this.FileService.ProcFormData(req.req, {imgs: -1})
         const data     = formdata.fields
-        const files    = formdata.files
+        const images   = formdata.files.imgs
 
-        if (data.title === undefined || (data.context === undefined && (files.imgs === undefined || files.imgs === []))) {
+        if (data.title === undefined || (data.context === undefined && (images === undefined || images === []))) {
             throw 'post error'
         }
 
-        if (files.imgs !==  undefined && files.imgs !== []) {
+        if (images !== undefined && images !== []) {
             data.image = []
-            if (files.imgs instanceof Array) {
-                for (const img of files.imgs) {
-                    data.image.push(utils.getBaseName(img))
+            if (images instanceof Array) {
+                for (const image of images) {
+                    data.image.push(utils.getBaseName(image.path))
                 }
             } else {
-                data.image.push(utils.getBaseName(files.imgs))
+                data.image.push(utils.getBaseName(images.path))
             }
         }
         data.image    = JSON.stringify(data.image)
@@ -84,18 +85,18 @@ export default class Article {
             throw 'edit error'
         }
 
-        const formdata = await this.FileService.ProcFormData(req.req)
+        const formdata = await this.FileService.ProcFormData(req.req, {imgs: -1})
         const data     = formdata.fields
-        const files    = formdata.files
+        const images   = formdata.files.imgs
 
-        if (files.imgs !==  undefined && files.imgs !== []) {
+        if (images !==  undefined && images !== []) {
             data.image = []
-            if (files.imgs instanceof Array) {
-                for (const img of files.imgs) {
-                    data.image.push(utils.getBaseName(img))
+            if (images instanceof Array) {
+                for (const image of images) {
+                    data.image.push(utils.getBaseName(image.path))
                 }
             } else {
-                data.image.push(utils.getBaseName(files.imgs))
+                data.image.push(utils.getBaseName(images.path))
             }
         }
         data.image = JSON.stringify(data.image)

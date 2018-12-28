@@ -7,7 +7,7 @@ export default class File {
         
     }
 
-    ProcFormData(req, imgNum=-1) {
+    ProcFormData(req, imgConfig) {
         return new Promise((resolve, reject) => {
             const form = new formidable.IncomingForm()
             form.encoding       = 'utf-8'
@@ -19,19 +19,40 @@ export default class File {
                     reject(err)
                     return
                 }
+
                 let flag = true
                 for (const idx in files) {
-                    if (files[idx] instanceof Array) {
-                        for (const file of files[idx]) {
-                            if (!this.checkFileExt(file, ['jpg', 'png'])) {
+                    if (!(idx in imgConfig)) {
+                        if (files[idx] instanceof Array) {
+                            for (const file of files[idx]) {
                                 utils.removeFile(file)
+                            }
+                        } else {
+                            utils.removeFile(files[idx])
+                        }
+                        delete files[idx]
+                    } else {
+                        if (files[idx] instanceof Array) {
+                            for (const file of files[idx]) {
+                                if (!this.checkFileExt(file, ['jpg', 'png'])) {
+                                    utils.removeFile(file)
+                                    flag = false
+                                }
+                            }
+                            if (flag && imgConfig[idx] > 0) {
+                                for (let i = imgConfig[idx]; i < files[idx].length; ) {
+                                    utils.removeFile(files[idx][i])
+                                    files[idx].splice(i, 1)
+                                }
+                                if (imgConfig[idx] === 1) {
+                                    files[idx] = files[idx][0]
+                                }
+                            }
+                        } else {
+                            if (!this.checkFileExt(files[idx], ['jpg', 'png'])) {
+                                utils.removeFile(files[idx])
                                 flag = false
                             }
-                        }
-                    } else {
-                        if (!this.checkFileExt(files[idx], ['jpg', 'png'])) {
-                            utils.removeFile(files[idx])
-                            flag = false
                         }
                     }
                 }
@@ -39,7 +60,6 @@ export default class File {
                     reject('file ext err')
                     return
                 }
-
                 resolve({ fields: fields, files: files })
             })
         })

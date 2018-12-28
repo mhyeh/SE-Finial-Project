@@ -50,9 +50,9 @@ export default class Account {
         if (ID !== id) {
             throw 'edit error'
         }
-        const formdata = await this.FileService.ProcFormData(req, 1)
+        const formdata = await this.FileService.ProcFormData(req, {photo: 1})
         const data     = formdata.fields
-        const files    = formdata.files
+        const photo    = formdata.files.photo
         if (data.password !== undefined) {
             data.password = utils.hash(data.password)
         }
@@ -65,8 +65,8 @@ export default class Account {
             data.expire_date = utils.getDate(data.expire_date)
         }
 
-        if (files.photo !== undefined) {
-            data.photo = utils.getBaseName(files.photo.path)
+        if (photo !== undefined) {
+            data.photo = utils.getBaseName(photo.path)
         }
         await this.AccountRepo.edit(id, data)
     }

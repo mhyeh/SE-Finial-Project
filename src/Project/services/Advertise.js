@@ -24,17 +24,17 @@ export default class Advertise {
             throw 'create error'
         }
 
-        const formdata = await this.FileService.ProcFormData(req, 1)
+        const formdata = await this.FileService.ProcFormData(req, {img: 1})
         const data     = formdata.fields
-        const files    = formdata.files
+        const image    = formdata.files.img
 
-        if (data.context === undefined && files.img === undefined) {
+        if (data.context === undefined && image === undefined) {
             throw 'create error'
         }
 
         data.author = ID
-        if (files.img !== undefined) {
-            data.image = utils.getBaseName(files.img)
+        if (image !== undefined) {
+            data.image = utils.getBaseName(image.path)
         }
         await this.AdvertiseRepo.create(pos, data)
     }
@@ -46,16 +46,16 @@ export default class Advertise {
             throw 'create error'
         }
 
-        const formdata = await this.FileService.ProcFormData(req, 1)
+        const formdata = await this.FileService.ProcFormData(req, {img: 1})
         const data     = formdata.fields
-        const files    = formdata.files
+        const image    = formdata.files.img
 
-        if (data.context === undefined && files.img === undefined) {
+        if (data.context === undefined && image === undefined) {
             throw 'create error'
         }
 
-        if (files.img !== undefined) {
-            data.image = utils.getBaseName(files.img)
+        if (image !== undefined) {
+            data.image = utils.getBaseName(image.path)
         }
         await this.AdvertiseRepo.edit(id, data)
     }
