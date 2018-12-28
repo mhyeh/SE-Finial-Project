@@ -1,4 +1,5 @@
 import Model from '../models/MongoDB';
+
 import Article from './Article'
 
 import utils from '../Utils'

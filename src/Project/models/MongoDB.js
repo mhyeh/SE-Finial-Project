@@ -38,6 +38,11 @@ export default class Model {
     }
 
     orWhere() {
+        const orlist = this.whereStr
+        this.whereStr = {}
+        this.whereStr = {
+            $or: [orlist, this.whereArg(...arguments)]
+        }
     }
 
     whereArg() {

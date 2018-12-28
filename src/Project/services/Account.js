@@ -1,4 +1,6 @@
-import AccountRepo  from '../repositories/Account'
+import AccountRepo from '../repositories/Account'
+import FriendRepo  from '../repositories/Friend'
+
 import FileService  from './File'
 import RedisService from './Redis'
 
@@ -8,6 +10,7 @@ export default class Account {
     constructor() {
         this.AccountRepo  = new AccountRepo()
         this.FileService  = new FileService()
+        this.FriendRepo   = new FriendRepo()
         this.RedisService = new RedisService()
     }
 
@@ -81,6 +84,25 @@ export default class Account {
     }
 
     async Match(token) {
-
+        const ID          = await this.RedisService.Verify(token)
+        const accountList = await this.AccountRepo.getAllAccounts()
+        if (accountList.length === 1) {
+            throw 'no other user'
+        }
+        let r, count = 0;
+        while (1) {
+            r = ~~(Math.random() * accountList.length)
+            if (accountList[r].id === ID || accountList[r].isFriend == 1) {
+                continue
+            }
+            if (await this.FriendRepo.getFriend(ID, accountList[r])) {
+                accountList[r].isFriend = 1
+                count++
+            }
+            if (count === accountList.length - 1) {
+                throw '人生勝利組'
+            }
+        }
+        return accountList[r]
     }
 }

@@ -1,10 +1,8 @@
-import FriendRepo    from '../repositories/Friend'
-import FriendService from '../services/Friend'
+import FriendRepo from '../repositories/Friend'
 
 export default class Friend {
     constructor() {
-        this.FriendRepo    = new FriendRepo()
-        this.FriendService = new FriendService()   
+        this.FriendRepo = new FriendRepo()
         
         this.GetFriends            = this.getFriends.bind(this)
         this.GetUnconfirmedFriends = this.getUnconfirmedFriends.bind(this)
@@ -41,7 +39,7 @@ export default class Friend {
 
     async checkState(req, res) {
         try {
-            res.status(200).json({ state: await this.FriendService.CheckState(req.header.authorization, req.params.id) })
+            res.status(200).json({ state: await this.FriendRepo.CheckState(req.header.authorization, req.params.id) })
         } catch (e) {
             res.status(400).json({ error: 'get friends error' })
         }
@@ -49,7 +47,7 @@ export default class Friend {
 
     async sendInvitation(req, res) {
         try {
-            await this.FriendService.send(req.header.authorization, req.params.id)
+            await this.FriendRepo.send(req.header.authorization, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'send invitation error' })
@@ -58,7 +56,7 @@ export default class Friend {
 
     async confirm(req, res) {
         try {
-            await this.FriendService.confirm(req.header.authorization, req.params.id)
+            await this.FriendRepo.confirm(req.header.authorization, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'confirm invitation error' })
