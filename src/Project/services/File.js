@@ -1,4 +1,5 @@
 import * as formidable from 'formidable'
+import * as mime       from 'mime'
 
 import utils from '../Utils'
 
@@ -66,10 +67,8 @@ export default class File {
     }
 
     checkFileExt(file, accepts) {
-        const ext = utils.getBaseName(file.path)
-
         for (const accept of accepts) {
-            if (ext === accept) {
+            if (file.type === mime.getType(accept)) {
                 return true
             }
         }
