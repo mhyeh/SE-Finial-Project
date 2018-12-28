@@ -8,6 +8,7 @@ export default class Account {
 
         this.GetAllAccounts    = this.getAllAccounts.bind(this)
         this.GetAccountByToken = this.getAccountByToken.bind(this)
+        this.Match             = this.match.bind(this)
         this.Login             = this.login.bind(this)
         this.Register          = this.register.bind(this)
         this.GetAccountsByName = this.getAccountsByName.bind(this)
@@ -27,6 +28,14 @@ export default class Account {
     async getAccountByToken(req, res) {
         try {
             res.status(200).json({ account: await this.AccountRepo.getAccountByToken(req.header.authorization) })
+        } catch (e) {
+            res.status(400).json({ error: 'get account error' })
+        }
+    }
+
+    async match(req, res) {
+        try {
+            res.status(200).json({ account: await this.AccountService.Match(req.header.authorization) })
         } catch (e) {
             res.status(400).json({ error: 'get account error' })
         }

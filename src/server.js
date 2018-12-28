@@ -11,6 +11,7 @@ import AdvertiseRouter from './routes/Advertise'
 import ArticleRouter   from './routes/Article'
 import CommentRouter   from './routes/Comment'
 import FileRouter      from './routes/File'
+import FriendRouter    from './routes/Friend'
 import GroupRouter     from './routes/Group'
 
 const router = new Router()
@@ -28,6 +29,7 @@ router.use('/advertise', AdvertiseRouter)
 router.use('/article',   ArticleRouter)
 router.use('/comment',   CommentRouter)
 router.use('/file',      FileRouter)
+router.use('/friend',    FriendRouter)
 router.use('/group',     GroupRouter)
 
 const server = http.createServer(async (req, res) => {

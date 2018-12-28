@@ -38,6 +38,9 @@ export default class Redis {
                     reject(err)
                     return
                 }
+                if (val === null) {
+                    reject()
+                }
                 resolve(val)
             })
         })

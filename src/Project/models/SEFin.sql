@@ -112,3 +112,11 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `type`   text        NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `friends` (
+  `id`        varchar(36) NOT NULL,
+  `account1`  varchar(36) NOT NULL,
+  `account2`  varchar(36) NOT NULL,
+  `isConfirm` int(1)      NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

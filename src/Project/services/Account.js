@@ -73,10 +73,14 @@ export default class Account {
 
     async Delete(token, id) {
         const ID = await this.RedisService.Verify(token)
-        if (ID === -1 || ID !== id) {
+        if (ID !== id) {
             throw 'delete error'
         }
 
         await this.AccountRepo.Delete(id)
+    }
+
+    async Match(token) {
+
     }
 }

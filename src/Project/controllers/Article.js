@@ -6,7 +6,7 @@ export default class Article {
         this.ArticleRepo    = new ArticleRepo()
         this.ArticleService = new ArticleService()
 
-        this.GetAllArticles               = this.getAllArticles.bind(this)
+        this.GetFriendsArticles           = this.getFriendsArticles.bind(this)
         this.GetArticleByID               = this.getArticleByID.bind(this)
         this.GetArticlesByAuthor          = this.getArticlesByAuthor.bind(this)
         this.GetArticlesByTitle           = this.getArticlesByTitle.bind(this)
@@ -21,9 +21,9 @@ export default class Article {
         this.Delete                       = this.delete.bind(this)
     }
     
-    async getAllArticles(req, res) {
+    async getFriendsArticles(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getAllArticles() })
+            res.status(200).json({ articles: await this.ArticleRepo.getFriendArticles() })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
