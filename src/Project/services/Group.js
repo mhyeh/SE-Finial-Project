@@ -38,14 +38,8 @@ export default class Group {
     async Join(token, id) {
         const ID    = await this.RedisService.Verify(token)
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.type !== 'Family') {
+        if (group === undefined || group.type !== 'Family' || await this.GroupRepo.isInGroup(ID, group.id)) {
             throw 'join error'
-        }
-        const members = await this.GroupRepo.getGroupMembers(id)
-        for (const member of members) {
-            if (member === id) {
-                throw 'join error'
-            }
         }
         
         await this.GroupRepo.Join(id, ID)
@@ -54,18 +48,7 @@ export default class Group {
     async Leave(token, id) {
         const ID    = await this.RedisService.Verify(token)
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.type !== 'Family') {
-            throw 'leave error'
-        }
-        const members = await this.GroupRepo.getGroupMembers(id)
-        let flag = false
-        for (const member of members) {
-            if (member === id) {
-                flag = true
-                break
-            }
-        }
-        if (!flag) {
+        if (group === undefined || group.type !== 'Family' || !(await this.GroupRepo.isInGroup(ID, group.id))) {
             throw 'leave error'
         }
         

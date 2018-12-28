@@ -15,6 +15,6 @@ export default class Request {
         this.index  = 0
         this.ip     = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         this.ip     = this.ip.split(',')[0]
-        this.ip     = this.ip.split(':').slice(-1)
+        this.ip     = this.ip.split(':').slice(-1)[0]
     }
 }

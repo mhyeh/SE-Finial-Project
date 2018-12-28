@@ -87,7 +87,7 @@ export default class Model {
         } else if (args.length === 2) {
             return `\`${args[0]}\` = '${args[1]}'`
         } else if (args[1] === 'like') {
-            return `\`${args[0]}\` like ${'%' + args[2] + '%'}`
+            return `\`${args[0]}\` like '${'%' + args[2] + '%'}'`
         } else {
             if (args[1] in this.compareOP) {
                 args[1] = this.compareOP[args[1]]

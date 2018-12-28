@@ -26,9 +26,6 @@ npm install
 
 ## TODO
 
-- Article Repo 跟 group 相關的 query 要驗證 user 是否在 group 中
-- 1 個留言發文者 +1 台科幣
-
 ## API List
 
 ### More info at [API Doc](./APIdoc.md)

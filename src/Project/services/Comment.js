@@ -1,3 +1,4 @@
+import AccountRepo  from '../repositories/Account'
 import ArticleRepo  from '../repositories/Article'
 import CommentRepo  from '../repositories/Comment'
 import RedisService from './Redis'
@@ -6,6 +7,7 @@ import utils from '../Utils'
 
 export default class Comment {
     constructor() {
+        this.AccountRepo  = new AccountRepo()
         this.ArticleRepo  = new ArticleRepo()
         this.CommentRepo  = new CommentRepo()
         this.RedisService = new RedisService()

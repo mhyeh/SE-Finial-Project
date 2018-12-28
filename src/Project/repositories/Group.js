@@ -1,6 +1,6 @@
 import Model from '../models/MongoDB';
 
-import Article from './Article'
+import ArticleRepo from './Article'
 
 import utils from '../Utils'
 
@@ -8,7 +8,7 @@ export default class Group {
     constructor() {
         this.GroupModel    = new Model('groups')
         this.GPMemberModel = new Model('gp_member')
-        this.ArticleRepo   = new Article()
+        this.ArticleRepo   = new ArticleRepo()
     }
 
     async getAllGroups() {
@@ -23,8 +23,8 @@ export default class Group {
         return await this.GroupModel.select('*').where('name', 'like', name).query()
     }
 
-    async getGroupByAccount(accountID) {
-        const groups  = await this.GPMemberModel.select('*').where('account', accountID).query()
+    async getGroupByAccount(account) {
+        const groups  = await this.GPMemberModel.select('*').where('account', account).query()
         const promise = []
         for (const group of groups) {
             promise.push(this.getGroupByID(group.id))
@@ -34,6 +34,10 @@ export default class Group {
 
     async getGroupMembers(id) {
         return await this.GPMemberModel.select('*').where('group_id', id).query()
+    }
+
+    async isInGroup(account, group) {
+        return (await this.GPMemberModel.select('*').where('account', account).andWhere('group_id', group).query()) !== []
     }
 
     async create(data) {
