@@ -135,12 +135,7 @@ let corsSetting = async function(req, res) {
 }
 
 
-export default function cors(config=undefined) {
-    options = defaults
-    if (config) {
-        for (const option in config) {
-            options[option] = config[option]
-        }
-    }
+export default function cors(config={}) {
+    options = Object.assign(JSON.parse(JSON.stringify(defaults)), config)
     return corsSetting
 }

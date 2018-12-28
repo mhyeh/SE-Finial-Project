@@ -2,17 +2,21 @@ import * as uuid from 'uuid'
 
 import { MongoDB } from './Connection'
 
+import utils from '../Utils'
+
 export default class Model {
     constructor(table) {
         this.connection = MongoDB
         this.table      = table
-        this.projStr    = {}
-        this.whereStr   = {}
+        this.lastWhere  = ''
+        this.queryObj   = {}
+        this.whereObj   = {}
         this.compareOP  = {
             ">":  "$gt",
             ">=": "$gte",
-            "<":  "lt",
-            "<=": "lte"
+            "<":  "$lt",
+            "<=": "$lte",
+            "<>": "$ne"
         }
     }
 
@@ -21,49 +25,69 @@ export default class Model {
             if (arguments[i] === '*') {
                 continue
             } else {
-                this.projStr[arguments[i]] = 1
+                this.queryObj[arguments[i]] = 1
             }
         }
         return this
     }
 
     where() {
-        this.whereArg(...arguments)
+        this.whereObj = this.whereArg(...arguments)
         return this
     }
 
     andWhere() {
-        this.whereArg(...arguments)
+        const next = this.whereArg(...arguments)
+        if (!(this.whereObj['$or'] && next['$or'])) {
+            this.whereObj = utils.deepMerge(this.whereObj, next)
+        } else {
+            if (this.lastWhere === 'and') {
+                this.whereObj['$and'].push(this.whereArg(...arguments))
+            } else {
+                this.whereObj = {
+                    $and: [this.whereObj, this.whereArg(...arguments)]
+                }
+            }
+            this.lastWhere = 'and'
+        }
         return this
     }
 
     orWhere() {
-        const orlist = this.whereStr
-        this.whereStr = {}
-        this.whereStr = {
-            $or: [orlist, this.whereArg(...arguments)]
-        }
-    }
-
-    whereArg() {
-        if (arguments.length === 2) {
-            this.whereStr[arguments[0]] = arguments[1]
+        if (this.lastWhere === 'or') {
+            this.whereObj['$or'].push(this.whereArg(...arguments))
         } else {
-            if (arguments[1] === 'like') {
-                this.whereStr[arguments[0]] = `/${arguments[2]}/`
-            } else {
-                if (!this.whereStr[arguments[0]]) {
-                    this.whereStr[arguments[0]] = {}
-                }
-                this.whereStr[arguments[0]][this.compareOP[arguments[1]]] = arguments[2]
+            this.whereObj = {
+                $or: [this.whereObj, this.whereArg(...arguments)]
             }
         }
+        this.lastWhere = 'or'
+        return this
+    }
+
+    whereArg(...args) {
+        let whereObj = {}
+        if (args.length === 1) {
+            return args[0]
+        } else if (args.length === 2) {
+            whereObj[args[0]] = args[1]
+        } else {
+            if (args[1] === 'like') {
+                whereObj[args[0]] = `/${args[2]}/`
+            } else {
+                if (!whereObj[args[0]]) {
+                    whereObj[args[0]] = {}
+                }
+                whereObj[args[0]][this.compareOP[args[1]]] = args[2]
+            }
+        }
+        return whereObj
     }
 
     query() {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
-                return db.db().collection(this.table).find(this.whereStr, this.projStr).toArray()
+                return db.db().collection(this.table).find(this.whereObj, this.queryObj).toArray()
             }).then(res => {
                 this.flush()
                 resolve(res)
@@ -96,7 +120,7 @@ export default class Model {
                 const newVal = {
                     $set: data
                 }
-                return db.db().collection(this.table).updateMany(this.whereStr, newVal)
+                return db.db().collection(this.table).updateMany(this.whereObj, newVal)
             }).then(() => {
                 this.flush()
                 resolve()
@@ -110,7 +134,7 @@ export default class Model {
     del() {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
-                return db.db().collection(this.table).deleteMany(this.whereStr)
+                return db.db().collection(this.table).deleteMany(this.whereObj)
             }).then(() => {
                 this.flush()
                 resolve()
@@ -122,7 +146,8 @@ export default class Model {
     }
 
     flush() {
-        this.whereStr = {}
-        this.projStr  = {}
+        this.whereObj  = {}
+        this.queryObj  = {}
+        this.lastWhere = ''
     }
 }
