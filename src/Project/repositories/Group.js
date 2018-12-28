@@ -1,14 +1,11 @@
 import Model from '../models/MongoDB';
 
-import ArticleRepo from './Article'
-
 import utils from '../Utils'
 
 export default class Group {
     constructor() {
         this.GroupModel    = new Model('groups')
         this.GPMemberModel = new Model('gp_member')
-        this.ArticleRepo   = new ArticleRepo()
     }
 
     async getAllGroups() {
