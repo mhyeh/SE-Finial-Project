@@ -13,7 +13,7 @@ export default class Article {
     }
 
     async getAllArticles() {
-        return await this.ArticleModel.select('*').query('group', '')
+        return await this.ArticleModel.select('*').query()
     }
 
     async getFriendArticles(token) {
@@ -25,7 +25,7 @@ export default class Article {
         for (let i = 1; i < friendList.length; i++) {
             query.orWhere('author', friendList[i])
         }
-        return await query.query('group', '')
+        return await query.andWhere('board_id', '').query()
     }
 
     async getArticleByID(id) {
@@ -33,31 +33,31 @@ export default class Article {
     }
 
     async getArticleByAuthor(author) {
-        return await this.ArticleModel.select('*').where('author', author).andWhere('group', '').query()
+        return await this.ArticleModel.select('*').where('author', author).andWhere('board_id', '').query()
     }
 
     async getArticleByTitle(title) {
-        return await this.ArticleModel.select('*').where('title', 'like', title).andWhere('group', '').query()
+        return await this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', '').query()
     }
 
     async getArticleByContext(context) {
-        return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('group', '').query()
+        return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', '').query()
     }
     
     async getArticleByGroup(group) {
-        return await this.ArticleModel.select('*').where('group', group).query()
+        return await this.ArticleModel.select('*').where('board_id', group).query()
     }
 
     async getArticleByGroupAndAuthor(group, author) {
-        return await this.ArticleModel.select('*').where('author', author).andWhere('group', group).query()
+        return await this.ArticleModel.select('*').where('author', author).andWhere('board_id', group).query()
     }
 
     async getArticleByGroupAndTitle(group, title) {
-        return await this.ArticleModel.select('*').where('title', 'like', title).andWhere('group', group).query()
+        return await this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', group).query()
     }
 
     async getArticleByGroupAndContext(group, context) {
-        return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('group', group).query()   
+        return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', group).query()   
     }
 
     async create(data) {

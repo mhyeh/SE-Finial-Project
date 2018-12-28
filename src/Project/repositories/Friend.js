@@ -64,7 +64,7 @@ export default class Friend {
         }
     }
 
-    async delete(id) {
+    async delete(token, id2) {
         const id1    = await this.AccountRepo.getAccountByToken(token)
         const friend = await this.getFriend(id1, id2)
         if (friend === undefined) {
