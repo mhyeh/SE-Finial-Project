@@ -1,6 +1,7 @@
 import Model from '../models/MongoDB'
 
 import Comment from './Comment'
+import Friend  from './Friend'
 
 import utils from '../Utils'
 
@@ -8,10 +9,23 @@ export default class Article {
     constructor() {
         this.ArticleModel = new Model('article')
         this.CommentRepo  = new Comment()
+        this.FriendRepo   = new Friend()
     }
 
     async getAllArticles() {
         return await this.ArticleModel.select('*').query('group', '')
+    }
+
+    async getFriendArticles(token) {
+        const friendList = await this.FriendRepo.getAllFriends(token)
+        if (friendList.length === 0) {
+            return []
+        }
+        let query = this.ArticleModel.select('*').where('author', friendList[0].id)
+        for (let i = 1; i < friendList.length; i++) {
+            query.orWhere('author', friendList[i])
+        }
+        return await query.query('group', '')
     }
 
     async getArticleByID(id) {
