@@ -61,6 +61,7 @@ export default class Response {
     }
 
     json(obj) {
+        obj = this.xss(obj)
         this.type('json')
         return this.send(JSON.stringify(obj))
     }
@@ -74,5 +75,34 @@ export default class Response {
 
     type(type) {
         this.res.setHeader('Content-Type', mime.getType(type))
+    }
+
+    htmlEscape(html){
+        return String(html)
+        .replace(/&(?!\w+;)/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+    }
+
+    xss(obj) {
+        if (obj instanceof Array) {
+            for (var i = 0; i < obj.length; i++) {
+                obj[i] = xss(obj[i])
+            }
+        } else {
+            for(var key in obj) {
+                // key != '_id' for mongoose doc
+                if(obj[key] instanceof Object && !(obj[key] instanceof String) 
+                    && !(obj[key] instanceof Function) && key != '_id') {
+                    obj[key] = xss(obj[key])
+                } else if (obj[key] instanceof String || typeof(obj[key]) == "string") {
+                    obj[key] = htmlEscape(obj[key])
+                } else {
+                    obj[key] = obj[key]
+                }
+            }
+        }
+        return obj
     }
 }

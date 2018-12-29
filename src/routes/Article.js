@@ -10,7 +10,7 @@ class Article extends Router {
     }
 
     init() {
-        this.get('/',                              this.controller.GetFriendsArticles)
+        this.get('/',                              this.controller.GetDefaultArticles)
         this.get('/group/:group/author/:author',   this.controller.GetArticlesByGroupAndAuthor)
         this.get('/group/:group/title/:title',     this.controller.GetArticlesByGroupAndTitle)
         this.get('/group/:group/context/:context', this.controller.GetArticlesByGroupAndContext)

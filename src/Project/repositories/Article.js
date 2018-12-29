@@ -18,15 +18,16 @@ export default class Article {
         return await this.ArticleModel.select('*').query()
     }
 
-    async getFriendArticles(token) {
-        const friendList = await this.FriendRepo.getAllFriends(token)
+    async getDefaultArticles(accountID) {
+        const friendList = await this.FriendRepo.getAllFriends(accountID)
         if (friendList.length === 0) {
             return []
         }
         let query = this.ArticleModel.select('*').where('author', friendList[0].id)
         for (let i = 1; i < friendList.length; i++) {
-            query.orWhere('author', friendList[i])
+            query.orWhere('author', friendList[i].id)
         }
+        query.orWhere('author', accountID)
         return await query.andWhere('board_id', '').query()
     }
 

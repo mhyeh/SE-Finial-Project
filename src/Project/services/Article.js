@@ -14,7 +14,7 @@ export default class Article {
     }
 
     async Post(accountID, req) {
-        const data    = await this.procPost(req)
+        const data    = await this.procArticle(req)
         data.author   = accountID
         data.board_id = ''
         
@@ -30,7 +30,7 @@ export default class Article {
             throw 'post error'
         }
 
-        const data    = await this.procPost(req)
+        const data    = await this.procArticle(req)
         data.author   = accountID
         data.board_id = groupID
 
@@ -59,7 +59,7 @@ export default class Article {
             throw 'edit error'
         }
 
-        const data = await this.procPost(req)
+        const data = await this.procArticle(req)
 
         await this.ArticleRepo.edit(id, data)
     }

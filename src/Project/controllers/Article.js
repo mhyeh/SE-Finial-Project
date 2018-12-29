@@ -9,7 +9,7 @@ export default class Article {
         this.ArticleService = new ArticleService()
         this.RedisService   = new RedisService()
 
-        this.GetFriendsArticles           = this.getFriendsArticles.bind(this)
+        this.GetDefaultArticles           = this.getDefaultArticles.bind(this)
         this.GetArticleByID               = this.getArticleByID.bind(this)
         this.GetArticlesByAuthor          = this.getArticlesByAuthor.bind(this)
         this.GetArticlesByTitle           = this.getArticlesByTitle.bind(this)
@@ -24,9 +24,9 @@ export default class Article {
         this.Delete                       = this.delete.bind(this)
     }
     
-    async getFriendsArticles(req, res) {
+    async getDefaultArticles(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getFriendArticles() })
+            res.status(200).json({ articles: await this.ArticleRepo.getDefaultArticles() })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
