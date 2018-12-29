@@ -29,7 +29,7 @@ export default class Advertise {
             throw 'create error'
         }
 
-        data.author = ID
+        data.author = accountID
         if (image !== undefined) {
             data.image = utils.getBaseName(image.path)
         }
