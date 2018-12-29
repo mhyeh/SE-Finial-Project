@@ -92,12 +92,11 @@ export default class Response {
             }
         } else {
             for(var key in obj) {
-                // key != '_id' for mongoose doc
                 if(obj[key] instanceof Object && !(obj[key] instanceof String) 
                     && !(obj[key] instanceof Function) && key != '_id') {
-                    obj[key] = xss(obj[key])
+                    obj[key] = this.xss(obj[key])
                 } else if (obj[key] instanceof String || typeof(obj[key]) == "string") {
-                    obj[key] = htmlEscape(obj[key])
+                    obj[key] = this.htmlEscape(obj[key])
                 } else {
                     obj[key] = obj[key]
                 }
