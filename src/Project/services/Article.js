@@ -83,16 +83,20 @@ export default class Article {
                 data.image.push(utils.getBaseName(images.path))
             }
         }
-        data.image    = JSON.stringify(data.image)
-        data.time     = utils.getDateTime()
-        data.ip       = req.ip
+        data.image = JSON.stringify(data.image)
+        data.time  = utils.getDateTime()
+        data.ip    = req.ip
 
         return data
     }
 
     async Delete(accountID, id) {
         const article = await this.ArticleRepo.getArticleByID(id)
-        if (article === undefined || article.author !== accountID) {
+        let   group
+        if (article.board_id !== '') {
+            group = await this.GroupRepo.getGroupByID(article.board_id)
+        }
+        if (article === undefined || article.author !== accountID && accountID !== group.leader) {
             throw 'delete error'
         }
 

@@ -12,9 +12,14 @@ export default class Request {
         this.query  = URL.query
         this.method = req.method
         this.header = req.headers
+        this.ip     = this.getIP()
         this.index  = 0
-        this.ip     = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-        this.ip     = this.ip.split(',')[0]
-        this.ip     = this.ip.split(':').slice(-1)[0]
+    }
+
+    getIP() {
+        let str = this.req.headers['x-forwarded-for'] || this.req.connection.remoteAddress
+        str     = str.split(',')[0]
+        str     = str.split(':').slice(-1)[0]
+        return str
     }
 }

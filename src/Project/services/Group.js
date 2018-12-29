@@ -40,13 +40,31 @@ export default class Group {
         await this.GroupRepo.Join(id, accountID)
     }
 
+    async ChangeLeader(id, accountID, newLeader) {
+        const group = await this.GroupRepo.getGroupByID(id)
+        if (group === undefined || group.type !== 'Family' || group.leader !== accountID || !(await this.GroupRepo.isInGroup(newLeader, group.id))) {
+            throw 'change error'
+        }
+
+        await this.GroupRepo.edit(id, { leader: newLeader })
+    }
+
     async Leave(accountID, id) {
         const group = await this.GroupRepo.getGroupByID(id)
         if (group === undefined || group.type !== 'Family' || !(await this.GroupRepo.isInGroup(accountID, group.id))) {
             throw 'leave error'
         }
-        
         await this.GroupRepo.leave(id, accountID)
+
+        if (group.leader === accountID) {
+            const groupMembers = await this.GroupRepo.getGroupMembers(group.id)
+            if (groupMembers.length === 0) {
+                await this.GroupRepo.Delete(group.id)
+            } else {
+                const r = ~~(Math.random() * groupMembers.length)
+                await this.GroupRepo.edit(group.id, { leader: groupMembers[r].account })
+            }
+        }
     }
 
     async Delete(accountID, id) {

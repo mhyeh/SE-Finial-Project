@@ -18,6 +18,7 @@ export default class Group {
         this.Join              = this.join.bind(this)
         this.Leave             = this.leave.bind(this)
         this.Edit              = this.edit.bind(this)
+        this.ChangeLeader      = this.changeLeader.bind(this)
         this.Delete            = this.delete.bind(this)
     }
     
@@ -91,6 +92,16 @@ export default class Group {
         }
     }
 
+    async changeLeader(req, res) {
+        try {
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.GroupService.ChangeLeader(req.params.id, ID, req.params.leader)
+            res.status(200).json({ message: 'success' })
+        } catch (e) {
+            res.status(400).json({ error: 'change leader error' })
+        }
+    }
+
     async leave(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
@@ -100,6 +111,7 @@ export default class Group {
             res.status(400).json({ error: 'leave group error' })
         }
     }
+
 
     async delete(req, res) {
         try {
