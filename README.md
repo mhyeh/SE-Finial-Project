@@ -80,3 +80,11 @@ npm install
 | POST | /group | create a new group |
 | PUT | /group/:id | edit group |
 | DELETE | /group/:id | delete group |
+| **Friend** |
+| GET | /friend | get all friends |
+| GET | /friend/unconfirmed | get list of unconfirmed ivitation from others |
+| GET | /friend/invitation | get invitation list |
+| GET | /friend/:id | get status with specific ID |
+| POST | /friend/:id | send invitation to another user|
+| PUT | /friend/:id | confirm the invitation from another |
+| DELETE | /friend/:id | delete a friend |

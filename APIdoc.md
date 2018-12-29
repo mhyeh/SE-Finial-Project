@@ -723,3 +723,126 @@ Response:
 Status Code: 200
 Data: { "message": "success" }
 ```
+
+### getAllFriends
+
+```
+Method: GET
+URL: /friend
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { 
+    "friends": [
+        id:         <friend id>
+        account1:   <account id>
+        account2    <account id>
+        isConfirm   <friend status>
+    ]
+}
+```
+
+### getUnconfirmedFriends
+
+```
+Method: GET
+URL: /friend/unconfirmed
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { 
+    "unconfrimed": [
+        id:         <friend id>
+        account1:   <account id>
+        account2    <account id>
+        isConfirm   <friend status>
+    ]
+}
+```
+
+### getInvitation
+
+```
+Method: GET
+URL: /friend/unconfirmed
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { 
+    "invitation": [
+        id:         <friend id>
+        account1:   <account id>
+        account2    <account id>
+        isConfirm   <friend status>
+    ]
+}
+```
+
+### getStatusWithFriend
+
+```
+Method: GET
+URL: /friend/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { 
+    "state": [
+        isConfirm   <friend status>
+    ]
+}
+```
+
+### sendInvitation
+
+```
+Method: POST
+URL: /friend/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
+
+### confirmInvitation
+
+```
+Method: PUT
+URL: /friend/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
+
+### deleteFriend
+
+```
+Method: DELETE
+URL: /friend/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
