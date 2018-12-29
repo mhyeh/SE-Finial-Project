@@ -20,12 +20,16 @@ export default class Advertise {
         return (await this.AdModel.select('*').where('id', id).query())[0]
     }
 
+    async getAdvertisesByAccount(accountID) {
+        return await this.AdModel.select('*').where('author', accountID).query()
+    }
+
     async create(pos, data) {
         if (!utils.allow(data, ['context', 'author', 'image'])) {
             throw 'not accept'
         }
         await this.AdModel.insert(data)
-        const AdData    = (await this.AdModel.select('*').where('author', data.author).query())[0]
+        const AdData    = (await this.AdModel.select('*').where('author', data.author).andWhere('context', data.context).andWhere('image', data.image).query())[0]
         const AdposData = { ad: AdData.id }
         await this.AdposModel.where('pos', pos).update(AdposData)
     }
@@ -37,7 +41,7 @@ export default class Advertise {
         await this.AdModel.where('id', id).update(data)
     }
     
-    async Delete(id) {
+    async delete(id) {
         await this.AdModel.where('id', id).del()
     }
 }

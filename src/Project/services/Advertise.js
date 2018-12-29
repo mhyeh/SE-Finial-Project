@@ -17,7 +17,7 @@ export default class Advertise {
             throw 'create error'
         }
         const account = await this.AccountRepo.getAccountByID(accountID)
-        if (account.NTUST_coin < ad_pos.ice) {
+        if (account.NTUST_coin < ad_pos.price) {
             throw 'create error'
         }
 
@@ -62,6 +62,6 @@ export default class Advertise {
             throw 'create error'
         }
         
-        await this.AdvertiseRepo.Delete(id)
+        await this.AdvertiseRepo.delete(id)
     }
 }

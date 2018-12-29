@@ -9,12 +9,13 @@ export default class Advertise {
         this.AdvertiseService = new AdvertiseService()
         this.RedisService     = new RedisService()
 
-        this.GetAllAdvertises  = this.getAllAdvertises.bind(this)
-        this.GetAdvertiseByPos = this.getAdvertiseByPos.bind(this)
-        this.GetAdvertiseByID  = this.getAdvertiseByID.bind(this)
-        this.Buy               = this.buy.bind(this)
-        this.Edit              = this.edit.bind(this)
-        this.Cancel            = this.cancel.bind(this)
+        this.GetAllAdvertises     = this.getAllAdvertises.bind(this)
+        this.GetAdvertisesByToken = this.getAdvertisesByToken.bind(this)
+        this.GetAdvertiseByPos    = this.getAdvertiseByPos.bind(this)
+        this.GetAdvertiseByID     = this.getAdvertiseByID.bind(this)
+        this.Buy                  = this.buy.bind(this)
+        this.Edit                 = this.edit.bind(this)
+        this.Cancel               = this.cancel.bind(this)
     }
 
     async getAllAdvertises(req, res) {
@@ -25,6 +26,15 @@ export default class Advertise {
         }
     }
 
+    async getAdvertisesByToken(req, res) {
+        try {
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ advertises: await this.AdvertiseRepo.getAdvertisesByAccount(ID) })
+        } catch (e) {
+            res.status(400).json({ error: 'get ad error' })
+        }
+    }
+    
     async getAdvertiseByPos(req, res) {
         try {
             res.status(200).json({ advertise: await this.AdvertiseRepo.getAdvertiseByPos(req.params.pos) })
@@ -44,7 +54,7 @@ export default class Advertise {
     async buy(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            await this.AdvertiseRepo.Create(ID, req.params.pos, req.req)
+            await this.AdvertiseService.Create(ID, req.params.pos, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'buy ad error' })
@@ -54,7 +64,7 @@ export default class Advertise {
     async edit(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            await this.AdvertiseRepo.Edit(ID, req.params.id, req.req)
+            await this.AdvertiseService.Edit(ID, req.params.id, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'edit ad error' })
@@ -64,7 +74,7 @@ export default class Advertise {
     async cancel(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            await this.AdvertiseRepo.Delete(ID, req.params.id)
+            await this.AdvertiseService.Delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'cancel ad error' })

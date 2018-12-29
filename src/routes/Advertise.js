@@ -11,6 +11,7 @@ class Advertise extends Router {
 
     init() {
         this.get('/',         this.controller.GetAllAdvertises)
+        this.get('/account',  this.controller.GetAdvertisesByToken)
         this.get('/pos/:pos', this.controller.GetAdvertiseByPos)
         this.get('/:id',      this.controller.GetAdvertiseByID)
         this.post('/:pos',    this.controller.Buy)
