@@ -88,7 +88,7 @@ export default class Response {
     xss(obj) {
         if (obj instanceof Array) {
             for (var i = 0; i < obj.length; i++) {
-                obj[i] = xss(obj[i])
+                obj[i] = this.xss(obj[i])
             }
         } else {
             for(var key in obj) {
