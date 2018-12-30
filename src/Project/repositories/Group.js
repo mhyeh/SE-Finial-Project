@@ -24,7 +24,7 @@ export default class Group {
         const groups  = await this.GPMemberModel.select('*').where('account', account).query()
         const promise = []
         for (const group of groups) {
-            promise.push(this.getGroupByID(group.id))
+            promise.push(this.getGroupByID(group.group_id))
         }
         return await Promise.all(promise)
     }
@@ -41,7 +41,10 @@ export default class Group {
         if (!utils.allow(data, ['name', 'leader', 'type'])) {
             throw 'not accept'
         }
-        await this.GroupModel.insert(data)
+        const groupID = await this.GroupModel.insert(data)
+        if (data.type === 'Family') {
+            await this.GPMemberModel.insert({account: data.leader, group_id: groupID})
+        }
     }
 
     async edit(id, data) {

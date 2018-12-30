@@ -32,7 +32,7 @@ export default class Group {
 
     async getGroupByID(req, res) {
         try {
-            res.status(200).json({ groups: await this.GroupRepo.getGroupByID(req.params.id) })
+            res.status(200).json({ group: await this.GroupRepo.getGroupByID(req.params.id) })
         } catch (e) {
             res.status(400).json({ error: 'get group error' })
         }
