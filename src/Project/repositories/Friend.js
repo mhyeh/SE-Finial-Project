@@ -21,10 +21,9 @@ export default class Friend {
     }
 
     async getFriend(id1, id2) {
-        const promise = []
-        promise.push(this.FriendModel.select('*').where('account1', id1).andWhere('account2', id2).query())
-        promise.push(this.FriendModel.select('*').where('account1', id2).andWhere('account2', id1).query())
-        const friend = await Promise.all(promise)
+        const friend = []
+        friend.push(await this.FriendModel.select('*').where('account1', id1).andWhere('account2', id2).query())
+        friend.push(await this.FriendModel.select('*').where('account1', id2).andWhere('account2', id1).query())
         if (friend[0][0]) {
             return friend[0][0]
         }

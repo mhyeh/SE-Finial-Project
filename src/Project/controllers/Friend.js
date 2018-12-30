@@ -46,7 +46,7 @@ export default class Friend {
     async checkState(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            res.status(200).json({ state: await this.FriendRepo.CheckState(ID, req.params.id) })
+            res.status(200).json({ state: await this.FriendRepo.checkState(ID, req.params.id) })
         } catch (e) {
             res.status(400).json({ error: 'get friends error' })
         }
@@ -75,7 +75,7 @@ export default class Friend {
     async delete(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            await this.FriendService.delete(ID, req.params.id)
+            await this.FriendRepo.delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: 'delete friend error' })

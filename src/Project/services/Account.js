@@ -98,10 +98,12 @@ export default class Account {
             if (await this.FriendRepo.getFriend(ID, accountList[r])) {
                 accountList[r].isFriend = 1
                 count++
+                if (count === accountList.length - 1) {
+                    throw '人生勝利組'
+                }
+                continue
             }
-            if (count === accountList.length - 1) {
-                throw '人生勝利組'
-            }
+            break
         }
         return accountList[r]
     }
