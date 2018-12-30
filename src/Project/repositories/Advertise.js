@@ -35,7 +35,7 @@ export default class Advertise {
         await this.AdModel.insert(data)
         const AdData    = (await this.AdModel.select('*').where('author', data.author).andWhere('context', data.context).andWhere('image', data.image).query())[0]
         const AdposData = { ad: AdData.id }
-        await this.AdposModel.where('pos', pos).update(AdposData)
+        await this.AdposModel.where('position', pos).update(AdposData)
     }
 
     async edit(id, data) {

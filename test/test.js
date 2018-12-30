@@ -199,7 +199,7 @@ const testAd = async (_token, _pos, _data) => {
     console.log('\n', '=========== ad ===========', '\n')
 
     // get ad
-    console.log('get all',  await getAllAd, '\n')
+    console.log('get all',  await getAllAd(), '\n')
 
     // but ad
     console.log('buy', await buyAd(_token, _pos, _data))
