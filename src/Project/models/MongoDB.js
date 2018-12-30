@@ -70,7 +70,11 @@ export default class Model {
         if (args.length === 1) {
             return args[0]
         } else if (args.length === 2) {
-            whereObj[args[0]] = args[1]
+            if (!whereObj[args[0]]) {
+                whereObj[args[0]] = { $in: [args[1]] }
+            } else {
+                whereObj[args[0]]['$in'].push(args[1])
+            }
         } else {
             if (args[1] === 'like') {
                 whereObj[args[0]] = new RegExp(args[2])

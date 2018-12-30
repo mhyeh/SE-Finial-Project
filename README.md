@@ -26,6 +26,8 @@ npm install
 
 ## TODO
 
+- get ad pos list
+
 ## API List
 
 ### More info at [API Doc](./APIdoc.md)

@@ -24,6 +24,10 @@ export default class Advertise {
         return await this.AdModel.select('*').where('author', accountID).query()
     }
 
+    async getAdvertisePosList() {
+        return await this.AdposModel.select('*').query()
+    }
+
     async create(pos, data) {
         if (!utils.allow(data, ['context', 'author', 'image'])) {
             throw 'not accept'

@@ -10,6 +10,7 @@ export default class Advertise {
         this.RedisService     = new RedisService()
 
         this.GetAllAdvertises     = this.getAllAdvertises.bind(this)
+        this.GetAdvertisePosList  = this.getAdvertisePosList.bind(this)
         this.GetAdvertisesByToken = this.getAdvertisesByToken.bind(this)
         this.GetAdvertiseByPos    = this.getAdvertiseByPos.bind(this)
         this.GetAdvertiseByID     = this.getAdvertiseByID.bind(this)
@@ -21,6 +22,14 @@ export default class Advertise {
     async getAllAdvertises(req, res) {
         try {
             res.status(200).json({ advertises: await this.AdvertiseRepo.getAllAdvertises() })
+        } catch (e) {
+            res.status(400).json({ error: 'get ad error' })
+        }
+    }
+
+    async getAdvertisePosList(req, res) {
+        try {
+            res.status(200).json({ pos: await this.AdvertiseRepo.getAdvertisePosList() })
         } catch (e) {
             res.status(400).json({ error: 'get ad error' })
         }
