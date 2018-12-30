@@ -14,7 +14,7 @@ export default class Comment {
     async Post(accountID, id, req) {
         const article = await this.ArticleRepo.getArticleByID(id)
         const data    = req.body
-        if (article === undefined || data.types === undefined || (data.types !== 0 && data.types !== 1 && data.types !== 2) || data.comment === undefined) {
+        if (article === undefined || data.types === undefined || (data.types !== 0 && data.types !== 1 && data.types !== 2) || data.context === undefined) {
             throw 'post error'
         }
         data.time       = utils.getDateTime()
@@ -28,7 +28,7 @@ export default class Comment {
     async Edit(accountID, id, req) {
         const comment = await this.CommentRepo.getCommentByID(id)
         const data    = req.body
-        if (comment === undefined || comment.author !== accountID || data.comment === undefined) {
+        if (comment === undefined || comment.author !== accountID || data.context === undefined) {
             throw 'edit error'
         }
         data.time = utils.getDateTime()
