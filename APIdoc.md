@@ -101,7 +101,7 @@ Status Code: 200
 Data: { "token": <token> }
 ```
 
-### register
+### login
 
 ```
 Method: POST
