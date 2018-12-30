@@ -1,11 +1,14 @@
 import Model from '../models/MongoDB';
 
+import ArticleRepo from './Article'
+
 import utils from '../Utils'
 
 export default class Group {
     constructor() {
         this.GroupModel    = new Model('groups')
         this.GPMemberModel = new Model('gp_member')
+        this.ArticleRepo   = new ArticleRepo()
     }
 
     async getAllGroups() {
@@ -34,7 +37,7 @@ export default class Group {
     }
 
     async isInGroup(account, group) {
-        return (await this.GPMemberModel.select('*').where('account', account).andWhere('group_id', group).query()) !== []
+        return (await this.GPMemberModel.select('*').where('account', account).andWhere('group_id', group).query())[0] !== undefined
     }
 
     async create(data) {
