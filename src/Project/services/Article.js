@@ -41,16 +41,20 @@ export default class Article {
 
     async giveCoin(data) {
         let score
-        if (data.context && data.imgs.length !== 0) {
-            score = data.context.length + data.imgs.length * 10
+        const img = JSON.parse(data.image || '[]')
+        if (data.context && img.length !== 0) {
+            score = data.context.length + img.length * 10
         } else if (data.context) {
             score = data.context.length
         } else {
-            score = data.imgs.length * 10
+            score = img.length * 10
         }
 
         const account = await this.AccountRepo.getAccountByID(data.author)
-        await this.AccountRepo.edit(data.author, {NTUST_coin: account.NTUST_Coin + score})
+        if (account.NTUST_coin !== undefined) {
+            score += account.NTUST_coin
+        }
+        await this.AccountRepo.edit(data.author, {NTUST_coin: score})
     }
 
     async Edit(accountID, id, req) {

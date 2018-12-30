@@ -26,7 +26,8 @@ export default class Article {
     
     async getDefaultArticles(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getDefaultArticles() })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ articles: await this.ArticleRepo.getDefaultArticles(ID) })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
@@ -34,7 +35,7 @@ export default class Article {
     
     async getArticleByID(req, res) {
         try {
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByID(req.params.id) })
+            res.status(200).json({ article: await this.ArticleRepo.getArticleByID(req.params.id) })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
