@@ -36,8 +36,8 @@ const server = http.createServer(async (req, res) => {
     const request  = new Request(req)
     const response = new Response(res)
     if (!(await router.Match(request, response))) {
-        res.writeHead(400)
-        res.end()
+        console.log('path not found')
+        response.status(404).json({error: 'path not found'})
     }
 })
 

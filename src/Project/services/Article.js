@@ -59,18 +59,24 @@ export default class Article {
             throw 'edit error'
         }
 
-        const data = await this.procArticle(req)
+        const data = await this.procArticle(req, true)
 
         await this.ArticleRepo.edit(id, data)
     }
 
-    async procArticle(req) {
+    async procArticle(req, isEdit=false) {
         const formdata = await this.FileService.ProcFormData(req.req, { imgs: -1 })
         const data     = formdata.fields
         const images   = formdata.files.imgs
 
-        if (data.title === undefined || (data.context === undefined && (images === undefined || images === []))) {
-            throw 'post error'
+        if (isEdit) {
+            if (data.title === undefined && data.context === undefined && (images === undefined || images === [])) {
+                throw 'edit error'
+            }
+        } else {
+            if (data.title === undefined || (data.context === undefined && (images === undefined || images === []))) {
+                throw 'post error'
+            }
         }
 
         if (images !== undefined && images !== []) {
