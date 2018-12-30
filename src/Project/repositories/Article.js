@@ -1,7 +1,6 @@
 import Model from '../models/MongoDB'
 
 import FriendRepo  from './Friend'
-import GroupRepo   from './Group'
 
 import utils from '../Utils'
 
@@ -10,7 +9,6 @@ export default class Article {
         this.ArticleModel = new Model('article')
         this.CommentModel = new Model('comment')
         this.FriendRepo   = new FriendRepo()
-        this.GroupRepo    = new GroupRepo()
     }
 
     async getAllArticles() {
@@ -40,23 +38,19 @@ export default class Article {
         return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', '').query()
     }
     
-    async getArticleByGroup(accountID, group) {
-        await this.auth(accountID, group)
+    async getArticleByGroup(group) {
         return await this.ArticleModel.select('*').where('board_id', group).query()
     }
 
-    async getArticleByGroupAndAuthor(accountID, group, author) {
-        await this.auth(accountID, group)
+    async getArticleByGroupAndAuthor(group, author) {
         return await this.ArticleModel.select('*').where('author', author).andWhere('board_id', group).query()
     }
 
-    async getArticleByGroupAndTitle(accountID, group, title) {
-        await this.auth(accountID, group)
+    async getArticleByGroupAndTitle(group, title) {
         return await this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', group).query()
     }
 
-    async getArticleByGroupAndContext(accountID, group, context) {
-        await this.auth(accountID, group)
+    async getArticleByGroupAndContext(group, context) {
         return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', group).query()   
     }
 
@@ -103,12 +97,5 @@ export default class Article {
         promise.push(this.ArticleModel.where('id', id).del())
         promise.push(this.CommentModel.where('article_id', id).del())
         await Promise.all(promise)
-    }
-    
-    async auth(accountID, group) {
-        const groupType = (await this.GroupRepo.getGroupByID(group)).type
-        if (groupType === 'Family' && !(await this.GroupRepo.isInGroup(accountID, group))) {
-            throw 'not in group'
-        }
     }
 }

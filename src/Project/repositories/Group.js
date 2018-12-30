@@ -34,7 +34,7 @@ export default class Group {
     }
 
     async isInGroup(account, group) {
-        return (await this.GPMemberModel.select('*').where('account', account).andWhere('group_id', group).query()) !== []
+        return (await this.GPMemberModel.select('*').where('account', account).andWhere('group_id', group).query())[0] !== undefined
     }
 
     async create(data) {

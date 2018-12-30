@@ -25,10 +25,7 @@ export default class Article {
     }
 
     async PostInGroup(accountID, groupID, req) {
-        const group = await this.GroupRepo.getGroupByID(groupID)
-        if (group.type === 'Family' && !(await this.GroupRepo.isInGroup(groupID, accountID))) {
-            throw 'post error'
-        }
+        await this.auth(accountID, groupID)
 
         const data    = await this.procArticle(req)
         data.author   = accountID
@@ -111,5 +108,12 @@ export default class Article {
         }
 
         await this.ArticleRepo.delete(id)
+    }
+
+    async auth(accountID, group) {
+        const groupType = (await this.GroupRepo.getGroupByID(group)).type
+        if (groupType === 'Family' && !(await this.GroupRepo.isInGroup(accountID, group))) {
+            throw 'not in group'
+        }
     }
 }

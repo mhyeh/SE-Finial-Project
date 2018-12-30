@@ -48,7 +48,8 @@ export default class Group {
 
     async getGroupByAccount(req, res) {
         try {
-            res.status(200).json({ groups: await this.GroupRepo.getGroupByAccount(req.params.account) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ groups: await this.GroupRepo.getGroupByAccount(ID) })
         } catch (e) {
             res.status(400).json({ error: 'get group error' })
         }

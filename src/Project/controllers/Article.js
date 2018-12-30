@@ -68,7 +68,8 @@ export default class Article {
     async getArticlesByGroup(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroup(ID, req.params.group) })
+            await this.ArticleService.auth(ID, req.params.group)
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroup(req.params.group) })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
@@ -77,7 +78,8 @@ export default class Article {
     async getArticlesByGroupAndAuthor(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndAuthor(ID, req.params.group, req.params.author) })
+            await this.ArticleService.auth(ID, req.params.group)
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndAuthor(req.params.group, req.params.author) })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
@@ -86,7 +88,8 @@ export default class Article {
     async getArticlesByGroupAndTitle(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndTitle(ID, req.params.group, req.params.title) })
+            await this.ArticleService.auth(ID, req.params.group)
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndTitle(req.params.group, req.params.title) })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
@@ -95,7 +98,8 @@ export default class Article {
     async getArticlesByGroupAndContext(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndContext(ID, req.params.group, req.params.context) })
+            await this.ArticleService.auth(ID, req.params.group)
+            res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndContext(req.params.group, req.params.context) })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }
