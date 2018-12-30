@@ -30,7 +30,7 @@ export default class Group {
             throw 'join error'
         }
         
-        await this.GroupRepo.Join(id, accountID)
+        await this.GroupRepo.join(id, accountID)
     }
 
     async ChangeLeader(id, accountID, newLeader) {
@@ -52,7 +52,7 @@ export default class Group {
         if (group.leader === accountID) {
             const groupMembers = await this.GroupRepo.getGroupMembers(group.id)
             if (groupMembers.length === 0) {
-                await this.GroupRepo.Delete(group.id)
+                await this.GroupRepo.delete(group.id)
             } else {
                 const r = ~~(Math.random() * groupMembers.length)
                 await this.GroupRepo.edit(group.id, { leader: groupMembers[r].account })
@@ -66,6 +66,6 @@ export default class Group {
             throw 'delete error'
         }
         
-        await this.GroupRepo.Delete(id)
+        await this.GroupRepo.delete(id)
     }
 }

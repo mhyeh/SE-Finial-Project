@@ -41,6 +41,21 @@ export default class Model {
         return this
     }
 
+    whereIn(col, vals) {
+        this.queryStr += ' where '
+        this.whereStr += this.in(col, vals)
+        return this
+    }
+
+    in(col, vals) {
+        let str = `\`${col}\` in (`
+        for (const val of vals) {
+            str += '?,'
+            this.whereParam.push(val)
+        }
+        return str.slice(0, -1) + ')'
+    }
+
     andWhere() {
         if (this.lastWhere === 'and') {
             this.whereStr = `${this.whereStr} and ${this.whereArg(undefined, this.whereParam, ...arguments)}`
@@ -51,8 +66,23 @@ export default class Model {
         return this
     }
 
+    andWhereIn(col, vals) {
+        if (this.lastWhere === 'and') {
+            this.whereStr = `${this.whereStr} and ${this.in(col, vals)}`
+        } else {
+            this.whereStr = `(${this.whereStr}) and ${this.in(col, vals)}`
+        }
+        this.lastWhere = 'and'
+    }
+
     orWhere() {
         this.whereStr  = `${this.whereStr} or ${this.whereArg(undefined, this.whereParam, ...arguments)}`
+        this.lastWhere = 'or'
+        return this
+    }
+
+    orWhereIn(col, vals) {
+        this.whereStr  = `${this.whereStr} or ${this.in(col, vals)}`
         this.lastWhere = 'or'
         return this
     }

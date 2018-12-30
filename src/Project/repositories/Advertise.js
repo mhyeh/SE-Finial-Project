@@ -13,11 +13,7 @@ export default class Advertise {
         if (posList.length === 0) {
             return []
         }
-        const query = this.AdModel.select('*').where('id', posList[0].ad)
-        for (let i = 1; i < posList.length; i++) {
-            query.orWhere('id', posList[i].ad)
-        }
-        return await query.query()
+        return await this.AdModel.select('*').whereIn('id', posList).query()
     }
 
     async getAdvertisePos(pos) {
@@ -33,15 +29,12 @@ export default class Advertise {
     }
 
     async getAdvertisesByAccount(accountID) {
-        const posList = await this.getAdvertisePosList()
+        let posList = await this.getAdvertisePosList()
         if (posList.length === 0) {
             return []
         }
-        const query = this.AdModel.select('*').where('id', posList[0].ad)
-        for (let i = 1; i < posList.length; i++) {
-            query.orWhere('id', posList[i].ad)
-        }
-        return await query.andWhere('author', accountID).query()
+        posList = posList.map(pos => pos.ad)
+        return await this.AdModel.select('*').whereIn('id', posList).andWhere('author', accountID).query()
     }
 
     async getAdvertiseByPos(pos) {
@@ -65,6 +58,10 @@ export default class Advertise {
     }
     
     async delete(id) {
+        const ad = await this.getAdvertiseByID(id)
+        if (ad.image) {
+            utils.removeFile(utils.getPath('uploadedFiles', ad.image))
+        }
         await this.AdModel.where('id', id).del()
         await this.AdposModel.where('ad', id).update({ ad: ''})
     }

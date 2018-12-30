@@ -29,11 +29,7 @@ export default class Comment {
         await this.CommentModel.where('id', id).update(data)
     }
 
-    async Delete(id) {
+    async delete(id) {
         await this.CommentModel.where('id', id).del()
-    }
-    
-    async deletebyArticle(article_id) {
-        await this.CommentModel.where('article_id', article_id).del()
     }
 }

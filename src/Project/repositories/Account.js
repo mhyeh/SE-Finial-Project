@@ -1,10 +1,13 @@
 import Model from '../models/MongoDB'
 
+import GroupRepo from './Group'
+
 import utils from '../Utils'
 
 export default class Account {
     constructor() {
         this.AccountModel = new Model('account')
+        this.GroupRepo    = new GroupRepo()
     }
 
     async getAllAccounts() {
@@ -37,7 +40,18 @@ export default class Account {
         this.AccountModel.where('id', id).update(data)
     }
 
-    async Delete(id) {
-        await this.AccountModel.where('id', id).del()
+    async delete(id) {
+        const account = await this.getAccountByID(id)
+        if (account.photo) {
+            utils.removeFile(utils.getPath('./uploadedFiles', account.photo))
+        }
+        const promise = []
+        const groups  = this.GroupRepo.getGroupByAccount(id)
+
+        promise.push(this.AccountModel.where('id', id).del())
+        for (const group of groups) {
+            promise.push(this.GroupRepo.leave(group.id, id))
+        }
+        await Promise.all(promise)
     }
 }

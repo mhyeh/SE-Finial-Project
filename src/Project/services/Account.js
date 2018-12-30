@@ -80,7 +80,7 @@ export default class Account {
             throw 'delete error'
         }
 
-        await this.AccountRepo.Delete(id)
+        await this.AccountRepo.delete(id)
     }
 
     async Match(token) {

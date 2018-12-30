@@ -60,7 +60,7 @@ const removeFile = (path) => {
 }
 
 const isObject = (item) => {
-    return (item && typeof item === 'object' && !Array.isArray(item));
+    return (item && typeof item === 'object' && !Array.isArray(item))
 }
   
 const deepMerge = (target, ...sources) => {
@@ -76,13 +76,15 @@ const deepMerge = (target, ...sources) => {
                     Object.assign(target, { [key]: {} }) 
                 }
                 deepMerge(target[key], source[key])
+            } else if (target[key] instanceof Array && source[key] instanceof Array) {
+                target[key] = target[key].concat(source[key])
             } else {
                 Object.assign(target, { [key]: source[key] })
             }
         }
     }
   
-    return deepMerge(target, ...sources);
+    return deepMerge(target, ...sources)
 }
 
 export default {

@@ -43,6 +43,6 @@ export default class Comment {
             throw 'delete error'
         }
         
-        await this.CommentRepo.Delete(id)
+        await this.CommentRepo.delete(id)
     }
 }

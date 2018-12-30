@@ -1,11 +1,14 @@
 import Model from '../models/MongoDB';
 
+import ArticleRepo from './Article'
+
 import utils from '../Utils'
 
 export default class Group {
     constructor() {
         this.GroupModel    = new Model('groups')
         this.GPMemberModel = new Model('gp_member')
+        this.ArticleRepo   = new ArticleRepo()
     }
 
     async getAllGroups() {
@@ -21,12 +24,9 @@ export default class Group {
     }
 
     async getGroupByAccount(account) {
-        const groups  = await this.GPMemberModel.select('*').where('account', account).query()
-        const promise = []
-        for (const group of groups) {
-            promise.push(this.getGroupByID(group.group_id))
-        }
-        return await Promise.all(promise)
+        let groups = await this.GPMemberModel.select('*').where('account', account).query()
+        groups     = groups.map(group => group.group_id)
+        return await this.GroupModel.select('*').whereIn('id', groups).query()
     }
 
     async getGroupMembers(id) {
@@ -54,7 +54,7 @@ export default class Group {
         await this.GroupModel.where('id', id).update(data)
     }
 
-    async Join(id, account) {
+    async join(id, account) {
         const data = { group_id: id, account: account }
         await this.GPMemberModel.insert(data)
     }
@@ -63,7 +63,7 @@ export default class Group {
         await this.GPMemberModel.where('group_id', id).andWhere('account', account).del()
     }
 
-    async Delete(id) {
+    async delete(id) {
         await Promise.all([this.GroupModel.where('id', id).del(), this.GPMemberModel.where('group_id', id).del(), this.ArticleRepo.deletebyGroup(id)])
     }
 }

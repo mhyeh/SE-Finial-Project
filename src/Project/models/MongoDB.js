@@ -36,21 +36,49 @@ export default class Model {
         return this
     }
 
+    whereIn(col, vals) {
+        this.whereObj[col] = this.in(vals)
+        return this
+    }
+
+    in(vals){
+        const obj = { $in: [] }
+        for (const val of vals) {
+            obj['$in'].push(val)
+        }
+        return obj
+    }
+
     andWhere() {
         const next = this.whereArg(...arguments)
         if (!(this.whereObj['$or'] && next['$or'])) {
             this.whereObj = utils.deepMerge(this.whereObj, next)
         } else {
-            if (this.lastWhere === 'and') {
-                this.whereObj['$and'].push(this.whereArg(...arguments))
-            } else {
-                this.whereObj = {
-                    $and: [this.whereObj, this.whereArg(...arguments)]
-                }
-            }
-            this.lastWhere = 'and'
+            this.and(next)
         }
         return this
+    }
+    
+    andWhereIn(col, vals) {
+        const next = {}
+        next[col] = this.in(vals)
+        if (!this.whereObj['$or']) {
+            this.whereObj = utils.deepMerge(this.whereObj, next)
+        } else {
+            this.and(next)
+        }
+        return this
+    }
+
+    and(next) {
+        if (this.lastWhere === 'and') {
+            this.whereObj['$and'].push(next)
+        } else {
+            this.whereObj = {
+                $and: [this.whereObj, next]
+            }
+        }
+        this.lastWhere = 'and'
     }
 
     orWhere() {
@@ -59,6 +87,20 @@ export default class Model {
         } else {
             this.whereObj = {
                 $or: [this.whereObj, this.whereArg(...arguments)]
+            }
+        }
+        this.lastWhere = 'or'
+        return this
+    }
+
+    orWhereIn(cal, vals) {
+        const next = {}
+        next[cal] = this.in(vals)
+        if (this.lastWhere === 'or') {
+            this.whereObj['$or'].push(next)
+        } else {
+            this.whereObj = {
+                $or: [this.whereObj, next]
             }
         }
         this.lastWhere = 'or'

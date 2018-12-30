@@ -264,7 +264,7 @@ const getArticleByGroupAndTitle = async (_token, _group, _title) => {
 }
 
 const getArticleByGroupAndContext = async (_token, _group, _context) => {
-    const response = await fetch('http://140.118.127.169:3000/article/group/' + _group + '/title/' + _context, {
+    const response = await fetch('http://140.118.127.169:3000/article/group/' + _group + '/context/' + _context, {
         method: 'GET',
         headers: {
             'authorization': _token
@@ -274,7 +274,7 @@ const getArticleByGroupAndContext = async (_token, _group, _context) => {
 }
 
 const getArticleByGroupAndAuthor = async (_token, _group, _author) => {
-    const response = await fetch('http://140.118.127.169:3000/article/group/' + _group + '/title/' + _author, {
+    const response = await fetch('http://140.118.127.169:3000/article/group/' + _group + '/author/' + _author, {
         method: 'GET',
         headers: {
             'authorization': _token
@@ -380,7 +380,7 @@ const deleteArticle = async (_token, _id) => {
 
 let articleID
 
-const testArticle = async (_token, _title, _context) => {
+const testArticle1 = async (_token, _title, _context) => {
     console.log('\n', '=========== article ===========', '\n')
     const account = await getAccount(_token)
     
@@ -405,6 +405,18 @@ const testArticle = async (_token, _title, _context) => {
     // delete article
     // console.log('delete', await deleteArticle(_token, articles[0].id))
     // console.log('article', await getArticleByID(articles[0].id), '\n')
+}
+
+const testArticle2 = async (_token, _group, _title, _context) => {
+    console.log('\n', '=========== article ===========', '\n')
+
+    const account = await getAccount(_token)
+    console.log('post in group', await postArticleInGroup(_token, _group, _title, _context))
+
+    console.log('get by group', await getArticleByGroup(_token, _group), '\n')
+    console.log('get by group and author', await getArticleByGroupAndAuthor(_token, _group, account.id), '\n')
+    console.log('get by group and title', await getArticleByGroupAndTitle(_token, _group, _title), '\n')
+    console.log('get by group and context', await getArticleByGroupAndContext(_token, _group, _context), '\n')
 }
 
 
@@ -695,7 +707,7 @@ const leaveGroup = async (_token, _id) => {
     return res.message
 }
 
-let group
+let groupID
 const testGroup1 = async (_token, _name, _type) => {
     console.log('\n', '=========== group ===========', '\n')
 
@@ -704,20 +716,54 @@ const testGroup1 = async (_token, _name, _type) => {
     const account = await getAccount(_token)
 
     const groups = await getAllGroup()
-    console.log('all group', groups)
-    console.log('get by account', await getGroupByAccount(account.id))
-    console.log('get by name', await getGroupByName(_name))
-    console.log('group', await getGroupByID(groups[groups.length - 1].id), '\n')
+    groupID = groups[groups.length - 1].id
 
-    console.log('get member', await getGroupMember(groups[groups.length - 1].id), '\n')
+    console.log(account.id, await getGroupMember(groupID))
+    // console.log('all group', groups)
+    // console.log('get by account', await getGroupByAccount(account.id))
+    // console.log('get by name', await getGroupByName(_name))
+    // console.log('group', await getGroupByID(groupID), '\n')
 
-    console.log('edit', await editGroup(_token, groups[groups.length - 1].id, 'test'))
-    console.log('group', await getGroupByID(groups[groups.length - 1].id), '\n')
+    // console.log('get member', await getGroupMember(groupID), '\n')
+
+    // console.log('edit', await editGroup(_token, groupID, 'test'))
+    // console.log('group', await getGroupByID(groupID), '\n')
+    // console.log('delete', await deleteGroup(_token, groupID))
+    // console.log('group', await getGroupByID(groupID), '\n')
+}
+
+const testGroup2 = async (_token, _id) => {
+    console.log('\n', '=========== group ===========', '\n')
+
+    console.log('join', await joinGroup(_token, _id))
+    console.log('get member', await getGroupMember(_id), '\n')
+
+    // console.log('leave', await leaveGroup(_token, _id))
+    // console.log('get member', await getGroupMember(_id), '\n')
+}
+
+const testGroup3 = async (_token, _id, _newLeader) => {
+    console.log('\n', '=========== group ===========', '\n')
+
+    console.log('changeLeader', await changeLeader(_token, _id, _newLeader))
+    console.log('group', await getGroupByID(_id), '\n')
+
+    console.log('changeLeader', await changeLeader(_token, _id, _newLeader))
+    console.log('group', await getGroupByID(_id), '\n')
+}
+
+const testGroup4 = async (_token, _id) => {
+    console.log('\n', '=========== group ===========', '\n')
+
+    console.log('group', await getGroupByID(_id), '\n')
+
+    console.log('leave', await leaveGroup(_token, _id))
+    console.log('group', await getGroupByID(_id), '\n')
 }
 
 const test = async () => {
     await testAccount('eee', '123', 'ccc')
-    // await testArticle(token, 'testaaa', 'testaaa')
+    // await testArticle1(token, 'testaaa', 'testaaa')
     // await testAd(token, 0, {context: 'aaa'})
     // await testComment(token, articleID, 'asd', 3)
     // await testFriend1(token, "acf18f37-9e3f-4205-868f-b39b9409b634")
@@ -727,8 +773,18 @@ const test = async () => {
     // await testFriend3(token, "acf18f37-9e3f-4205-868f-b39b9409b634")
     // await testGroup1(token, 'aaa', 'Board')
     // await testGroup1(token, 'aaa', 'Family')
-    await testGroup1(token, 'bbb', 'Family')
+    // await testGroup1(token, 'bbb', 'Family')
     // await testGroup1(token, 'ccc', '123')
-
+    await testGroup1(token, 'aaa', 'Board')
+    // await testAccount('bbb', 'bbb', 'ccc')
+    // await testGroup2(token, groupID)
+    // await testGroup2(token, groupID)
+    // await testAccount('eee', '123', 'ccc')
+    // const account = await getAccount(token)
+    // await testAccount('eee', '123', 'ccc')
+    // await testGroup3(token, groupID, account.id)
+    // await testGroup4(token, groupID)
+    await testAccount('123456', '123', 'ccc')
+    await testArticle2(token, groupID, 'asdfaf', 'jiafifoaif')
 }
 test()
