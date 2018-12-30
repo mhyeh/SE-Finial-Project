@@ -2,7 +2,6 @@ import Model from '../models/MongoDB'
 
 import CommentRepo from './Comment'
 import FriendRepo  from './Friend'
-import GroupRepo   from './Group'
 
 import utils from '../Utils'
 
@@ -11,7 +10,6 @@ export default class Article {
         this.ArticleModel = new Model('article')
         this.CommentRepo  = new CommentRepo()
         this.FriendRepo   = new FriendRepo()
-        this.GroupRepo    = new GroupRepo()
     }
 
     async getAllArticles() {

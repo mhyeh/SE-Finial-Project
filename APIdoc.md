@@ -9,11 +9,11 @@
 
 ## Account
 
-### getAccountByToken
+### get account by token
 
 ```
 Method: GET
-URL: /account
+URL: /account/
 
 Header: { "authorization": <token> }
 
@@ -43,23 +43,19 @@ Data: {
 }
 ```
 
-### getAllAccounts
+### match account
 
 ```
 Method: GET
-URL: /account/all
+URL: /account/match
 
 Response:
 
 Status Code: 200
-Data: { 
-    "accounts": [
-        同 getAccountByToken 的 Data
-    ]
-}
+Data: 同 get account by token 的 Data
 ```
 
-### getAccountsByName
+### get accounts by name
 
 ```
 Method: GET
@@ -68,10 +64,14 @@ URL: /account/name/:name
 Response:
 
 Status Code: 200
-Data: 同 getAllAccounts 的 Data
+Data: {
+    "accounts": [
+        同 get account by token 的 Data
+    ]
+}
 ```
 
-### getAccountByID
+### get account by ID
 
 ```
 Method: GET
@@ -80,7 +80,7 @@ URL: /account/:id
 Response:
 
 Status Code: 200
-Data: 同 getAccountByToken 的 Data
+Data: 同 get account by token 的 Data
 ```
 
 ### register
@@ -88,6 +88,8 @@ Data: 同 getAccountByToken 的 Data
 ```
 Method: POST
 URL: /account/
+
+Header: { "Content-Type": "application/json" }
 
 Body: {
     "account":  <user account>,
@@ -107,6 +109,8 @@ Data: { "token": <token> }
 Method: POST
 URL: /account/login
 
+Header: { "Content-Type": "application/json" }
+
 Body: {
     "account":  <user account>,
     "password": <user password>
@@ -118,7 +122,7 @@ Status Code: 200
 Data: { "token": <token> }
 ```
 
-### editAccount
+### edit account
 
 ```
 Method: PUT
@@ -150,7 +154,7 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### deleteAccount
+### delete account
 
 ```
 Method: DELETE
@@ -166,23 +170,63 @@ Data: { "message": "success" }
 
 ## Advertise
 
-### getAllAdervertise
+### get all adervertise
 
 ```
 Method: GET
-URL: /advertise
+URL: /advertise/
 
 Response:
 
 Status Code: 200
 Data: { 
     "advertises": [
-        同 getAdvertiseByPosition 的 Data
+        {
+            "id":       <advertise id>,
+            "author":   <advertise author account id>,
+            ["context": <advertise context>],
+            ["image":   <advertise image path>]
+        }
     ]
 }
 ```
 
-### getAdvertiseByPosition
+### get advertise by account
+
+```
+Method: GET
+URL: /advertise/account
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: 同 get all adervertise 的 Data
+```
+
+### get advertise position list
+
+```
+Method: GET
+URL: /advertise/position
+
+Response:
+
+Status Code: 200
+Data: {
+    pos: [
+        {
+            "id":       <ad_pos id>,
+            "position": <advertise position>,
+            "ad":       <advertise id>,
+            "price":    <ad_pos price>
+        }
+    ]
+}
+```
+
+### get advertise by position
 
 ```
 Method: GET
@@ -193,15 +237,15 @@ Response:
 Status Code: 200
 Data: { 
     "advertise": {
-        "id":      <ad id>,
-        "context": <ad context>,
-        "author":  <ad author account id>,
-        "image":   <ad image path>
+        "id":      <advertise id>,
+        "context": <advertise context>,
+        "author":  <advertise author account id>,
+        "image":   <advertise image path>
     }
 }
 ```
 
-### getAdvertiseByID
+### get advertise by ID
 
 ```
 Method: GET
@@ -210,14 +254,16 @@ URL: /advertise/:id
 Response:
 
 Status Code: 200
-Data: 同 getAdvertiseByPosition 的 Data
+Data: 同 get advertise by position 的 Data
 ```
 
-### buyAdvertise
+### buy advertise
 
 ```
 Method: POST
 URL: /advertise/:pos
+
+Header: { "authorization": <token> }
 
 FormData: {
     ["context": <ad context>],
@@ -230,7 +276,7 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### editAd
+### edit advertise
 
 ```
 Method: PUT
@@ -249,7 +295,7 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### deleteAd
+### delete advertise
 
 ```
 Method: DELETE
@@ -265,11 +311,11 @@ Data: { "message": "success" }
 
 ## Article
 
-### getAllArticlesNotInGroup
+### get friend and self article
 
 ```
 Method: GET
-URL: /article
+URL: /article/
 
 Response:
 
@@ -277,57 +323,77 @@ Status Code: 200
 Data: { 
     "articles": [
         {
-            "id":       <article id>,
-            "title":    <article title>,
-            "context":  <article context>,
-            "author":   <article author>,
-            "time":     <article post time>,
-            "ip":       <article post ip>,
-            "board_id": <article board id>,
-            "visible":  <article visible status>,
-            "image":    <article image path>,
+            "id":        <article id>,
+            "title":     <article title>,
+            ["context":  <article context>],
+            "author":    <article author>,
+            "time":      <article post time>,
+            "ip":        <article post ip>,
+            "board_id":  <article board id>,
+            "visible":   <article visible status>,
+            ["image":    <article image path>]
         }
     ]
 }
 ```
 
-### getArticlesByGroupAndAuthor
+### get articles by group and author
 
 ```
 Method: GET
 URL: /article/group/:group/author/:author
 
+Header: { "authorization": <token> }
+
 Response:
 
 Status Code: 200
-Data: 同 getAllArticles 的 Data
+Data: 同 get friend and self article 的 Data
 ```
 
-### getArticlesByGroupAndTitle
+### get articles by group and title
 
 ```
 Method: GET
 URL: /article/group/:group/title/:title
 
+Header: { "authorization": <token> }
+
 Response:
 
 Status Code: 200
-Data: 同 getAllArticles 的 Data
+Data: 同 get friend and self article 的 Data
 ```
 
-### getArticlesByGroupAndContext
+### get articles by group and context
 
 ```
 Method: GET
 URL: /article/group/:group/context/:context
 
+Header: { "authorization": <token> }
+
 Response:
 
 Status Code: 200
-Data: 同 getAllArticles 的 Data
+Data: 同 get friend and self article 的 Data
 ```
 
-### getArticlesByAuthor
+### get articles by group
+
+```
+Method: GET
+URL: /article/group/:group
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: 同 get friend and self article 的 Data
+```
+
+### get articles by author
 
 ```
 Method: GET
@@ -336,10 +402,10 @@ URL: /article/author/:author
 Response:
 
 Status Code: 200
-Data: 同 getAllArticles 的 Data
+Data: 同 get friend and self article 的 Data
 ```
 
-### getArticlesByTitle
+### get articles by title
 
 ```
 Method: GET
@@ -348,10 +414,10 @@ URL: /article/title/:title
 Response:
 
 Status Code: 200
-Data: 同 getAllArticles 的 Data
+Data: 同 get friend and self article 的 Data
 ```
 
-### getArticlesByContext
+### get articles by context
 
 ```
 Method: GET
@@ -360,22 +426,10 @@ URL: /article/context/:context
 Response:
 
 Status Code: 200
-Data: 同 getAllArticles 的 Data
+Data: 同 get friend and self article 的 Data
 ```
 
-### getArticlesByGroup
-
-```
-Method: GET
-URL: /article/group/:group
-
-Response:
-
-Status Code: 200
-Data: 同 getAllArticles 的 Data
-```
-
-### getArticleByID
+### get article by ID
 
 ```
 Method: GET
@@ -385,21 +439,21 @@ Response:
 
 Status Code: 200
 Data: {
-    "articles": {
-        "id":       <article id>,
-        "title":    <article title>,
-        "context":  <article context>,
-        "author":   <article author account id>,
-        "time":     <article post time>,
-        "ip":       <article post ip>,
-        "board_id": <article board id>,
-        "visible":  <article visible status>,
-        "image":    <article image path>,
+    "article": {
+        "id":        <article id>,
+        "title":     <article title>,
+        ["context":  <article context>],
+        "author":    <article author account id>,
+        "time":      <article post time>,
+        "ip":        <article post ip>,
+        "board_id":  <article board id>,
+        "visible":   <article visible status>,
+        ["image":    <article image path>]
     }
 }
 ```
 
-### postArticle
+### post article
 
 ```
 Method: POST
@@ -407,10 +461,10 @@ URL: /article
 
 Header: { "authorization": <token> }
 
-Body: {
-    "title":   <article title>,
-    "context": <article context>,
-    ["imgs":   <article image array>]
+FormData: {
+    "title":    <article title>,
+    ["context": <article context>],
+    ["imgs":    <article image array>]
 }
 
 Response:
@@ -419,7 +473,7 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### postArticleInGroup
+### post article in group
 
 ```
 Method: POST
@@ -427,11 +481,7 @@ URL: /article/group/:id
 
 Header: { "authorization": <token> }
 
-Body: {
-    "title":   <article title>,
-    "context": <article context>,
-    ["imgs":   <article image array>]
-}
+FormData: 同 post article 的 FormData
 
 Response:
 
@@ -439,7 +489,7 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### editArticle
+### edit article
 
 ```
 Method: PUT
@@ -459,7 +509,7 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### deleteArticle
+### delete article
 
 ```
 Method: DELETE
@@ -475,7 +525,7 @@ Data: { "message": "success" }
 
 ## Comment
 
-### getAllCommentByArticleID
+### get all comment by article ID
 ```
 Method: GET
 URL: /comment/:id
@@ -498,12 +548,15 @@ Data: {
 }
 ```
 
-### postComment
+### post comment
 ```
 Method: POST
 URL: /comment/:id
 
-Header: { "authorization": <token> }
+Header: { 
+    "authorization": <token>,
+    "Content-Type": "application/json"
+}
 
 Body: {
     "context": <comment context>,
@@ -516,13 +569,16 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### editComment
+### edit comment
 
 ```
 Method: PUT
 URL: /comment/:id
 
-Header: { "authorization": <token> }
+Header: { 
+    "authorization": <token>,
+    "Content-Type": "application/json"
+}
 
 Body: {
     "context": <comment context>
@@ -534,7 +590,7 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### deleteComment
+### delete comment
 
 ```
 Method: DELETE
@@ -550,7 +606,7 @@ Data: { "message": "success" }
 
 ## File
 
-### getFileByFilePath
+### get file by file path
 ```
 Method: GET
 URL: /file/:filePath
@@ -560,9 +616,132 @@ Response:
 Status Code: 200
 Data: file
 ```
+
+## Friend
+
+### get all friends
+
+```
+Method: GET
+URL: /friend/
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { 
+    "friends": [
+        id:        <friend id>
+        account1:  <account id>
+        account2:  <account id>
+        isConfirm: <friend status>
+    ]
+}
+```
+
+### get unconfirmed friends
+
+```
+Method: GET
+URL: /friend/unconfirmed
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { 
+    "unconfrimed": [
+        id:        <friend id>
+        account1:  <account id>
+        account2:  <account id>
+        isConfirm: <friend status>
+    ]
+}
+```
+
+### get invitation
+
+```
+Method: GET
+URL: /friend/unconfirmed
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { 
+    "invitation": [
+        id:        <friend id>
+        account1:  <account id>
+        account2:  <account id>
+        isConfirm: <friend status>
+    ]
+}
+```
+
+### get status with friend
+
+```
+Method: GET
+URL: /friend/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "state": <friend state> }
+```
+
+### send invitation
+
+```
+Method: POST
+URL: /friend/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
+
+### confirm invitation
+
+```
+Method: PUT
+URL: /friend/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
+
+### delete friend
+
+```
+Method: DELETE
+URL: /friend/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
+
+
 ## Group
 
-### getAllGroups
+### get all groups
 
 ```
 Method: GET
@@ -583,33 +762,7 @@ Data: {
 }
 ```
 
-### joinGroup
-```
-Method: GET
-URL: /group/join/:id
-
-Header: { "authorization": <token> }
-
-Response:
-
-Status Code: 200
-Data: { "message": "success" }
-```
-
-### leaveGroup
-```
-Method: GET
-URL: /group/leave/:id
-
-Header: { "authorization": <token> }
-
-Response:
-
-Status Code: 200
-Data: { "message": "success" }
-```
-
-### getGroupsByName
+### get groups by name
 
 ```
 Method: GET
@@ -618,26 +771,28 @@ URL: /group/name/:name
 Response:
 
 Status Code: 200
-Data: 同 getAllGroups 的 Data
+Data: 同 get all groups 的 Data
 ```
 
-### getGroupsByAccount
+### get groups by account
 
 ```
 Method: GET
-URL: /group/account/:account
+URL: /group/account
+
+Header: { "authorization": <token> }
 
 Response:
 
 Status Code: 200
-Data: 同 getAllGroups 的 Data
+Data: 同 get all groups 的 Data
 ```
 
-### getGroupMembers
+### get group members
 
 ```
 Method: GET
-URL: /group/:id/account
+URL: /group/:id/member
 
 Response:
 
@@ -653,7 +808,7 @@ Data: {
 }
 ```
 
-### getGroupByID
+### get group by ID
 
 ```
 Method: GET
@@ -672,17 +827,19 @@ Data: { "group":
 }
 ```
 
-### createGroup
+### create group
 
 ```
 Method: POST
 URL: /group
 
-Header: { "authorization": <token> }
+Header: { 
+    "authorization": <token>,
+    "Content-Type": "application/json"
+}
 
 Body: {
     name    <group name>,
-    leader: <group leader account id>,
     type:   <group type>
 }
 
@@ -692,124 +849,10 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### editGroup
-```
-Method: PUT
-URL: /group/:id
-
-Header: { "authorization": <token> }
-
-Body: {
-    [name:   <group name>],
-    [leader: <leader account ID>]
-}
-
-Response:
-
-Status Code: 200
-Data: { "message": "success" }
-```
-
-### deleteGroup
-
-```
-Method: DELETE
-URL: /group/:id
-
-Header: { "authorization": <token> }
-
-Response:
-
-Status Code: 200
-Data: { "message": "success" }
-```
-
-### getAllFriends
-
-```
-Method: GET
-URL: /friend
-
-Header: { "authorization": <token> }
-
-Response:
-
-Status Code: 200
-Data: { 
-    "friends": [
-        id:         <friend id>
-        account1:   <account id>
-        account2    <account id>
-        isConfirm   <friend status>
-    ]
-}
-```
-
-### getUnconfirmedFriends
-
-```
-Method: GET
-URL: /friend/unconfirmed
-
-Header: { "authorization": <token> }
-
-Response:
-
-Status Code: 200
-Data: { 
-    "unconfrimed": [
-        id:         <friend id>
-        account1:   <account id>
-        account2    <account id>
-        isConfirm   <friend status>
-    ]
-}
-```
-
-### getInvitation
-
-```
-Method: GET
-URL: /friend/unconfirmed
-
-Header: { "authorization": <token> }
-
-Response:
-
-Status Code: 200
-Data: { 
-    "invitation": [
-        id:         <friend id>
-        account1:   <account id>
-        account2    <account id>
-        isConfirm   <friend status>
-    ]
-}
-```
-
-### getStatusWithFriend
-
-```
-Method: GET
-URL: /friend/:id
-
-Header: { "authorization": <token> }
-
-Response:
-
-Status Code: 200
-Data: { 
-    "state": [
-        isConfirm   <friend status>
-    ]
-}
-```
-
-### sendInvitation
-
+### join group
 ```
 Method: POST
-URL: /friend/:id
+URL: /group/:id
 
 Header: { "authorization": <token> }
 
@@ -819,11 +862,10 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### confirmInvitation
-
+### change group leader
 ```
 Method: PUT
-URL: /friend/:id
+URL: /group/:id/leader/:leader
 
 Header: { "authorization": <token> }
 
@@ -833,11 +875,44 @@ Status Code: 200
 Data: { "message": "success" }
 ```
 
-### deleteFriend
+### edit group
+```
+Method: PUT
+URL: /group/:id
+
+Header: { 
+    "authorization": <token>,
+    "Content-Type": "application/json"
+}
+
+Body: {
+    name: <group name>,
+}
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
+
+### leave group
+```
+Method: DELETE
+URL: /group/leave/:id
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
+
+### delete group
 
 ```
 Method: DELETE
-URL: /friend/:id
+URL: /group/:id
 
 Header: { "authorization": <token> }
 
