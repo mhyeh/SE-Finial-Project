@@ -13,7 +13,7 @@ export default class Advertise {
 
     async Create(accountID, pos, req) {
         const ad_pos = await this.AdvertiseRepo.getAdvertisePos(pos)
-        if (ad_pos.ad !== -1) {
+        if (ad_pos.ad !== undefined && ad_pos.ad !== '') {
             throw 'create error'
         }
         const account = await this.AccountRepo.getAccountByID(accountID)
@@ -34,6 +34,9 @@ export default class Advertise {
             data.image = utils.getBaseName(image.path)
         }
         await this.AdvertiseRepo.create(pos, data)
+
+        account.NTUST_coin -= ad_pos.price
+        await this.AccountRepo.edit(account.id, { NTUST_coin: account.NTUST_coin })
     }
 
     async Edit(accountID, id, req) {

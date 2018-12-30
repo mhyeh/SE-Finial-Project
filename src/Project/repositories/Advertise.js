@@ -12,8 +12,12 @@ export default class Advertise {
         return await this.AdModel.select('*').query()
     }
 
-    async getAdvertiseByPos(pos) {
+    async getAdvertisePos(pos) {
         return (await this.AdposModel.select('*').where('position', pos).query())[0]
+    }
+
+    async getAdvertisePosList() {
+        return await this.AdposModel.select('*').query()
     }
 
     async getAdvertiseByID(id) {
@@ -24,18 +28,17 @@ export default class Advertise {
         return await this.AdModel.select('*').where('author', accountID).query()
     }
 
-    async getAdvertisePosList() {
-        return await this.AdposModel.select('*').query()
+    async getAdvertiseByPos(pos) {
+        const pos = (await this.AdposModel.select('*').where('position', pos).query())[0]
+        return await this.getAdvertiseByID(pos.ad)
     }
 
     async create(pos, data) {
         if (!utils.allow(data, ['context', 'author', 'image'])) {
             throw 'not accept'
         }
-        await this.AdModel.insert(data)
-        const AdData    = (await this.AdModel.select('*').where('author', data.author).andWhere('context', data.context).andWhere('image', data.image).query())[0]
-        const AdposData = { ad: AdData.id }
-        await this.AdposModel.where('position', pos).update(AdposData)
+        const insertID = await this.AdModel.insert(data)
+        await this.AdposModel.where('position', pos).update({ ad: insertID })
     }
 
     async edit(id, data) {
@@ -47,5 +50,6 @@ export default class Advertise {
     
     async delete(id) {
         await this.AdModel.where('id', id).del()
+        await this.AdposModel.where('ad', id).update({ ad: ''})
     }
 }

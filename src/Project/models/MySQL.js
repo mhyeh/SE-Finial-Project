@@ -134,7 +134,7 @@ export default class Model {
                     reject(err)
                     return
                 }
-                resolve()
+                resolve(data.id)
             })
         })
     }

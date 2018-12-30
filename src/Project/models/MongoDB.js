@@ -109,7 +109,7 @@ export default class Model {
                 return db.db().collection(this.table).insertOne(data)
             }).then(() => {
                 this.flush()
-                resolve()
+                resolve(data.id)
             }).catch(err => {
                 this.flush()
                 reject(err)
