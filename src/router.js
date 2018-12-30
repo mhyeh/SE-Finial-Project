@@ -1,11 +1,12 @@
 export default class Router {
     constructor() {
         this.routeMap = {
-            ANY:    [],
-            GET:    [],
-            POST:   [],
-            PUT:    [],
-            DELETE: []
+            ANY:     [],
+            GET:     [],
+            POST:    [],
+            PUT:     [],
+            DELETE:  [],
+            OPTIONS: []
         }
     }
 

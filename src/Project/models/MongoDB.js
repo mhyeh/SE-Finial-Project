@@ -111,7 +111,6 @@ export default class Model {
                 this.flush()
                 resolve()
             }).catch(err => {
-                console.log(err)
                 this.flush()
                 reject(err)
             })

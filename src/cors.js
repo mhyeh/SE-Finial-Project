@@ -116,7 +116,7 @@ let applyHeaders = function(headers, res) {
 let corsSetting = async function(req, res) {
     let headers  = []
     const method = req.method
-    if (method === 'OPTION') {
+    if (method === 'OPTIONS') {
         headers.push(configureOrigin(options, req))
         headers.push(configureCredentials(options))
         headers.push(configureMethods(options))
@@ -125,6 +125,9 @@ let corsSetting = async function(req, res) {
         headers.push(configureExposedHeaders(options))
 
         applyHeaders(headers, res.res)
+
+        res.res.setHeader('Content-Length', '0');
+        res.status(options.optionsSuccessStatus).send();
     } else {
         headers.push(configureOrigin(options, req));
         headers.push(configureCredentials(options));
