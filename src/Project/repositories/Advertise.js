@@ -9,11 +9,19 @@ export default class Advertise {
     }
 
     async getAllAdvertises() {
-        return await this.AdModel.select('*').query()
+        const posList = await this.getAdvertisePosList()
+        if (posList.length === 0) {
+            return []
+        }
+        const query = this.AdModel.select('*').where('id', posList[0].ad)
+        for (let i = 1; i < posList.length; i++) {
+            query.orWhere('id', posList[i].ad)
+        }
+        return await query.query()
     }
 
     async getAdvertisePos(pos) {
-        return (await this.AdposModel.select('*').where('position', pos).query())[0]
+        return (await this.AdposModel.select('*').where('position', parseInt(pos)).query())[0]
     }
 
     async getAdvertisePosList() {
@@ -25,12 +33,20 @@ export default class Advertise {
     }
 
     async getAdvertisesByAccount(accountID) {
-        return await this.AdModel.select('*').where('author', accountID).query()
+        const posList = await this.getAdvertisePosList()
+        if (posList.length === 0) {
+            return []
+        }
+        const query = this.AdModel.select('*').where('id', posList[0].ad)
+        for (let i = 1; i < posList.length; i++) {
+            query.orWhere('id', posList[i].ad)
+        }
+        return await query.andWhere('author', accountID).query()
     }
 
     async getAdvertiseByPos(pos) {
-        const pos = (await this.AdposModel.select('*').where('position', pos).query())[0]
-        return await this.getAdvertiseByID(pos.ad)
+        const ad_pos = (await this.AdposModel.select('*').where('position', parseInt(pos)).query())[0]
+        return await this.getAdvertiseByID(ad_pos.ad)
     }
 
     async create(pos, data) {
@@ -38,7 +54,7 @@ export default class Advertise {
             throw 'not accept'
         }
         const insertID = await this.AdModel.insert(data)
-        await this.AdposModel.where('position', pos).update({ ad: insertID })
+        await this.AdposModel.where('position', parseInt(pos)).update({ ad: insertID })
     }
 
     async edit(id, data) {
