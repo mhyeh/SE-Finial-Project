@@ -26,14 +26,14 @@ export default class Article {
     async getRecommandArticles() {
         if (this.ArticleModel.db === 'mongo') {
             let groups   = await this.GroupModel.select('id').where('type', 'Board').query()
-            groups       = group.map(group => group.id)
+            groups       = groups.map(group => group.id)
             let articles = await this.ArticleModel.raw([
                 { $lookup: { from: 'comment', localField: 'id', foreignField: 'article_id', as: 'comment' } },
-                { $unwind: '$comment' },
+                { $unwind: { path: '$comment', preserveNullAndEmptyArrays: true } },
                 { $project: {'id': '$id', 'title': '$title', 'context': '$context', 'author': '$author', 'time': '$time', 'ip': '$ip', 'board_id': '$board_id', 'visible': '$visible', 'image': '$image', 'types': '$comment.types'}},
                 { $match: { $or: [ 
                             { 
-                                types: { $in: [0, 1] },
+                                $or: [{ types: { $in: [0, 1] } }, { types: { $exists: false } }],
                                 board_id: ''
                             },
                             { board_id: { $in: groups } }, 
@@ -44,7 +44,7 @@ export default class Article {
                 { $sort: { count: 1 } },
                 { $limit: 10 }
             ])
-            articles = articles.map(article => articles.id)
+            articles = articles.map(article => article.id)
             return await this.ArticleModel.whereIn('id', articles).query()
         } else {
             return await this.ArticleModel.raw('select `article`.* from `article`                                \
