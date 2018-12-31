@@ -18,8 +18,7 @@ export default class Friend {
     
     async getFriends(req, res) {
         try {
-            const ID = await this.RedisService.Verify(req.header.authorization)
-            res.status(200).json({ friends: await this.FriendRepo.getAllFriends(ID) })
+            res.status(200).json({ friends: await this.FriendRepo.getAllFriends(req.params.id) })
         } catch (e) {
             res.status(400).json({ error: 'get friends error' })
         }

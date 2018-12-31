@@ -41,7 +41,7 @@ export default class Article {
                     }
                 },
                 { $group: { _id: '$id', id: { $first: '$id' }, count: { $sum: 1 } } },
-                { $sort: { count: 1 } },
+                { $sort: { count: -1 } },
                 { $limit: 10 }
             ])
             articles = articles.map(article => article.id)

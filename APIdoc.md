@@ -635,9 +635,8 @@ Data: file
 
 ```
 Method: GET
-URL: /friend/
+URL: /friend/:id
 
-Header: { "authorization": <token> }
 
 Response:
 
@@ -683,7 +682,7 @@ Data: {
 
 ```
 Method: GET
-URL: /friend/:id
+URL: /friend/:id/state
 
 Header: { "authorization": <token> }
 
