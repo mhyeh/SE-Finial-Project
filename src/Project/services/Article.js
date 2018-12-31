@@ -75,7 +75,7 @@ export default class Article {
                 throw 'edit error'
             }
         } else {
-            if (data.title === undefined || (data.context === undefined && (images === undefined || images === []))) {
+            if (data.title === undefined || data.context === undefined && (images === undefined || images === [])) {
                 throw 'post error'
             }
         }

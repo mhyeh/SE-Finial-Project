@@ -5,7 +5,8 @@ import { MongoDB } from './Connection'
 import utils from '../Utils'
 
 export default class Model {
-    constructor(table) {
+    constructor(table='') {
+        this.db         = 'mongo'
         this.connection = MongoDB
         this.table      = table
         this.lastWhere  = ''
@@ -128,6 +129,20 @@ export default class Model {
             }
         }
         return whereObj
+    }
+
+    raw(obj) {
+        return new Promise((resolve, reject) => {
+            this.connection.then(db => {
+                return db.db().collection(this.table).aggregate(obj).toArray()
+            }).then(res => {
+                this.flush()
+                resolve(res)
+            }).catch(err => {
+                this.flush()
+                reject(err)
+            })
+        })
     }
 
     query() {

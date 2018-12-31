@@ -311,7 +311,7 @@ Data: { "message": "success" }
 
 ## Article
 
-### get friend and self article
+### get friend and self articles
 
 ```
 Method: GET
@@ -427,6 +427,18 @@ Response:
 
 Status Code: 200
 Data: 同 get friend and self article 的 Data
+```
+
+### get recommand articles
+
+```
+Method: GET
+URL: /article/recommand
+
+Response:
+
+Status Code: 200
+Data: 同 get friend and self articles 的 Data
 ```
 
 ### get article by ID
@@ -631,12 +643,7 @@ Response:
 
 Status Code: 200
 Data: { 
-    "friends": [
-        id:        <friend id>
-        account1:  <account id>
-        account2:  <account id>
-        isConfirm: <friend status>
-    ]
+    "friends": <account id>[]
 }
 ```
 
@@ -652,12 +659,7 @@ Response:
 
 Status Code: 200
 Data: { 
-    "unconfrimed": [
-        id:        <friend id>
-        account1:  <account id>
-        account2:  <account id>
-        isConfirm: <friend status>
-    ]
+    "unconfrimed": <account id>[]
 }
 ```
 
@@ -673,12 +675,7 @@ Response:
 
 Status Code: 200
 Data: { 
-    "invitation": [
-        id:        <friend id>
-        account1:  <account id>
-        account2:  <account id>
-        isConfirm: <friend status>
-    ]
+    "invitation": <account id>[]
 }
 ```
 

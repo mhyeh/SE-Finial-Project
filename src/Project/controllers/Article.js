@@ -18,6 +18,7 @@ export default class Article {
         this.GetArticlesByGroupAndAuthor  = this.getArticlesByGroupAndAuthor.bind(this)
         this.GetArticlesByGroupAndTitle   = this.getArticlesByGroupAndTitle.bind(this)
         this.GetArticlesByGroupAndContext = this.getArticlesByGroupAndContext.bind(this)
+        this.GetRecommandArticles         = this.getRecommandArticles.bind(this)
         this.Post                         = this.post.bind(this)
         this.PostInGroup                  = this.postInGroup.bind(this)
         this.Edit                         = this.edit.bind(this)
@@ -28,6 +29,14 @@ export default class Article {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
             res.status(200).json({ articles: await this.ArticleRepo.getDefaultArticles(ID) })
+        } catch (e) {
+            res.status(400).json({ error: 'get article error' })
+        }
+    }
+
+    async getRecommandArticles(req, res) {
+        try {
+            res.status(200).json({ articles: await this.ArticleRepo.getRecommandArticles() })
         } catch (e) {
             res.status(400).json({ error: 'get article error' })
         }

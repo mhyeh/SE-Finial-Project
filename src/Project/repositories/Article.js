@@ -8,6 +8,7 @@ export default class Article {
     constructor() {
         this.ArticleModel = new Model('article')
         this.CommentModel = new Model('comment')
+        this.GroupModel   = new Model('group')
         this.FriendRepo   = new FriendRepo()
     }
 
@@ -20,6 +21,42 @@ export default class Article {
         const author = friendList.map(friend => friend.id)
         author.push(accountID)
         return await this.ArticleModel.select('*').whereIn('author', author).andWhere('board_id', '').query()
+    }
+
+    async getRecommandArticles() {
+        if (this.ArticleModel.db === 'mongo') {
+            let groups = await this.GroupModel.select('id').where('type', 'Board').query()
+            groups     = group.map(group => group.id)
+            return await this.ArticleModel.raw([
+                { $lookup: { from: 'comment', localField: 'id', foreignField: 'article_id', as: 'comment' } },
+                { $unwind: '$comment' },
+                { $project: {'id': '$id', 'title': '$title', 'context': '$context', 'author': '$author', 'time': '$time', 'ip': '$ip', 'board_id': '$board_id', 'visible': '$visible', 'image': '$image', 'types': '$comment.types'}},
+                { $match: { $or: [ 
+                            { 
+                                types: { $in: [0, 1] },
+                                board_id: ''
+                            },
+                            { board_id: { $in: groups } }, 
+                        ]
+                    }
+                },
+                { $group: { _id: '$id', id: { $first: '$id' }, count: { $sum: 1 } } },
+                { $sort: { count: 1 } },
+                { $limit: 10 }
+            ])
+        } else {
+            return await this.ArticleModel.raw('select article.*, count(comment.types) from article        \
+                                                left join `comment` on                                     \
+                                                    article.id = comment.article_id and                    \
+                                                    comment.types in (0, 1) and (                          \
+                                                        article.board_id = \'\' or article.board_id in (   \
+                                                            select id from groups where `type` = \'Board\' \
+                                                        )                                                  \
+                                                    )                                                      \
+                                                group by article.id                                        \
+                                                order by count(comment.types) desc                         \
+                                                limit 10')
+        }
     }
 
     async getArticleByID(id) {

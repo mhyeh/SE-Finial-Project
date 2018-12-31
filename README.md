@@ -53,7 +53,7 @@ npm install
 | PUT | /advertise/:id | edit advertise |
 | DELETE | /advertise/:id | cancel advertise |
 | **Article** |
-| GET | /article | get friend and self article (not in group) |
+| GET | /article | get friend and self articles (not in group) |
 | GET | /article/group/:group/author/:author | get articles by group and author |
 | GET | /article/group/:group/title/:title | get articles by group and title |
 | GET | /article/group/:group/context/:context | get articles by group and context |
@@ -61,6 +61,7 @@ npm install
 | GET | /article/author/:author | get articles by author |
 | GET | /article/title/:title | get articles by title |
 | GET | /article/context/:context | get articles by context |
+| GET | /article/recommand/ | get recommand articles |
 | GET | /article/:id | get article by ID |
 | POST | /article | post a new article |
 | POST | /article/group/:id | post a new article in group |

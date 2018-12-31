@@ -18,6 +18,7 @@ class Article extends Router {
         this.get('/author/:author',                this.controller.GetArticlesByAuthor)
         this.get('/title/:title',                  this.controller.GetArticlesByTitle)
         this.get('/context/:context',              this.controller.GetArticlesByContext)
+        this.get('/recommand',                     this.controller.GetRecommandArticles)
         this.get('/:id',                           this.controller.GetArticleByID)
         this.post('/',                             this.controller.Post)
         this.post('/group/:id',                    this.controller.PostInGroup)

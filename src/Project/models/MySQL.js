@@ -3,7 +3,8 @@ import * as uuid from 'uuid'
 import { MySQL } from './Connection'
 
 export default class Model {
-    constructor(table) {
+    constructor(table='') {
+        this.db         = 'maria'
         this.connection = MySQL
         this.table      = table
         this.queryStr   = ''
@@ -128,6 +129,11 @@ export default class Model {
             whereParam.push(args[2])
             return `\`${args[0]}\` ${args[1]} ?`
         }
+    }
+
+    async raw(str) {
+        this.queryStr = str
+        return await this.query()
     }
 
     query() {

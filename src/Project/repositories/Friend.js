@@ -1,23 +1,25 @@
 import Model from '../models/MongoDB'
 
-import AccountRepo from './Account'
-
 export default class Friend {
     constructor() {
         this.FriendModel = new Model('friends')
-        this.AccountRepo = new AccountRepo()
     }
 
     async getAllFriends(ID) {
-        return await this.FriendModel.select('*').where('account1', ID).orWhere('account2', ID).andWhere('isConfirm', 1).query()
+        const friends = []
+        friends.push(await this.FriendModel.select('account1').where('account1', ID).andWhere('isConfirm', 1).query())
+        friends.push(await this.FriendModel.select('account2').where('account1', ID).andWhere('isConfirm', 1).query())
+        return friends[0].map(friend => friend.account1).concat(friends[1].map(friend => friend.account2))
     }
 
     async getUnconfirmedFriends(ID) {
-        return await this.FriendModel.select('*').where('account2', ID).andWhere('isConfirm', 0).query()
+        const list = await this.FriendModel.select('account1').where('account2', ID).andWhere('isConfirm', 0).query()
+        return list.map(element => element.account1)
     }
 
     async getInvitationList(ID) {
-        return await this.FriendModel.select('*').where('account1', ID).andWhere('isConfirm', 0).query()
+        const list = await this.FriendModel.select('account2').where('account1', ID).andWhere('isConfirm', 0).query()
+        return list.map(element => element.account2)
     }
 
     async getFriend(id1, id2) {
