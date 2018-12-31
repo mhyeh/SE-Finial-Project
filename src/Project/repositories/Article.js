@@ -25,9 +25,9 @@ export default class Article {
 
     async getRecommandArticles() {
         if (this.ArticleModel.db === 'mongo') {
-            let groups = await this.GroupModel.select('id').where('type', 'Board').query()
-            groups     = group.map(group => group.id)
-            return await this.ArticleModel.raw([
+            let groups   = await this.GroupModel.select('id').where('type', 'Board').query()
+            groups       = group.map(group => group.id)
+            let articles = await this.ArticleModel.raw([
                 { $lookup: { from: 'comment', localField: 'id', foreignField: 'article_id', as: 'comment' } },
                 { $unwind: '$comment' },
                 { $project: {'id': '$id', 'title': '$title', 'context': '$context', 'author': '$author', 'time': '$time', 'ip': '$ip', 'board_id': '$board_id', 'visible': '$visible', 'image': '$image', 'types': '$comment.types'}},
@@ -44,17 +44,19 @@ export default class Article {
                 { $sort: { count: 1 } },
                 { $limit: 10 }
             ])
+            articles = articles.map(article => articles.id)
+            return await this.ArticleModel.whereIn('id', articles).query()
         } else {
-            return await this.ArticleModel.raw('select article.*, count(comment.types) from article        \
-                                                left join `comment` on                                     \
-                                                    article.id = comment.article_id and                    \
-                                                    comment.types in (0, 1) and (                          \
-                                                        article.board_id = \'\' or article.board_id in (   \
-                                                            select id from groups where `type` = \'Board\' \
-                                                        )                                                  \
-                                                    )                                                      \
-                                                group by article.id                                        \
-                                                order by count(comment.types) desc                         \
+            return await this.ArticleModel.raw('select `article`.* from `article`                                \
+                                                left join `comment` on                                           \
+                                                    `article`.`id` = `comment`.`article_id` and                  \
+                                                    `comment`.`types` in (0, 1) and (                            \
+                                                        `article`.`board_id` = \'\' or `article`.`board_id` in ( \
+                                                            select `id` from `groups` where `type` = \'Board\'   \
+                                                        )                                                        \
+                                                    )                                                            \
+                                                group by `article`.`id`                                          \
+                                                order by count(`comment`.`types`) desc                           \
                                                 limit 10')
         }
     }
