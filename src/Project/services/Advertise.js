@@ -31,7 +31,7 @@ export default class Advertise {
             }
             throw 'no price'
         }
-        if (ad_pos.ad !== undefined && ad_pos.ad !== '' && ad_pos.price > data.price) {
+        if (ad_pos.ad !== undefined && ad_pos.ad !== '' && ad_pos.price >= data.price) {
             if (image) {
                 await utils.removeFile(image.path)
             }

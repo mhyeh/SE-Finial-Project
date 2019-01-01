@@ -9,12 +9,15 @@ export default class Advertise {
     }
 
     async getAllAdvertises() {
-        let posList = await this.getAdvertisePosList()
-        if (posList.length === 0) {
-            return []
+        if (this.AdModel.db === 'mongo') {
+            return await this.AdModel.raw([
+                { $lookup: {from: 'ad_pos', localField: 'id', foreignField: 'ad', as: 'pos'} },
+                { $unwind: '$pos' },
+                { $project: {'id': 1, 'context': 1, 'author': 1, 'image': 1, 'price': 'pos.price'} }
+            ])
+        } else {
+            return await this.AdModel.raw('select `ad`.*, `ad_pos`.`price` from `ad` join `ad_pos` on `ad`.`id` = `ad_pos`.`ad`')
         }
-        posList = posList.map(pos => pos.ad)
-        return await this.AdModel.select('*').whereIn('id', posList).query()
     }
 
     async getAdvertisePos(pos) {
