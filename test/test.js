@@ -385,22 +385,22 @@ const testArticle1 = async (_token, _title, _context) => {
     const account = await getAccount(_token)
     
     // post article
-    // console.log('post', await postArticle(_token, _title, _context))
+    console.log('post', await postArticle(_token, _title, _context))
     console.log('account', await getAccount(_token), '\n')
     const articles = await getArticleByAuthor(account.id)
 
     articleID = articles[0].id
 
     // get article
-    // console.log('get by author', articles, '\n')
-    // console.log('get by title', await getArticleByTitle(_title), '\n')
-    // console.log('get by context', await getArticleByContext(_context), '\n')
-    // console.log('get by id', await getArticleByID(articles[0].id), '\n')
-    // console.log('get default', await getAllArticle(_token), '\n')
+    console.log('get by author', articles, '\n')
+    console.log('get by title', await getArticleByTitle(_title), '\n')
+    console.log('get by context', await getArticleByContext(_context), '\n')
+    console.log('get by id', await getArticleByID(articles[0].id), '\n')
+    console.log('get default', await getAllArticle(_token), '\n')
 
-    // // edit article
-    // console.log('edit', await editArticle(_token, articles[0].id, '123456'))
-    // console.log('article', await getArticleByID(articles[0].id), '\n')
+    // edit article
+    console.log('edit', await editArticle(_token, articles[0].id, '123456'))
+    console.log('article', await getArticleByID(articles[0].id), '\n')
 
     // delete article
     // console.log('delete', await deleteArticle(_token, articles[0].id))
@@ -763,7 +763,7 @@ const testGroup4 = async (_token, _id) => {
 
 const test = async () => {
     await testAccount('eee', '123', 'ccc')
-    // await testArticle1(token, 'testaaa', 'testaaa')
+    await testArticle1(token, 'testaaa', 'testaaa')
     // await testAd(token, 0, {context: 'aaa'})
     // await testComment(token, articleID, 'asd', 3)
     // await testFriend1(token, "acf18f37-9e3f-4205-868f-b39b9409b634")

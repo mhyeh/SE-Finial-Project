@@ -1,4 +1,4 @@
-import Model from "../models/MongoDB";
+import Model from '../models/Model'
 
 import utils from '../Utils'
 
