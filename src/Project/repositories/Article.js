@@ -119,7 +119,7 @@ export default class Article {
 
     async deletebyGroup(group_id) {
         const promise  = []
-        const articles = await this.ArticleModel.select('id').where('group', group_id).query()
+        let   articles = await this.ArticleModel.select('id').where('group', group_id).query()
         
         for (const article of articles) {
             if (article.image && article.image.length > 2) {

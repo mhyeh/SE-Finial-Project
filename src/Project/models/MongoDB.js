@@ -135,7 +135,7 @@ export default class Model {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
                 return db.db().collection(this.table).aggregate(obj).toArray()
-            }).then(resolve).catch(() => reject(this.table + ' raw error')).then(this.flush)
+            }).then(resolve).catch(() => reject(this.table + ' raw error')).then(() => this.flush())
         })
     }
 
@@ -143,7 +143,7 @@ export default class Model {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
                 return db.db().collection(this.table).find(this.whereObj, this.queryObj).toArray()
-            }).then(resolve).catch(() => reject(this.table + ' get error')).then(this.flush)
+            }).then(resolve).catch(() => reject(this.table + ' get error')).then(() => this.flush())
         })
     }
 
@@ -152,7 +152,7 @@ export default class Model {
             data.id = uuid.v4()
             this.connection.then(db => {
                 return db.db().collection(this.table).insertOne(data)
-            }).then(() => resolve(data.id)).catch(() => reject(this.table + ' insert error')).then(this.flush)
+            }).then(() => resolve(data.id)).catch(() => reject(this.table + ' insert error')).then(() => this.flush())
         })
     }
 
@@ -163,7 +163,7 @@ export default class Model {
                     $set: data
                 }
                 return db.db().collection(this.table).updateMany(this.whereObj, newVal)
-            }).then(resolve).catch(() => reject(this.table + ' update error')).then(this.flush)
+            }).then(resolve).catch(() => reject(this.table + ' update error')).then(() => this.flush())
         })
     }
 
@@ -171,7 +171,7 @@ export default class Model {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
                 return db.db().collection(this.table).deleteMany(this.whereObj)
-            }).then(resolve).catch(() => reject(this.table + ' flush error')).then(this.flush)
+            }).then(resolve).catch(() => reject(this.table + ' flush error')).then(() => this.flush())
         })
     }
 

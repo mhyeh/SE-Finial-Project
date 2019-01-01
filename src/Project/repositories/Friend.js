@@ -6,11 +6,10 @@ export default class Friend {
     }
 
     async getAllFriends(ID) {
-        const friends = []
         const promise = []
         promise.push(this.FriendModel.select('account1').where('account1', ID).andWhere('isConfirm', 1).query())
         promise.push(this.FriendModel.select('account2').where('account1', ID).andWhere('isConfirm', 1).query())
-        friends = await Promise.all(promise)
+        const friends = await Promise.all(promise)
         return friends[0].map(friend => friend.account1).concat(friends[1].map(friend => friend.account2))
     }
 
@@ -25,11 +24,10 @@ export default class Friend {
     }
 
     async getFriend(id1, id2) {
-        const friend  = []
         const promise = []
         promise.push(this.FriendModel.select('*').where('account1', id1).andWhere('account2', id2).query())
         promise.push(this.FriendModel.select('*').where('account1', id2).andWhere('account2', id1).query())
-        friend = await Promise.all(promise)
+        const friend = await Promise.all(promise)
         if (friend[0][0]) {
             return friend[0][0]
         }
