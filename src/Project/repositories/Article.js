@@ -99,7 +99,7 @@ export default class Article {
 
     async edit(id, data) {
         const promise = []
-        if (data.image && data.image.length > 2) {
+        if (data.image !== undefined && data.image !== 'undefined') {
             const article = await this.getArticleByID(id)
             if (article.image) {
                 let images
@@ -112,6 +112,8 @@ export default class Article {
                     promise.push(utils.removeFile(utils.getPath('uploadedFiles', image)))
                 }
             }
+        } else {
+            delete data.image
         }
         promise.push(this.ArticleModel.where('id', id).update(data))
         await Promise.all(promise)

@@ -184,7 +184,9 @@ Data: {
             "id":       <advertise id>,
             "author":   <advertise author account id>,
             ["context": <advertise context>],
-            ["image":   <advertise image path>]
+            ["image":   <advertise image path>],
+            "price":    <advertise price>,
+            "position": <advertise position>,
         }
     ]
 }

@@ -25,6 +25,11 @@ export default class Advertise {
         if ((data.context === undefined || data.context === '') && image === undefined) {
             throw 'no input'
         }
+        try {
+            data.price = parseInt(data.price)
+        } catch (e) {
+            throw 'price should be int'
+        }
         if (data.price === undefined || typeof data.price !== 'number') {
             if (image) {
                 await utils.removeFile(image.path)

@@ -164,9 +164,9 @@ export default class Model {
             data.id = uuid.v4()
             this.connection.then(db => {
                 return db.db().collection(this.table).insertOne(data)
-            }).then(res => {
+            }).then(() => {
                 this.flush()
-                resolve(res)
+                resolve(data.id)
             }).catch(() => {
                 this.flush()
                 reject(this.table + ' insert error')
@@ -181,9 +181,9 @@ export default class Model {
                     $set: data
                 }
                 return db.db().collection(this.table).updateMany(this.whereObj, newVal)
-            }).then(res => {
+            }).then(() => {
                 this.flush()
-                resolve(res)
+                resolve()
             }).catch(() => {
                 this.flush()
                 reject(this.table + ' update error')
@@ -195,9 +195,9 @@ export default class Model {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
                 return db.db().collection(this.table).deleteMany(this.whereObj)
-            }).then(res => {
+            }).then(() => {
                 this.flush()
-                resolve(res)
+                resolve()
             }).catch(() => {
                 this.flush()
                 reject(this.table + ' delete error')

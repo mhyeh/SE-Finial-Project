@@ -13,7 +13,7 @@ export default class Advertise {
             return await this.AdModel.raw([
                 { $lookup: {from: 'ad_pos', localField: 'id', foreignField: 'ad', as: 'pos'} },
                 { $unwind: '$pos' },
-                { $project: {'id': 1, 'context': 1, 'author': 1, 'image': 1, 'price': 'pos.price'} }
+                { $project: {'id': 1, 'context': 1, 'author': 1, 'image': 1, 'price': '$pos.price', 'position': '$pos.position'} }
             ])
         } else {
             return await this.AdModel.raw('select `ad`.*, `ad_pos`.`price` from `ad` join `ad_pos` on `ad`.`id` = `ad_pos`.`ad`')
