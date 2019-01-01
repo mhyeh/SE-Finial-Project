@@ -131,7 +131,6 @@ URL: /account/:id
 Header: { "authorization": <token> }
 
 FormData: {
-    ["account":     <user account>],
     ["password":    <user password>],
     ["name":        <user name>],
     ["department":  <user department>],
@@ -666,7 +665,7 @@ Data: {
 
 ```
 Method: GET
-URL: /friend/unconfirmed
+URL: /friend/invitation
 
 Header: { "authorization": <token> }
 

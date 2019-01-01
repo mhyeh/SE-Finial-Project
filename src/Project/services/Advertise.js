@@ -29,10 +29,13 @@ export default class Advertise {
             throw 'no input'
         }
 
-        data.author = accountID
         if (image !== undefined) {
             data.image = utils.getBaseName(image.path)
         }
+        utils.checkAllow(data, ['context', 'image'])
+        
+        data.author = accountID
+
         await this.AdvertiseRepo.create(pos, data)
 
         account.NTUST_coin -= ad_pos.price
@@ -59,6 +62,8 @@ export default class Advertise {
         if (image !== undefined) {
             data.image = utils.getBaseName(image.path)
         }
+        utils.checkAllow(data, ['context', 'image'])
+
         await this.AdvertiseRepo.edit(id, data)
     }
 

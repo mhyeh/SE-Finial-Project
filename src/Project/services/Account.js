@@ -48,10 +48,13 @@ export default class Account {
         if (data.name === undefined || data.name === '') {
             throw 'no input name'
         }
+        utils.checkAllow(data, ['account', 'password', 'name'])
+
         let account = await this.AccountRepo.getAccountByAccount(data.account)
         if (account !== undefined) {
             throw 'account already exist'
         }
+
         data.password = utils.hash(data.password)
         await this.AccountRepo.create(data)
         account = await this.AccountRepo.getAccountByAccount(data.account) 
@@ -88,6 +91,8 @@ export default class Account {
         if (photo !== undefined) {
             data.photo = utils.getBaseName(photo.path)
         }
+        utils.checkAllow(data, ['password', 'name', 'department', 'class', 'birthday', 'sex', 'ID_card', 'address', 'photo', 'passport', 'credit_card', 'cvc', 'expire_date', 'interst'])
+
         await this.AccountRepo.edit(id, data)
     }
 

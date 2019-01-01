@@ -39,7 +39,7 @@ export default class Article {
                 let articles = await this.ArticleModel.raw([
                     { $lookup: { from: 'comment', localField: 'id', foreignField: 'article_id', as: 'comment' } },
                     { $unwind: { path: '$comment', preserveNullAndEmptyArrays: true } },
-                    { $project: {'id': '$id', 'title': '$title', 'context': '$context', 'author': '$author', 'time': '$time', 'ip': '$ip', 'board_id': '$board_id', 'visible': '$visible', 'image': '$image', 'types': '$comment.types'}},
+                    { $project: {'id': 1, 'board_id': 1, 'types': '$comment.types' } },
                     { $match: { $or: [ 
                                 { 
                                     $or: [{ types: { $in: [0, 1] } }, { types: { $exists: false } }],
@@ -138,7 +138,6 @@ export default class Article {
     }
 
     async create(data) {
-        utils.checkAllow(data, ['title', 'context', 'author', 'time', 'ip', 'board_id', 'visible', 'image'])
         try {
             await this.ArticleModel.insert(data)
         } catch (e) {
@@ -147,7 +146,6 @@ export default class Article {
     }
 
     async edit(id, data) {
-        utils.checkAllow(data, ['title', 'context', 'time', 'ip', 'visible', 'image'])
         try {
             await this.ArticleModel.where('id', id).update(data)
         } catch (e) {

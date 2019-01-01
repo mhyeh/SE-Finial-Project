@@ -68,7 +68,6 @@ export default class Advertise {
     }
 
     async create(pos, data) {
-        utils.checkAllow(data, ['context', 'author', 'image'])
         try {
             const insertID = await this.AdModel.insert(data)
             await this.AdposModel.where('position', parseInt(pos)).update({ ad: insertID })
@@ -78,7 +77,6 @@ export default class Advertise {
     }
 
     async edit(id, data) {
-        utils.checkAllow(data, ['context', 'image'])
         try {
             await this.AdModel.where('id', id).update(data)
         } catch (e) {

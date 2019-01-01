@@ -90,7 +90,7 @@ export default class Response {
             for (var i = 0; i < obj.length; i++) {
                 obj[i] = this.xss(obj[i])
             }
-        } else {
+        } else if (typeof obj === 'object') {
             for(var key in obj) {
                 if(obj[key] instanceof Object && !(obj[key] instanceof String) 
                     && !(obj[key] instanceof Function) && key != '_id') {

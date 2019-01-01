@@ -1,7 +1,5 @@
 import Model from '../models/Model'
 
-import utils from '../Utils'
-
 export default class Comment {
     constructor() {
         this.CommentModel = new Model('comment')
@@ -24,7 +22,6 @@ export default class Comment {
     }
 
     async post(data) {
-        utils.checkAllow(data, ['article_id', 'author', 'context', 'time', 'ip', 'types'])
         try {
             await this.CommentModel.insert(data)
         } catch (e) {
@@ -33,7 +30,6 @@ export default class Comment {
     }
 
     async edit(id, data) {
-        utils.checkAllow(data, ['author', 'context', 'time', 'ip'])
         try {
             await this.CommentModel.where('id', id).update(data)
         } catch (e) {

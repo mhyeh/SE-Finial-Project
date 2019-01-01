@@ -2,8 +2,6 @@ import Model from '../models/Model'
 
 import ArticleRepo from './Article'
 
-import utils from '../Utils'
-
 export default class Group {
     constructor() {
         this.GroupModel    = new Model('groups')
@@ -62,7 +60,6 @@ export default class Group {
     }
 
     async create(data) {
-        utils.checkAllow(data, ['name', 'leader', 'type'])
         let groupID
         try {
             groupID = await this.GroupModel.insert(data)
@@ -75,7 +72,6 @@ export default class Group {
     }
 
     async edit(id, data) {
-        utils.checkAllow(data, ['name', 'leader'])
         try {
             await this.GroupModel.where('id', id).update(data)
         } catch (e) {

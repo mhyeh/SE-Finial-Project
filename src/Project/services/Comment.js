@@ -26,6 +26,8 @@ export default class Comment {
         if (data.context === undefined || data.context === '') {
             throw 'no input context'
         }
+        utils.checkAllow(data, ['context', 'types'])
+
         data.time       = utils.getDateTime()
         data.author     = accountID
         data.article_id = id
@@ -46,6 +48,8 @@ export default class Comment {
         if (data.context === undefined || data.context === '') {
             throw 'no input context'
         }
+        utils.checkAllow(data, ['context'])
+        
         data.time = utils.getDateTime()
         data.ip   = req.ip
         

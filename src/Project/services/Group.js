@@ -1,4 +1,6 @@
-import GroupRepo    from '../repositories/Group'
+import GroupRepo from '../repositories/Group'
+
+import utils from '../Utils'
 
 export default class Group {
     constructor() {
@@ -15,6 +17,7 @@ export default class Group {
         if (data.type !== 'Family' && data.type !== 'Board') {
             throw 'illegal input type'
         }
+        utils.checkAllow(data, ['name', 'type'])
         
         data.leader = accountID
         
@@ -32,6 +35,7 @@ export default class Group {
         if (data.name === undefined || data.name === '') {
             throw 'no input name'
         }
+        utils.checkAllow(data, ['name'])
         
         await this.GroupRepo.edit(id, data)
     }

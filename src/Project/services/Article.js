@@ -101,6 +101,8 @@ export default class Article {
                 data.image.push(utils.getBaseName(images.path))
             }
         }
+        utils.checkAllow(data, ['title', 'context', 'image'])
+
         data.image = JSON.stringify(data.image)
         data.time  = utils.getDateTime()
         data.ip    = req.ip

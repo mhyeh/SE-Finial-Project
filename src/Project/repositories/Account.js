@@ -43,7 +43,6 @@ export default class Account {
     }
 
     async create(data) {
-        utils.checkAllow(data, ['account', 'password', 'name'])
         try {
             await this.AccountModel.insert(data)
         } catch (e) {
@@ -52,7 +51,6 @@ export default class Account {
     }
 
     async edit(id, data) {
-        utils.checkAllow(data, ['password', 'name', 'department', 'class', 'birthday', 'sex', 'ID_card', 'address', 'photo', 'passport', 'credit_card', 'cvc', 'expire_date', 'NTUST_coin', 'interst'])
         try {
             await this.AccountModel.where('id', id).update(data)
         } catch (e) {
