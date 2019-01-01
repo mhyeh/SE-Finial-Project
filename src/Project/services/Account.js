@@ -15,10 +15,10 @@ export default class Account {
     }
 
     async Login(data) {
-        if (data.account === undefined) {
+        if (data.account === undefined || data.account === '') {
             throw 'no input account'
         }
-        if (data.password === undefined) {
+        if (data.password === undefined || data.password === '') {
             throw 'no input password'
         }
         const account = await this.AccountRepo.getAccountByAccount(data.account)
@@ -39,13 +39,13 @@ export default class Account {
     }
 
     async Register(data) {
-        if (data.account === undefined) {
+        if (data.account === undefined || data.account === '') {
             throw 'no input account'
         }
-        if (data.password === undefined) {
+        if (data.password === undefined || data.password === '') {
             throw 'no input password'
         }
-        if (data.name === undefined) {
+        if (data.name === undefined || data.name === '') {
             throw 'no input name'
         }
         let account = await this.AccountRepo.getAccountByAccount(data.account)
@@ -73,15 +73,15 @@ export default class Account {
         const formdata = await this.FileService.ProcFormData(req, { photo: 1 })
         const data     = formdata.fields
         const photo    = formdata.files.photo
-        if (data.password !== undefined) {
+        if (data.password !== undefined && data.password !== '') {
             data.password = utils.hash(data.password)
         }
 
-        if (data.birthday !== undefined) {
+        if (data.birthday !== undefined && data.birthday !== '') {
             data.birthday = utils.getDate(data.birthday)
         }
 
-        if (data.expire_date !== undefined) {
+        if (data.expire_date !== undefined && data.expire_date !== '') {
             data.expire_date = utils.getDate(data.expire_date)
         }
 

@@ -43,7 +43,7 @@ export default class Account {
     }
 
     async create(data) {
-        utils.allow(data, ['account', 'password', 'name'])
+        utils.checkAllow(data, ['account', 'password', 'name'])
         try {
             await this.AccountModel.insert(data)
         } catch (e) {

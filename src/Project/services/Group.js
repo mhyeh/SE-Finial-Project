@@ -6,7 +6,7 @@ export default class Group {
     }
 
     async Create(accountID, data) {
-        if (data.name === undefined) {
+        if (data.name === undefined || data.name === '') {
             throw 'no input name'
         }
         if (data.type === undefined) {
@@ -29,7 +29,7 @@ export default class Group {
         if (group.leader !== accountID) {
             throw 'you are not group leader'
         }
-        if (data.name === undefined) {
+        if (data.name === undefined || data.name === '') {
             throw 'no input name'
         }
         

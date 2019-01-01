@@ -25,7 +25,7 @@ export default class Advertise {
         const data     = formdata.fields
         const image    = formdata.files.img
 
-        if (data.context === undefined && image === undefined) {
+        if ((data.context === undefined || data.context === '') && image === undefined) {
             throw 'no input'
         }
 
@@ -52,7 +52,7 @@ export default class Advertise {
         const data     = formdata.fields
         const image    = formdata.files.img
 
-        if (data.context === undefined && image === undefined) {
+        if ((data.context === undefined || data.context === '') && image === undefined) {
             throw 'no input'
         }
 
