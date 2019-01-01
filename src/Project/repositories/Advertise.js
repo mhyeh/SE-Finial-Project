@@ -9,10 +9,11 @@ export default class Advertise {
     }
 
     async getAllAdvertises() {
-        const posList = await this.getAdvertisePosList()
+        let posList = await this.getAdvertisePosList()
         if (posList.length === 0) {
             return []
         }
+        posList = posList.map(pos => pos.ad)
         try {
             return await this.AdModel.select('*').whereIn('id', posList).query()
         } catch (e) {
