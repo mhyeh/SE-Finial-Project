@@ -60,7 +60,7 @@ export default class Advertise {
         
         data.author = accountID
         
-        account.NTUST_coin -= data.price
+        account.NTUST_coin -= price
         await Promise.all([this.AdvertiseRepo.create(pos, data, price), this.AccountRepo.edit(account.id, { NTUST_coin: account.NTUST_coin })])
     }
 
