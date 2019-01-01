@@ -54,7 +54,7 @@ export default class Advertise {
     async edit(id, data) {
         const promise = []
         const ad      = await this.getAdvertiseByID(id)
-        if (ad.image) {
+        if (data.image && ad.image) {
             promise.push(utils.removeFile(utils.getPath('uploadedFiles', ad.image)))
         }
         promise.push(this.AdModel.where('id', id).update(data))
