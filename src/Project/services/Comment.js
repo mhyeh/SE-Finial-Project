@@ -14,8 +14,17 @@ export default class Comment {
     async Post(accountID, id, req) {
         const article = await this.ArticleRepo.getArticleByID(id)
         const data    = req.body
-        if (article === undefined || data.types === undefined || (data.types !== 0 && data.types !== 1 && data.types !== 2) || data.context === undefined) {
-            throw 'post error'
+        if (article === undefined) {
+            throw 'article not found'
+        }
+        if (data.types === undefined) {
+            throw 'no input types'
+        }
+        if (data.types !== 0 && data.types !== 1 && data.types !== 2) {
+            throw 'illegal input types'
+        }
+        if (data.context === undefined || data.context === '') {
+            throw 'no input context'
         }
         data.time       = utils.getDateTime()
         data.author     = accountID
@@ -28,8 +37,14 @@ export default class Comment {
     async Edit(accountID, id, req) {
         const comment = await this.CommentRepo.getCommentByID(id)
         const data    = req.body
-        if (comment === undefined || comment.author !== accountID || data.context === undefined) {
-            throw 'edit error'
+        if (comment === undefined) {
+            throw 'comment not found'
+        }
+        if (comment.author !== accountID) {
+            throw 'not your comment'
+        }
+        if (data.context === undefined || data.context === '') {
+            throw 'no input context'
         }
         data.time = utils.getDateTime()
         data.ip   = req.ip
@@ -39,8 +54,11 @@ export default class Comment {
 
     async Delete(accountID, id) {
         const comment = await this.CommentRepo.getCommentByID(id)
-        if (comment === undefined || comment.author !== accountID) {
-            throw 'delete error'
+        if (comment === undefined) {
+            throw 'comment not found'
+        }
+        if (comment.author !== accountID) {
+            throw 'not your comment'
         }
         
         await this.CommentRepo.delete(id)

@@ -9,7 +9,7 @@ export default function bodyParser(req) {
                 try {
                     req.body = JSON.parse(jsonStr)
                 } catch (e) {
-                    reject()
+                    reject('parse json error')
                     return
                 }
                 resolve()

@@ -12,58 +12,99 @@ export default class Group {
     }
 
     async getAllGroups() {
-        return await this.GroupModel.select('*').query()
+        try {
+            return await this.GroupModel.select('*').query()
+        } catch (e) {
+            throw 'get group error'
+        }
     }
 
     async getGroupByID(id) {
-        return (await this.GroupModel.select('*').where('id', id).query())[0]
+        try {
+            return (await this.GroupModel.select('*').where('id', id).query())[0]
+        } catch (e) {
+            throw 'get group error'
+        }
     }
 
     async getGroupByName(name) {
-        return await this.GroupModel.select('*').where('name', 'like', name).query()
+        try {
+            return await this.GroupModel.select('*').where('name', 'like', name).query()
+        } catch (e) {
+            throw 'get group error'
+        }
     }
 
     async getGroupByAccount(account) {
-        let groups = await this.GPMemberModel.select('*').where('account', account).query()
-        groups     = groups.map(group => group.group_id)
-        return await this.GroupModel.select('*').whereIn('id', groups).query()
+        try {
+            let groups = await this.GPMemberModel.select('*').where('account', account).query()
+            groups     = groups.map(group => group.group_id)
+            return await this.GroupModel.select('*').whereIn('id', groups).query()
+        } catch (e) {
+            throw 'get group error'
+        }
     }
 
     async getGroupMembers(id) {
-        return await this.GPMemberModel.select('*').where('group_id', id).query()
+        try {
+            return await this.GPMemberModel.select('*').where('group_id', id).query()
+        } catch (e) {
+            throw 'get group member error'
+        }
     }
 
     async isInGroup(account, group) {
-        return (await this.GPMemberModel.select('*').where('account', account).andWhere('group_id', group).query())[0] !== undefined
+        try {
+            return (await this.GPMemberModel.select('*').where('account', account).andWhere('group_id', group).query())[0] !== undefined
+        } catch (e) {
+            throw 'check in group error'
+        }
     }
 
     async create(data) {
-        if (!utils.allow(data, ['name', 'leader', 'type'])) {
-            throw 'not accept'
+        utils.checkAllow(data, ['name', 'leader', 'type'])
+        let groupID
+        try {
+            groupID = await this.GroupModel.insert(data)
+        } catch (e) {
+            throw 'insert group error'
         }
-        const groupID = await this.GroupModel.insert(data)
         if (data.type === 'Family') {
             await this.GPMemberModel.insert({account: data.leader, group_id: groupID})
         }
     }
 
     async edit(id, data) {
-        if (!utils.allow(data, ['name', 'leader'])) {
-            throw 'not accept'
+        utils.checkAllow(data, ['name', 'leader'])
+        try {
+            await this.GroupModel.where('id', id).update(data)
+        } catch (e) {
+            throw 'update group error'
         }
-        await this.GroupModel.where('id', id).update(data)
     }
 
     async join(id, account) {
-        const data = { group_id: id, account: account }
-        await this.GPMemberModel.insert(data)
+        try {
+            await this.GPMemberModel.insert({ group_id: id, account: account })
+        } catch (e) {
+            throw 'insert group member error'
+        }
     }
 
     async leave(id, account) {
-        await this.GPMemberModel.where('group_id', id).andWhere('account', account).del()
+        try {
+            await this.GPMemberModel.where('group_id', id).andWhere('account', account).del()
+        } catch (e) {
+            throw 'delete group member error'
+        }
     }
 
     async delete(id) {
-        await Promise.all([this.GroupModel.where('id', id).del(), this.GPMemberModel.where('group_id', id).del(), this.ArticleRepo.deletebyGroup(id)])
+        try {
+            await Promise.all([this.GroupModel.where('id', id).del(), this.GPMemberModel.where('group_id', id).del()])
+        } catch (e) {
+            throw 'delete group error'
+        }
+        await this.ArticleRepo.deletebyGroup(id)
     }
 }

@@ -38,13 +38,16 @@ const getPath = (...arg) => {
     return path.join(path.dirname(require.main.filename), ...arg)
 }
 
-const allow = (data, accept) => {
-    for (const col in data) {
-        if (!accept.includes(col)) {
-            return false
+const checkAllow = (data, accept) => {
+    try {
+        for (const col in data) {
+            if (!accept.includes(col)) {
+                throw 'not accept'
+            }
         }
+    } catch (e) {
+        throw 'not accept'
     }
-    return true
 } 
 
 const removeFile = (path) => {
@@ -94,7 +97,7 @@ export default {
     getDateTime,
     getBaseName,
     getPath,
-    allow,
+    checkAllow,
     removeFile,
     deepMerge
 }

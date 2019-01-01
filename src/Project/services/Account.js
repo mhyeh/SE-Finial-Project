@@ -15,43 +15,60 @@ export default class Account {
     }
 
     async Login(data) {
-        if (data.account === undefined || data.password === undefined) {
-            throw 'login error'
+        if (data.account === undefined) {
+            throw 'no input account'
+        }
+        if (data.password === undefined) {
+            throw 'no input password'
         }
         const account = await this.AccountRepo.getAccountByAccount(data.account)
         if (account === undefined) {
-            throw 'login error'
+            throw 'no this account'
         }
         const hashPwd = utils.hash(data.password)
         if (hashPwd !== account.password) {
-            throw 'login error'
+            throw 'false password'
         }
-        const token = this.RedisService.GenerateToken()
-        this.RedisService.Store(token, account.id)
-        return token
+        try {
+            const token = this.RedisService.GenerateToken()
+            this.RedisService.Store(token, account.id)
+            return token
+        } catch (e) {
+            throw 'redis error'
+        }
     }
 
     async Register(data) {
-        if (data.account === undefined || data.password === undefined || data.name === undefined) {
-            throw 'register error'
+        if (data.account === undefined) {
+            throw 'no input account'
+        }
+        if (data.password === undefined) {
+            throw 'no input password'
+        }
+        if (data.name === undefined) {
+            throw 'no input name'
         }
         let account = await this.AccountRepo.getAccountByAccount(data.account)
         if (account !== undefined) {
-            throw 'register error'
+            throw 'account already exist'
         }
         data.password = utils.hash(data.password)
         await this.AccountRepo.create(data)
         account = await this.AccountRepo.getAccountByAccount(data.account) 
 
-        const token = this.RedisService.GenerateToken()
-        this.RedisService.Store(token, account.id)
-        return token
+        try {
+            const token = this.RedisService.GenerateToken()
+            this.RedisService.Store(token, account.id)
+            return token
+        } catch (e) {
+            throw 'redis error'
+        }
     }
 
     async Edit(token, id, req) {
         const ID = await this.RedisService.Verify(token)
         if (ID !== id) {
-            throw 'edit error'
+            throw 'not your account'
         }
         const formdata = await this.FileService.ProcFormData(req, { photo: 1 })
         const data     = formdata.fields
@@ -77,7 +94,7 @@ export default class Account {
     async Delete(token, id) {
         const ID = await this.RedisService.Verify(token)
         if (ID !== id) {
-            throw 'delete error'
+            throw 'not your account'
         }
 
         await this.AccountRepo.delete(id)

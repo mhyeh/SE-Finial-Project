@@ -20,7 +20,7 @@ export default class Friend {
         try {
             res.status(200).json({ friends: await this.FriendRepo.getAllFriends(req.params.id) })
         } catch (e) {
-            res.status(400).json({ error: 'get friends error' })
+            res.status(400).json({ error: e })
         }
     }
     
@@ -29,7 +29,7 @@ export default class Friend {
             const ID = await this.RedisService.Verify(req.header.authorization)
             res.status(200).json({ unconfrimed: await this.FriendRepo.getUnconfirmedFriends(ID) })
         } catch (e) {
-            res.status(400).json({ error: 'get friends error' })
+            res.status(400).json({ error: e })
         }
     }
 
@@ -38,7 +38,7 @@ export default class Friend {
             const ID = await this.RedisService.Verify(req.header.authorization)
             res.status(200).json({ invitation: await this.FriendRepo.getInvitationList(ID) })
         } catch (e) {
-            res.status(400).json({ error: 'get friends error' })
+            res.status(400).json({ error: e })
         }
     }
 
@@ -47,7 +47,7 @@ export default class Friend {
             const ID = await this.RedisService.Verify(req.header.authorization)
             res.status(200).json({ state: await this.FriendRepo.checkState(ID, req.params.id) })
         } catch (e) {
-            res.status(400).json({ error: 'get friends error' })
+            res.status(400).json({ error: e })
         }
     }
 
@@ -57,7 +57,7 @@ export default class Friend {
             await this.FriendRepo.send(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: 'send invitation error' })
+            res.status(400).json({ error: e })
         }
     }
 
@@ -67,7 +67,7 @@ export default class Friend {
             await this.FriendRepo.confirm(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: 'confirm invitation error' })
+            res.status(400).json({ error: e })
         }
     }
 
@@ -77,7 +77,7 @@ export default class Friend {
             await this.FriendRepo.delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: 'delete friend error' })
+            res.status(400).json({ error: e })
         }
     }
 }

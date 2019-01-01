@@ -14,11 +14,11 @@ export default class Advertise {
     async Create(accountID, pos, req) {
         const ad_pos = await this.AdvertiseRepo.getAdvertisePos(pos)
         if (ad_pos.ad !== undefined && ad_pos.ad !== '') {
-            throw 'create error'
+            throw 'can not buy this'
         }
         const account = await this.AccountRepo.getAccountByID(accountID)
         if (account.NTUST_coin < ad_pos.price) {
-            throw 'create error'
+            throw 'no enough ntust coin'
         }
 
         const formdata = await this.FileService.ProcFormData(req, { img: 1 })
@@ -26,7 +26,7 @@ export default class Advertise {
         const image    = formdata.files.img
 
         if (data.context === undefined && image === undefined) {
-            throw 'create error'
+            throw 'no input'
         }
 
         data.author = accountID
@@ -41,8 +41,11 @@ export default class Advertise {
 
     async Edit(accountID, id, req) {
         const advertise = await this.AdvertiseRepo.getAdvertiseByID(id)
+        if (advertise === undefined) {
+            throw 'advertise not found'
+        }
         if (advertise.author !== accountID) {
-            throw 'create error'
+            throw 'not your advertise'
         }
 
         const formdata = await this.FileService.ProcFormData(req, { img: 1 })
@@ -50,7 +53,7 @@ export default class Advertise {
         const image    = formdata.files.img
 
         if (data.context === undefined && image === undefined) {
-            throw 'create error'
+            throw 'no input'
         }
 
         if (image !== undefined) {
@@ -61,8 +64,11 @@ export default class Advertise {
 
     async Delete(accountID, id) {
         const advertise = await this.AdvertiseRepo.getAdvertiseByID(id)
+        if (advertise === undefined) {
+            throw 'advertise not found'
+        }
         if (advertise.author !== accountID) {
-            throw 'create error'
+            throw 'not your advertise'
         }
         
         await this.AdvertiseRepo.delete(id)

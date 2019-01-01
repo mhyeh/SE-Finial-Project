@@ -13,19 +13,35 @@ export default class Advertise {
         if (posList.length === 0) {
             return []
         }
-        return await this.AdModel.select('*').whereIn('id', posList).query()
+        try {
+            return await this.AdModel.select('*').whereIn('id', posList).query()
+        } catch (e) {
+            throw 'get advertise error'
+        }
     }
 
     async getAdvertisePos(pos) {
-        return (await this.AdposModel.select('*').where('position', parseInt(pos)).query())[0]
+        try {
+            return (await this.AdposModel.select('*').where('position', parseInt(pos)).query())[0]
+        } catch (e) {
+            throw 'get advertise error'
+        }
     }
 
     async getAdvertisePosList() {
-        return await this.AdposModel.select('*').query()
+        try {
+            return await this.AdposModel.select('*').query()
+        } catch (e) {
+            throw 'get advertise pos list error'
+        }
     }
 
     async getAdvertiseByID(id) {
-        return (await this.AdModel.select('*').where('id', id).query())[0]
+        try {
+            return (await this.AdModel.select('*').where('id', id).query())[0]
+        } catch (e) {
+            throw 'get advertise error'
+        }
     }
 
     async getAdvertisesByAccount(accountID) {
@@ -33,28 +49,40 @@ export default class Advertise {
         if (posList.length === 0) {
             return []
         }
-        posList = posList.map(pos => pos.ad)
-        return await this.AdModel.select('*').whereIn('id', posList).andWhere('author', accountID).query()
+        try {
+            posList = posList.map(pos => pos.ad)
+            return await this.AdModel.select('*').whereIn('id', posList).andWhere('author', accountID).query()
+        } catch (e) {
+            throw 'get advertise error'
+        }
     }
 
     async getAdvertiseByPos(pos) {
-        const ad_pos = (await this.AdposModel.select('*').where('position', parseInt(pos)).query())[0]
-        return await this.getAdvertiseByID(ad_pos.ad)
+        try {
+            const ad_pos = (await this.AdposModel.select('*').where('position', parseInt(pos)).query())[0]
+            return await this.getAdvertiseByID(ad_pos.ad)
+        } catch (e) {
+            throw 'get advertise error'
+        }
     }
 
     async create(pos, data) {
-        if (!utils.allow(data, ['context', 'author', 'image'])) {
-            throw 'not accept'
+        utils.checkAllow(data, ['context', 'author', 'image'])
+        try {
+            const insertID = await this.AdModel.insert(data)
+            await this.AdposModel.where('position', parseInt(pos)).update({ ad: insertID })
+        } catch (e) {
+            throw 'insert advertise error'
         }
-        const insertID = await this.AdModel.insert(data)
-        await this.AdposModel.where('position', parseInt(pos)).update({ ad: insertID })
     }
 
     async edit(id, data) {
-        if (!utils.allow(data, ['context', 'image'])) {
-            throw 'not accept'
+        utils.checkAllow(data, ['context', 'image'])
+        try {
+            await this.AdModel.where('id', id).update(data)
+        } catch (e) {
+            throw 'update advertise error'
         }
-        await this.AdModel.where('id', id).update(data)
     }
     
     async delete(id) {
@@ -62,7 +90,11 @@ export default class Advertise {
         if (ad.image) {
             utils.removeFile(utils.getPath('uploadedFiles', ad.image))
         }
-        await this.AdModel.where('id', id).del()
-        await this.AdposModel.where('ad', id).update({ ad: ''})
+        try {
+            await this.AdModel.where('id', id).del()
+            await this.AdposModel.where('ad', id).update({ ad: ''})
+        } catch (e) {
+            throw 'delete advertise error'
+        }
     }
 }

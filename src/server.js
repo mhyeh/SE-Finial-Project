@@ -35,9 +35,12 @@ router.use('/group',     GroupRouter)
 const server = http.createServer(async (req, res) => {
     const request  = new Request(req)
     const response = new Response(res)
-    if (!(await router.Match(request, response))) {
-        console.log('path not found')
-        response.status(404).json({error: 'path not found'})
+    try {
+        if (!(await router.Match(request, response))) {
+            response.status(404).json({error: 'path not found'})
+        }
+    } catch (e) {
+        response.status(404).json({error: 'undefined error'})
     }
 })
 

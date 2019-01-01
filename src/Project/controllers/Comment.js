@@ -19,7 +19,7 @@ export default class Comment {
         try {
             res.status(200).json({ comments: await this.CommentRepo.getAllComments(req.params.id) })
         } catch (e) {
-            res.status(400).json({ error: 'get comment error' })
+            res.status(400).json({ error: e })
         }
     }
     
@@ -29,7 +29,7 @@ export default class Comment {
             await this.CommentService.Post(ID, req.params.id ,req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: 'post comment error' })
+            res.status(400).json({ error: e })
         }
     }
 
@@ -39,7 +39,7 @@ export default class Comment {
             await this.CommentService.Edit(ID, req.params.id, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: 'edit comment error' })
+            res.status(400).json({ error: e })
         }
     }
 
@@ -49,7 +49,7 @@ export default class Comment {
             await this.CommentService.Delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: 'delete comment error' })
+            res.status(400).json({ error: e })
         }
     }
 }

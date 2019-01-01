@@ -19,7 +19,6 @@ export default class Article {
         data.board_id = ''
         
         await this.ArticleRepo.create(data)
-
         
         await this.giveCoin(data)
     }
@@ -38,7 +37,13 @@ export default class Article {
 
     async giveCoin(data) {
         let score
-        const img = JSON.parse(data.image || '[]')
+        let img
+        try {
+            img = JSON.parse(data.image || '[]')
+        } catch (e) {
+            throw 'parse json error'
+        }
+
         if (data.context && img.length !== 0) {
             score = data.context.length + img.length * 10
         } else if (data.context) {
@@ -56,8 +61,11 @@ export default class Article {
 
     async Edit(accountID, id, req) {
         const article = await this.ArticleRepo.getArticleByID(id)
-        if (article === undefined || article.author !== accountID) {
-            throw 'edit error'
+        if (article === undefined) {
+            throw 'article not found'
+        }
+        if (article.author !== accountID) {
+            throw 'not your article'
         }
 
         const data = await this.procArticle(req, true)
@@ -71,12 +79,15 @@ export default class Article {
         const images   = formdata.files.imgs
 
         if (isEdit) {
-            if (data.title === undefined && data.context === undefined && (images === undefined || images === [])) {
-                throw 'edit error'
+            if ((data.title === undefined || data.title === '') && (data.context === undefined || data.context === '') && (images === undefined || images === [])) {
+                throw 'no input'
             }
         } else {
-            if (data.title === undefined || data.context === undefined && (images === undefined || images === [])) {
-                throw 'post error'
+            if (data.title === undefined || data.title === '') {
+                throw 'no input title'
+            }
+            if ((data.context === undefined || data.context === '') && (images === undefined || images === [])) {
+                throw 'no input context / images'
             }
         }
 
@@ -103,8 +114,11 @@ export default class Article {
         if (article.board_id !== '') {
             group = await this.GroupRepo.getGroupByID(article.board_id)
         }
-        if (article === undefined || article.author !== accountID && accountID !== group.leader) {
-            throw 'delete error'
+        if (article === undefined) {
+            throw 'article not found'
+        }
+        if (article.author !== accountID && accountID !== group.leader) {
+            throw 'you are not author or group leader'
         }
 
         await this.ArticleRepo.delete(id)

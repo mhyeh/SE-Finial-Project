@@ -8,28 +8,44 @@ export default class Comment {
     }
 
     async getAllComments(article) {
-        return await this.CommentModel.select('*').where('article_id', article).query()
+        try {
+            return await this.CommentModel.select('*').where('article_id', article).query()
+        } catch (e) {
+            throw 'get comment error'
+        }
     }
 
     async getCommentByID(id) {
-        return (await this.CommentModel.select('*').where('id', id).query())[0]
+        try {
+            return (await this.CommentModel.select('*').where('id', id).query())[0]
+        } catch (e) {
+            throw 'get comment error'
+        }
     }
 
     async post(data) {
-        if (!utils.allow(data, ['article_id', 'author', 'context', 'time', 'ip', 'types'])) {
-            throw 'not accept'
+        utils.checkAllow(data, ['article_id', 'author', 'context', 'time', 'ip', 'types'])
+        try {
+            await this.CommentModel.insert(data)
+        } catch (e) {
+            throw 'insert comment error'
         }
-        await this.CommentModel.insert(data)
     }
 
     async edit(id, data) {
-        if (!utils.allow(data, ['author', 'context', 'time', 'ip'])) {
-            throw 'not accept'
+        utils.checkAllow(data, ['author', 'context', 'time', 'ip'])
+        try {
+            await this.CommentModel.where('id', id).update(data)
+        } catch (e) {
+            throw 'update comment error'
         }
-        await this.CommentModel.where('id', id).update(data)
     }
 
     async delete(id) {
-        await this.CommentModel.where('id', id).del()
+        try {
+            await this.CommentModel.where('id', id).del()
+        } catch (e) {
+            throw 'delete comment error'
+        }
     }
 }

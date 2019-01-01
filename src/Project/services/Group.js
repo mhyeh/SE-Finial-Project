@@ -2,12 +2,18 @@ import GroupRepo    from '../repositories/Group'
 
 export default class Group {
     constructor() {
-        this.GroupRepo    = new GroupRepo()
+        this.GroupRepo = new GroupRepo()
     }
 
     async Create(accountID, data) {
-        if (data.name === undefined || data.type === undefined || (data.type !== 'Family' && data.type !== 'Board')) {
-            throw 'create error'
+        if (data.name === undefined) {
+            throw 'no input name'
+        }
+        if (data.type === undefined) {
+            throw 'no input type'
+        }
+        if (data.type !== 'Family' && data.type !== 'Board') {
+            throw 'illegal input type'
         }
         
         data.leader = accountID
@@ -17,8 +23,14 @@ export default class Group {
 
     async Edit(accountID, id, data) {
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.leader !== accountID || data.name === undefined) {
-            throw 'edit error'
+        if (group === undefined) {
+            throw 'group not found'
+        }
+        if (group.leader !== accountID) {
+            throw 'you are not group leader'
+        }
+        if (data.name === undefined) {
+            throw 'no input name'
         }
         
         await this.GroupRepo.edit(id, data)
@@ -26,8 +38,14 @@ export default class Group {
 
     async Join(accountID, id) {
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.type !== 'Family' || await this.GroupRepo.isInGroup(accountID, group.id)) {
-            throw 'join error'
+        if (group === undefined) {
+            throw 'group not found'
+        }
+        if (group.type !== 'Family') {
+            throw 'not family'
+        }
+        if (await this.GroupRepo.isInGroup(accountID, group.id)) {
+            throw 'already in group'
         }
         
         await this.GroupRepo.join(id, accountID)
@@ -35,8 +53,17 @@ export default class Group {
 
     async ChangeLeader(id, accountID, newLeader) {
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.type !== 'Family' || group.leader !== accountID || !(await this.GroupRepo.isInGroup(newLeader, group.id))) {
-            throw 'change error'
+        if (group === undefined) {
+            throw 'group not found'
+        }
+        if (group.type !== 'Family') {
+            throw 'not family'
+        }
+        if (group.leader !== accountID) {
+            throw 'you are not group leader'
+        }
+        if (!(await this.GroupRepo.isInGroup(newLeader, group.id))) {
+            throw 'illegal new leader'
         }
 
         await this.GroupRepo.edit(id, { leader: newLeader })
@@ -44,9 +71,16 @@ export default class Group {
 
     async Leave(accountID, id) {
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.type !== 'Family' || !(await this.GroupRepo.isInGroup(accountID, group.id))) {
-            throw 'leave error'
+        if (group === undefined) {
+            throw 'group not found'
         }
+        if (group.type !== 'Family') {
+            throw 'not family'
+        }
+        if (!(await this.GroupRepo.isInGroup(accountID, group.id))) {
+            throw 'not in group'
+        }
+        
         await this.GroupRepo.leave(id, accountID)
 
         if (group.leader === accountID) {
@@ -62,8 +96,11 @@ export default class Group {
 
     async Delete(accountID, id) {
         const group = await this.GroupRepo.getGroupByID(id)
-        if (group === undefined || group.leader !== accountID) {
-            throw 'delete error'
+        if (group === undefined) {
+            throw 'group not found'
+        }
+        if (group.leader !== accountID) {
+            throw 'you are not group leader'
         }
         
         await this.GroupRepo.delete(id)
