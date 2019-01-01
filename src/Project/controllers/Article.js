@@ -3,6 +3,8 @@ import ArticleRepo    from '../repositories/Article'
 import ArticleService from '../services/Article'
 import RedisService   from '../services/Redis'
 
+import utils from '../Utils'
+
 export default class Article {
     constructor() {
         this.ArticleRepo    = new ArticleRepo()
@@ -30,7 +32,7 @@ export default class Article {
             const ID = await this.RedisService.Verify(req.header.authorization)
             res.status(200).json({ articles: await this.ArticleRepo.getDefaultArticles(ID) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get article error') })
         }
     }
 
@@ -38,7 +40,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getRecommandArticles() })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get article error') })
         }
     }
     
@@ -46,7 +48,7 @@ export default class Article {
         try {
             res.status(200).json({ article: await this.ArticleRepo.getArticleByID(req.params.id) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get article error') })
         }
     }
 
@@ -54,7 +56,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByAuthor(req.params.author) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get article error') })
         }
     }
 
@@ -62,7 +64,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByTitle(req.params.title) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get article error') })
         }
     }
 
@@ -70,7 +72,7 @@ export default class Article {
         try {
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByContext(req.params.context) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get article error') })
         }
     }
 
@@ -80,7 +82,7 @@ export default class Article {
             await this.ArticleService.auth(ID, req.params.group)
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroup(req.params.group) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get article error') })
         }
     }
 
@@ -90,7 +92,7 @@ export default class Article {
             await this.ArticleService.auth(ID, req.params.group)
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndAuthor(req.params.group, req.params.author) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get article error') })
         }
     }
 
@@ -100,7 +102,7 @@ export default class Article {
             await this.ArticleService.auth(ID, req.params.group)
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndTitle(req.params.group, req.params.title) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get article error') })
         }
     }
 
@@ -110,7 +112,7 @@ export default class Article {
             await this.ArticleService.auth(ID, req.params.group)
             res.status(200).json({ articles: await this.ArticleRepo.getArticleByGroupAndContext(req.params.group, req.params.context) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get article error') })
         }
     }
 
@@ -120,7 +122,7 @@ export default class Article {
             await this.ArticleService.Post(ID, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'psot article error') })
         }
     }
 
@@ -130,7 +132,7 @@ export default class Article {
             await this.ArticleService.PostInGroup(ID, req.params.id, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'psot article error') })
         }
     }
 
@@ -140,7 +142,7 @@ export default class Article {
             await this.ArticleService.Edit(ID, req.params.id, req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'edit article error') })
         }
     }
 
@@ -150,7 +152,7 @@ export default class Article {
             await this.ArticleService.Delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'delete article error') })
         }
     }
 }

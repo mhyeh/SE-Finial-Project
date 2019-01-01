@@ -11,65 +11,43 @@ export default class Account {
     }
 
     async getAllAccounts() {
-        try {
-            return await this.AccountModel.select('*').query()
-        } catch (e) {
-            throw 'get account error'
-        }
+        return await this.AccountModel.select('*').query()
     }
 
     async getAccountByID(id) {
-        try {
-            return (await this.AccountModel.select('*').where('id', id).query())[0]
-        } catch (e) {
-            throw 'get account error'
-        }
+        return (await this.AccountModel.select('*').where('id', id).query())[0]
     }
 
     async getAccountByAccount(account) {
-        try {        
-            return (await this.AccountModel.select('*').where('account', account).query())[0]
-        } catch (e) {
-            throw 'get account error'
-        }
+        return (await this.AccountModel.select('*').where('account', account).query())[0]
     }
 
     async getAccountsByName(name) {
-        try {
-            return await this.AccountModel.select('*').where('name', 'like', name).query()
-        } catch (e) {
-            throw 'get account error'
-        }
+        return await this.AccountModel.select('*').where('name', 'like', name).query()
     }
 
     async create(data) {
-        try {
-            await this.AccountModel.insert(data)
-        } catch (e) {
-            throw 'insert account error'
-        }
+        await this.AccountModel.insert(data)
     }
 
     async edit(id, data) {
-        try {
-            await this.AccountModel.where('id', id).update(data)
-        } catch (e) {
-            throw 'update account error'
+        const promise = []
+        const account = await this.getAccountByID(id)
+        if (account.photo) {
+            promise.push(utils.removeFile(utils.getPath('./uploadedFiles', account.photo)))
         }
+        promise.push(this.AccountModel.where('id', id).update(data))
+        await Promise.all(promise)
     }
 
     async delete(id) {
-        const account = await this.getAccountByID(id)
-        if (account.photo) {
-            utils.removeFile(utils.getPath('./uploadedFiles', account.photo))
-        }
-        try {
-            await this.AccountModel.where('id', id).del()
-        } catch (e) {
-            throw 'delete account error'
-        }
         const promise = []
-        const groups  = this.GroupRepo.getGroupByAccount(id)
+        const [account, groups] = await Promise.all([this.getAccountByID(id), this.GroupRepo.getGroupByAccount(id)])
+        
+        if (account.photo) {
+            promise.push(utils.removeFile(utils.getPath('./uploadedFiles', account.photo)))
+        }
+        promise.push(this.AccountModel.where('id', id).del())
         for (const group of groups) {
             promise.push(this.GroupRepo.leave(group.id, id))
         }

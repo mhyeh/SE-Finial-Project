@@ -34,7 +34,11 @@ export default class File {
                             }
                             delete files[idx]
                         } catch (e) {
-                            reject('remove file error')
+                            if (typeof e === 'string') {
+                                reject(e)
+                            } else {
+                                reject('remove file error')
+                            }
                             return
                         }
                     } else {
@@ -62,7 +66,11 @@ export default class File {
                                 }
                             }
                         } catch (e) {
-                            reject('remove file error')
+                            if (typeof e === 'string') {
+                                reject(e)
+                            } else {
+                                reject('remove file error')
+                            }
                             return
                         }
                     }

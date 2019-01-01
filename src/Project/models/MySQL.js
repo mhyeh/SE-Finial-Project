@@ -141,7 +141,7 @@ export default class Model {
             this.connection.query(this.queryStr + this.whereStr, this.whereParam, (err, results) => {
                 this.flush()
                 if (err) {
-                    reject(err)
+                    reject(this.table + ' get error')
                     return
                 }
                 resolve(results)
@@ -167,7 +167,7 @@ export default class Model {
             this.connection.query(this.queryStr, param, (err) => {
                 this.flush()
                 if (err) {
-                    reject(err)
+                    reject(this.table + ' insert error')
                     return
                 }
                 resolve(data.id)
@@ -187,10 +187,10 @@ export default class Model {
             this.connection.query(this.queryStr, param, (err, results) => {
                 this.flush()
                 if (err) {
-                    reject(err)
+                    reject(this.table + ' update error')
                     return
                 }
-                resolve(results)
+                resolve()
             })
         })
     }
@@ -201,10 +201,10 @@ export default class Model {
             this.connection.query(this.queryStr, (err, results) => {
                 this.flush()
                 if (err) {
-                    reject(err)
+                    reject(this.table + ' delete error')
                     return
                 }
-                resolve(results)
+                resolve()
             })
         })
     }

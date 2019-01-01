@@ -12,51 +12,72 @@ export default class Advertise {
     }
 
     async Create(accountID, pos, req) {
-        const ad_pos = await this.AdvertiseRepo.getAdvertisePos(pos)
-        if (ad_pos.ad !== undefined && ad_pos.ad !== '') {
-            throw 'can not buy this'
-        }
-        const account = await this.AccountRepo.getAccountByID(accountID)
-        if (account.NTUST_coin < ad_pos.price) {
-            throw 'no enough ntust coin'
-        }
+        const promise = []
+        promise.push(this.AdvertiseRepo.getAdvertisePos(pos))
+        promise.push(this.AccountRepo.getAccountByID(accountID))
+        promise.push(this.FileService.ProcFormData(req, { img: 1 }))
 
-        const formdata = await this.FileService.ProcFormData(req, { img: 1 })
-        const data     = formdata.fields
-        const image    = formdata.files.img
+        const [ad_pos, account, formdata] = await Promise.all(promise) 
+        
+        const data  = formdata.fields
+        const image = formdata.files.img
 
         if ((data.context === undefined || data.context === '') && image === undefined) {
             throw 'no input'
         }
+        if (data.price === undefined || typeof data.price !== 'number') {
+            if (image) {
+                await utils.removeFile(image.path)
+            }
+            throw 'no price'
+        }
+        if (ad_pos.ad !== undefined && ad_pos.ad !== '' && ad_pos.price > data.price) {
+            if (image) {
+                await utils.removeFile(image.path)
+            }
+            throw 'can not buy this'
+        }
+        if (account.NTUST_coin < data.price) {
+            if (image) {
+                await utils.removeFile(image.path)
+            }
+            throw 'no enough ntust coin'
+        }
+
+        const price = data.price
+        delete data.price
 
         if (image !== undefined) {
             data.image = utils.getBaseName(image.path)
         }
+
         utils.checkAllow(data, ['context', 'image'])
         
         data.author = accountID
-
-        await this.AdvertiseRepo.create(pos, data)
-
-        account.NTUST_coin -= ad_pos.price
-        await this.AccountRepo.edit(account.id, { NTUST_coin: account.NTUST_coin })
+        
+        account.NTUST_coin -= data.price
+        await Promise.all([this.AdvertiseRepo.create(pos, data, price), this.AccountRepo.edit(account.id, { NTUST_coin: account.NTUST_coin })])
     }
 
     async Edit(accountID, id, req) {
-        const advertise = await this.AdvertiseRepo.getAdvertiseByID(id)
-        if (advertise === undefined) {
-            throw 'advertise not found'
-        }
-        if (advertise.author !== accountID) {
-            throw 'not your advertise'
-        }
-
-        const formdata = await this.FileService.ProcFormData(req, { img: 1 })
-        const data     = formdata.fields
-        const image    = formdata.files.img
+        const [advertise, formdata] = await Promise.all(this.AdvertiseRepo.getAdvertiseByID(id), this.FileService.ProcFormData(req, { img: 1 }))
+        const data  = formdata.fields
+        const image = formdata.files.img
 
         if ((data.context === undefined || data.context === '') && image === undefined) {
             throw 'no input'
+        }
+        if (advertise === undefined) {
+            if (image) {
+                await utils.removeFile(image.path)
+            }
+            throw 'advertise not found'
+        }
+        if (advertise.author !== accountID) {
+            if (image) {
+                await utils.removeFile(image.path)
+            }
+            throw 'not your advertise'
         }
 
         if (image !== undefined) {

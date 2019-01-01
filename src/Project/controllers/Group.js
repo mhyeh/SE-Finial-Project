@@ -3,6 +3,8 @@ import GroupRepo    from '../repositories/Group'
 import GroupService from '../services/Group'
 import RedisService from '../services/Redis'
 
+import utils from '../Utils'
+
 export default class Group {
     constructor() {
         this.GroupRepo    = new GroupRepo()
@@ -26,7 +28,7 @@ export default class Group {
         try {
             res.status(200).json({ groups: await this.GroupRepo.getAllGroups() })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get group error') })
         }
     }
 
@@ -34,7 +36,7 @@ export default class Group {
         try {
             res.status(200).json({ group: await this.GroupRepo.getGroupByID(req.params.id) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get group error') })
         }
     }
 
@@ -42,7 +44,7 @@ export default class Group {
         try {
             res.status(200).json({ groups: await this.GroupRepo.getGroupByName(req.params.name) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get group error') })
         }
     }
 
@@ -51,7 +53,7 @@ export default class Group {
             const ID = await this.RedisService.Verify(req.header.authorization)
             res.status(200).json({ groups: await this.GroupRepo.getGroupByAccount(ID) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get group error') })
         }
     }
 
@@ -59,7 +61,7 @@ export default class Group {
         try {
             res.status(200).json({ members: await this.GroupRepo.getGroupMembers(req.params.id) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get group error') })
         }
     }
     
@@ -69,7 +71,7 @@ export default class Group {
             await this.GroupService.Create(ID, req.body)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'create group error') })
         }
     }
 
@@ -79,7 +81,7 @@ export default class Group {
             await this.GroupService.Edit(ID, req.params.id, req.body)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'edit group error') })
         }
     }
 
@@ -89,7 +91,7 @@ export default class Group {
             await this.GroupService.Join(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'join group error') })
         }
     }
 
@@ -99,7 +101,7 @@ export default class Group {
             await this.GroupService.ChangeLeader(req.params.id, ID, req.params.leader)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'chenge group leader error') })
         }
     }
 
@@ -109,7 +111,7 @@ export default class Group {
             await this.GroupService.Leave(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'leave group error') })
         }
     }
 
@@ -120,7 +122,7 @@ export default class Group {
             await this.GroupService.Delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'delete group error') })
         }
     }
 }

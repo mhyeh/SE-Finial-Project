@@ -3,6 +3,8 @@ import AccountRepo    from '../repositories/Account'
 import AccountService from '../services/Account'
 import RedisService   from '../services/Redis'
 
+import utils from '../Utils'
+
 export default class Account {
     constructor() {
         this.AccountRepo    = new AccountRepo()
@@ -24,7 +26,7 @@ export default class Account {
         try {
             res.status(200).json({ accounts: await this.AccountRepo.getAllAccounts() })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get account error') })
         }
     }
 
@@ -33,7 +35,7 @@ export default class Account {
             const ID = await this.RedisService.Verify(req.header.authorization)
             res.status(200).json({ account: await this.AccountRepo.getAccountByID(ID) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get account error') })
         }
     }
 
@@ -41,7 +43,7 @@ export default class Account {
         try {
             res.status(200).json({ account: await this.AccountService.Match(req.header.authorization) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'match account error') })
         }
     }
     
@@ -49,7 +51,7 @@ export default class Account {
         try {
             res.status(200).json({ token: await this.AccountService.Login(req.body) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'login error') })
         }
     }
 
@@ -57,7 +59,7 @@ export default class Account {
         try {
             res.status(200).json({ token: await this.AccountService.Register(req.body) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'register error') })
         }
     }
 
@@ -65,7 +67,7 @@ export default class Account {
         try {
             res.status(200).json({ account: await this.AccountRepo.getAccountByID(req.params.id) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get account error') })
         }
     }
 
@@ -73,7 +75,7 @@ export default class Account {
         try {
             res.status(200).json({ accounts: await this.AccountRepo.getAccountsByName(req.params.name) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get account error') })
         }
     }
 
@@ -82,7 +84,7 @@ export default class Account {
             await this.AccountService.Edit(req.header.authorization, req.params.id, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'edit account error') })
         }
     }
 
@@ -91,7 +93,7 @@ export default class Account {
             await this.AccountService.Delete(req.header.authorization, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'delete account error') })
         }
     }
 }

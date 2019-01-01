@@ -135,13 +135,7 @@ export default class Model {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
                 return db.db().collection(this.table).aggregate(obj).toArray()
-            }).then(res => {
-                this.flush()
-                resolve(res)
-            }).catch(err => {
-                this.flush()
-                reject(err)
-            })
+            }).then(resolve).catch(() => reject(this.table + ' raw error')).then(this.flush)
         })
     }
 
@@ -149,13 +143,7 @@ export default class Model {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
                 return db.db().collection(this.table).find(this.whereObj, this.queryObj).toArray()
-            }).then(res => {
-                this.flush()
-                resolve(res)
-            }).catch(err => {
-                this.flush()
-                reject(err)
-            })
+            }).then(resolve).catch(() => reject(this.table + ' get error')).then(this.flush)
         })
     }
 
@@ -164,13 +152,7 @@ export default class Model {
             data.id = uuid.v4()
             this.connection.then(db => {
                 return db.db().collection(this.table).insertOne(data)
-            }).then(() => {
-                this.flush()
-                resolve(data.id)
-            }).catch(err => {
-                this.flush()
-                reject(err)
-            })
+            }).then(() => resolve(data.id)).catch(() => reject(this.table + ' insert error')).then(this.flush)
         })
     }
 
@@ -181,13 +163,7 @@ export default class Model {
                     $set: data
                 }
                 return db.db().collection(this.table).updateMany(this.whereObj, newVal)
-            }).then(() => {
-                this.flush()
-                resolve()
-            }).catch(err => {
-                this.flush()
-                reject(err)
-            })
+            }).then(resolve).catch(() => reject(this.table + ' update error')).then(this.flush)
         })
     }
 
@@ -195,13 +171,7 @@ export default class Model {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
                 return db.db().collection(this.table).deleteMany(this.whereObj)
-            }).then(() => {
-                this.flush()
-                resolve()
-            }).catch(err => {
-                this.flush()
-                reject(err)
-            })
+            }).then(resolve).catch(() => reject(this.table + ' flush error')).then(this.flush)
         })
     }
 

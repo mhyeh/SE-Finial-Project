@@ -69,13 +69,17 @@ export default class Account {
     }
 
     async Edit(token, id, req) {
-        const ID = await this.RedisService.Verify(token)
+        const [ID, formdata] = await Promise.all([this.RedisService.Verify(token), this.FileService.ProcFormData(req, { photo: 1 })])
+        const data  = formdata.fields
+        const photo = formdata.files.photo
+
         if (ID !== id) {
+            if (photo) {
+                await utils.removeFile(photo.path)
+            }
             throw 'not your account'
         }
-        const formdata = await this.FileService.ProcFormData(req, { photo: 1 })
-        const data     = formdata.fields
-        const photo    = formdata.files.photo
+
         if (data.password !== undefined && data.password !== '') {
             data.password = utils.hash(data.password)
         }
@@ -106,8 +110,7 @@ export default class Account {
     }
 
     async Match(token) {
-        const ID          = await this.RedisService.Verify(token)
-        const accountList = await this.AccountRepo.getAllAccounts()
+        const [ID, accountList] = await Promise.all([this.RedisService.Verify(token), this.AccountRepo.getAllAccounts()])
         if (accountList.length === 1) {
             throw 'no other user'
         }

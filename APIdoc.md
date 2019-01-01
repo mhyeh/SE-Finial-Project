@@ -266,7 +266,8 @@ Header: { "authorization": <token> }
 
 FormData: {
     ["context": <ad context>],
-    ["img":     <ad image>]
+    ["img":     <ad image>],
+    price:      <ad price>
 }
 
 Response:

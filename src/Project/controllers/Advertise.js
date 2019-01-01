@@ -3,6 +3,8 @@ import AdvertiseRepo    from '../repositories/Advertise'
 import AdvertiseService from '../services/Advertise'
 import RedisService     from '../services/Redis'
 
+import utils from '../Utils'
+
 export default class Advertise {
     constructor() {
         this.AdvertiseRepo    = new AdvertiseRepo()
@@ -23,7 +25,7 @@ export default class Advertise {
         try {
             res.status(200).json({ advertises: await this.AdvertiseRepo.getAllAdvertises() })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get advertise error') })
         }
     }
 
@@ -31,7 +33,7 @@ export default class Advertise {
         try {
             res.status(200).json({ pos: await this.AdvertiseRepo.getAdvertisePosList() })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get advertise pos list error') })
         }
     }
 
@@ -40,7 +42,7 @@ export default class Advertise {
             const ID = await this.RedisService.Verify(req.header.authorization)
             res.status(200).json({ advertises: await this.AdvertiseRepo.getAdvertisesByAccount(ID) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get advertise error') })
         }
     }
     
@@ -48,7 +50,7 @@ export default class Advertise {
         try {
             res.status(200).json({ advertise: await this.AdvertiseRepo.getAdvertiseByPos(req.params.pos) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get advertise error') })
         }
     }
 
@@ -56,7 +58,7 @@ export default class Advertise {
         try {
             res.status(200).json({ advertise: await this.AdvertiseRepo.getAdvertiseByID(req.params.id) })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'get advertise error') })
         }
     }
     
@@ -66,7 +68,7 @@ export default class Advertise {
             await this.AdvertiseService.Create(ID, req.params.pos, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'buy advertise error') })
         }
     }
 
@@ -76,7 +78,7 @@ export default class Advertise {
             await this.AdvertiseService.Edit(ID, req.params.id, req.req)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'edit advertise error') })
         }
     }
     
@@ -86,7 +88,7 @@ export default class Advertise {
             await this.AdvertiseService.Delete(ID, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
-            res.status(400).json({ error: e })
+            res.status(400).json({ error: utils.errorHandle(e, 'cancel advertise error') })
         }
     }
 }

@@ -18,9 +18,7 @@ export default class Article {
         data.author   = accountID
         data.board_id = ''
         
-        await this.ArticleRepo.create(data)
-        
-        await this.giveCoin(data)
+        await Promise.all([this.ArticleRepo.create(data), this.giveCoin(data)]) 
     }
 
     async PostInGroup(accountID, groupID, req) {
@@ -30,9 +28,7 @@ export default class Article {
         data.author   = accountID
         data.board_id = groupID
 
-        await this.ArticleRepo.create(data)
-
-        await this.giveCoin(data)
+        await Promise.all([this.ArticleRepo.create(data), this.giveCoin(data)]) 
     }
 
     async giveCoin(data) {

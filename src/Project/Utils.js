@@ -54,7 +54,7 @@ const removeFile = (path) => {
     return new Promise((resolve, reject) => {
         fs.unlink(path, err => {
             if (err) {
-                reject(err)
+                reject('remove file error')
                 return
             }
             resolve()
@@ -63,7 +63,7 @@ const removeFile = (path) => {
 }
 
 const isObject = (item) => {
-    return (item && typeof item === 'object' && !Array.isArray(item))
+    return item && typeof item === 'object' && !Array.isArray(item)
 }
   
 const deepMerge = (target, ...sources) => {
@@ -90,6 +90,15 @@ const deepMerge = (target, ...sources) => {
     return deepMerge(target, ...sources)
 }
 
+const errorHandle = (e, defaultThrow) => {
+    switch (typeof e) {
+        case 'string':
+            return e
+        default:
+            return defaultThrow
+    }
+}
+
 export default {
     hash,
     getDate,
@@ -99,5 +108,6 @@ export default {
     getPath,
     checkAllow,
     removeFile,
-    deepMerge
+    deepMerge,
+    errorHandle
 }
