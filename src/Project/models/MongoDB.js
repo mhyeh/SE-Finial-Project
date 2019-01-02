@@ -139,6 +139,7 @@ export default class Model {
             this.skip = pageNum * pageSize
         }
         this.pageSize = pageSize
+        return this
     }
 
     raw(obj) {
@@ -157,6 +158,7 @@ export default class Model {
 
     sortBy(col, direct) {
         this.orderBy[col] = direct
+        return this
     }
 
     query() {

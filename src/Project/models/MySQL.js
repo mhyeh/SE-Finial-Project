@@ -139,6 +139,7 @@ export default class Model {
             this.limit += pageNum * pageSize + ','
         }
         this.limit += pageSize
+        return this
     }
 
     async raw(str) {
@@ -148,6 +149,7 @@ export default class Model {
 
     sortBy(col, direct) {
         this.orderby = ` order by \`${col}\` ${direct === 1 ? 'asc' : 'desc'}`
+        return this
     }
 
     query() {
