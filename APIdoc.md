@@ -769,7 +769,7 @@ URL: /group/board
 Response:
 
 Status Code: 200
-Data: 同 get all groups 的 Data
+Data: 同 get all groups 的 Data(groups改為borads)
 ```
 
 ### get groups by name
