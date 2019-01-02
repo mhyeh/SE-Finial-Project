@@ -15,6 +15,8 @@ export default class Comment {
     async Post(accountID, id, req) {
         const article = await this.ArticleRepo.getArticleByID(id)
         const data    = req.body
+
+        utils.trimData(data)
         if (!utils.hasValue(article, 'object')) {
             throw errorLog.dataNotFound('article')
         }
@@ -43,6 +45,8 @@ export default class Comment {
     async Edit(accountID, id, req) {
         const comment = await this.CommentRepo.getCommentByID(id)
         const data    = req.body
+
+        utils.trimData(data)
         if (!utils.hasValue(comment, 'object')) {
             throw errorLog.dataNotFound('comment')
         }
@@ -55,6 +59,8 @@ export default class Comment {
         if (!utils.checkAllow(data, ['context'])) {
             throw errorLog.inputNotAccept()
         }
+
+        utils.filterData(data)
 
         data.time = utils.getDateTime()
         data.ip   = req.ip

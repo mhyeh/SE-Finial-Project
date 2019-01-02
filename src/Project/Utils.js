@@ -118,6 +118,22 @@ const hasValue = (v, dataType) => {
     return flag
 }
 
+const trimData = (data) => {
+    for (col in data) {
+        if (typeof data[col] === 'string') {
+            data[col] = data[col].tirm()
+        }
+    }
+}
+
+const filterData = (data) => {
+    for (const col in data) {
+        if (!hasValue(data[col], 'string')) {
+            delete data[col]
+        }
+    }
+}
+
 export default {
     hash,
     getDate,
@@ -129,5 +145,7 @@ export default {
     removeFile,
     deepMerge,
     errorHandle,
-    hasValue
+    hasValue,
+    trimData,
+    filterData
 }

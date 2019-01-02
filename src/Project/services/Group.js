@@ -25,6 +25,7 @@ export default class Group {
     }
 
     async Create(accountID, data) {
+        utils.trimData(data)
         if (!utils.hasValue(data.name, 'string')) {
             throw errorLog.noInput('name')
         }
@@ -34,7 +35,7 @@ export default class Group {
         if (data.type !== 'Family' && data.type !== 'Board') {
             throw 'illegal input type'
         }
-        if (!utils.checkAllow(data, ['name', 'type'])) {
+        if (!utils.checkAllow(data, ['name', 'type', 'description'])) {
             throw errorLog.inputNotAccept()
         }
         
@@ -44,6 +45,7 @@ export default class Group {
     }
 
     async Edit(accountID, id, data) {
+        utils.trimData(data)
         const group = await this.GroupRepo.getGroupByID(id)
         if (!utils.hasValue(group, 'object')) {
             throw errorLog.dataNotFound('group')
@@ -51,10 +53,13 @@ export default class Group {
         if (group.leader !== accountID) {
             throw errorLog.notGroupLeader()
         }
-        if (!utils.hasValue(data.name, 'string')) {
-            throw errorLog.noInput('name')
+        if (!utils.hasValue(data.name, 'string') && !utils.hasValue(data.description, 'string')) {
+            throw errorLog.noInput()
         }
-        if (!utils.checkAllow(data, ['name'])) {
+        
+        utils.filterData(data)
+        
+        if (!utils.checkAllow(data, ['name', 'description'])) {
             throw errorLog.inputNotAccept()
         }
         

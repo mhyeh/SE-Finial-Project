@@ -28,6 +28,8 @@ export default class Advertise {
         const data  = formdata.fields
         const image = formdata.files.img
 
+        utils.trimData(data)
+
         if (!utils.hasValue(data.context, 'string') && !utils.hasValue(image, 'object')) {
             throw errorLog.noInput()
         }
@@ -73,6 +75,8 @@ export default class Advertise {
         const data  = formdata.fields
         const image = formdata.files.img
 
+        utils.trimData(data)
+
         if (!utils.hasValue(data.context, 'string') && !utils.hasValue(image, 'object')) {
             throw errorLog.noInput()
         }
@@ -88,6 +92,10 @@ export default class Advertise {
         if (utils.hasValue(image, 'object')) {
             data.image = utils.getBaseName(image.path)
         }
+
+        utils.filterData(data)
+
+
         if (!utils.checkAllow(data, ['context', 'image'])) {
             throw errorLog.inputNotAccept()
         }

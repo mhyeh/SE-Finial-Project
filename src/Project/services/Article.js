@@ -78,6 +78,8 @@ export default class Article {
         const data     = formdata.fields
         const images   = formdata.files.imgs
 
+        utils.trimData(data)
+
         if (isEdit) {
             if (!utils.hasValue(data.title, 'string') && !utils.hasValue(data.context, 'string') && !utils.hasValue(images, 'array')) {
                 throw errorLog.noInput()
@@ -102,6 +104,9 @@ export default class Article {
                 data.image.push(utils.getBaseName(image.path))
             }
         }
+
+        utils.filterData(data)
+
 
         if (!utils.checkAllow(data, ['title', 'context', 'image'])) {
             if (utils.hasValue(images, 'array')) {

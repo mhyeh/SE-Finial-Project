@@ -62,12 +62,12 @@ CREATE TABLE IF NOT EXISTS `article` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.comment 結構
 CREATE TABLE IF NOT EXISTS `comment` (
-  `id`         varchar(36) NOT NULL,
-  `article_id` varchar(36) NOT NULL,
-  `author`     varchar(36) NOT NULL,
-  `context`    text        NOT NULL,
-  `time`       datetime    NOT NULL,
-  `ip`         text        NOT NULL,
+  `id`         varchar(36) NOT     NULL,
+  `article_id` varchar(36) NOT     NULL,
+  `author`     varchar(36) NOT     NULL,
+  `context`    text        NOT     NULL,
+  `time`       datetime    NOT     NULL,
+  `ip`         text        NOT     NULL,
   `types`      int(11)     DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -107,10 +107,11 @@ CREATE TABLE IF NOT EXISTS `gp_member` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.groups 結構
 CREATE TABLE IF NOT EXISTS `groups` (
-  `id`     varchar(36) NOT NULL,
-  `name`   text        NOT NULL,
-  `leader` varchar(36) NOT NULL,
-  `type`   text        NOT NULL,
+  `id`          varchar(36) NOT     NULL,
+  `name`        text        NOT     NULL,
+  `leader`      varchar(36) NOT     NULL,
+  `type`        text        NOT     NULL,
+  `description` text        DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

@@ -16,6 +16,7 @@ export default class Account {
     }
 
     async Login(data) {
+        utils.trimData(data)
         if (!utils.hasValue(data.account, 'string')) {
             throw errorLog.noInput('account')
         }
@@ -40,6 +41,7 @@ export default class Account {
     }
 
     async Register(data) {
+        utils.trimData(data)
         if (!utils.hasValue(data.account, 'string')) {
             throw errorLog.noInput('account')
         }
@@ -75,13 +77,15 @@ export default class Account {
         const [ID, formdata] = await Promise.all([this.RedisService.Verify(token), this.FileService.ProcFormData(req, { photo: 1 })])
         const data  = formdata.fields
         const photo = formdata.files.photo
-
+        
         if (ID !== id) {
             if (photo) {
                 await utils.removeFile(photo.path)
             }
             throw errorLog.notYourData('account')
         }
+
+        utils.trimData(data)
 
         if (utils.hasValue(data.password, 'string')) {
             data.password = utils.hash(data.password)
@@ -98,6 +102,9 @@ export default class Account {
         if (utils.hasValue(data.photo, 'object')) {
             data.photo = utils.getBaseName(photo.path)
         }
+
+        utils.filterData(data)
+
         if (!utils.checkAllow(data, ['password', 'name', 'department', 'class', 'birthday', 'sex', 'ID_card', 'address', 'photo', 'passport', 'credit_card', 'cvc', 'expire_date', 'interst'])) {
             if (photo) {
                 await utils.removeFile(photo.path)
