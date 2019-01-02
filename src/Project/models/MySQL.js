@@ -200,7 +200,7 @@ export default class Model {
                 param.push(data[prop])
             }
             this.queryStr = str.slice(0, -1) + this.queryStr + this.whereStr
-            this.connection.query(this.queryStr, param, (err, results) => {
+            this.connection.query(this.queryStr, param.concat(this.whereParam), (err, results) => {
                 this.flush()
                 if (err) {
                     reject(this.table + ' update error')
@@ -214,7 +214,7 @@ export default class Model {
     del() {
         return new Promise((resolve, reject) => {
             this.queryStr = `delete from \`${this.table}\`` + this.queryStr + this.whereStr
-            this.connection.query(this.queryStr, (err, results) => {
+            this.connection.query(this.queryStr, this.whereParam, (err, results) => {
                 this.flush()
                 if (err) {
                     reject(this.table + ' delete error')

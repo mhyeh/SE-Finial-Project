@@ -9,18 +9,18 @@ export default class Friend {
 
     async getAllFriends(ID) {
         const friends = []
-        friends.push(await (new Model('friends')).select('account1').where('account2', ID).andWhere('isConfirm', 1).query())
-        friends.push(await (new Model('friends')).select('account2').where('account1', ID).andWhere('isConfirm', 1).query())
+        friends.push(await (new Model('friends')).select('*').where('account2', ID).andWhere('isConfirm', 1).query())
+        friends.push(await (new Model('friends')).select('*').where('account1', ID).andWhere('isConfirm', 1).query())
         return friends[0].map(friend => friend.account1).concat(friends[1].map(friend => friend.account2))
     }
 
     async getUnconfirmedFriends(ID) {
-        const list = await (new Model('friends')).select('account1').where('account2', ID).andWhere('isConfirm', 0).query()
+        const list = await (new Model('friends')).select('*').where('account2', ID).andWhere('isConfirm', 0).query()
         return list.map(element => element.account1)
     }
 
     async getInvitationList(ID) {
-        const list = await (new Model('friends')).select('account2').where('account1', ID).andWhere('isConfirm', 0).query()
+        const list = await (new Model('friends')).select('*').where('account1', ID).andWhere('isConfirm', 0).query()
         return list.map(element => element.account2)
     }
 

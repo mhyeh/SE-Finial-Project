@@ -54,7 +54,7 @@ export default class Article {
             articles = articles.map(article => article.id)
             return await (new Model('article')).whereIn('id', articles).query()
         } else {
-            return await (new Model('article')).raw('select `article`.* from `article`                                      \
+            return await (new Model('article')).raw('select `article`.* from `article`                                 \
                                                 left join `comment` on                                                 \
                                                     `article`.`id` = `comment`.`article_id` and                        \
                                                     `comment`.`types` in (0, 1) and (                                  \
