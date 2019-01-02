@@ -12,14 +12,22 @@ export default class Article {
         this.FriendRepo   = new FriendRepo()
     }
 
-    async getAllArticles() {
-        return await this.ArticleModel.select('*').query()
+    async getAllArticles(page=-1, pageSize=-1) {
+        const query = this.ArticleModel.select('*')
+        if (page >= 0 && pageSize >= 0) {
+            query.page(~~page, ~~pageSize)
+        }
+        return await query.query()
     }
 
-    async getDefaultArticles(accountID) {
+    async getDefaultArticles(accountID, page=-1, pageSize=-1) {
         const author = await this.FriendRepo.getAllFriends(accountID)
         author.push(accountID)
-        return await this.ArticleModel.select('*').whereIn('author', author).andWhere('board_id', '').query()
+        const query = this.ArticleModel.select('*').whereIn('author', author).andWhere('board_id', '')
+        if (page >= 0 && pageSize >= 0) {
+            query.page(~~page, ~~pageSize)
+        }
+        return await query.query()
     }
 
     async getRecommandArticles() {
@@ -64,32 +72,60 @@ export default class Article {
         return (await this.ArticleModel.select('*').where('id', id).query())[0]
     }
 
-    async getArticleByAuthor(author) {
-        return await this.ArticleModel.select('*').where('author', author).andWhere('board_id', '').query()
+    async getArticleByAuthor(author, page=-1, pageSize=-1) {
+        const query = this.ArticleModel.select('*').where('author', author).andWhere('board_id', '')
+        if (page >= 0 && pageSize >= 0) {
+            query.page(~~page, ~~pageSize)
+        }
+        return await query.query()
     }
 
-    async getArticleByTitle(title) {
-        return await this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', '').query()
+    async getArticleByTitle(title, page=-1, pageSize=-1) {
+        const query = this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', '')
+        if (page >= 0 && pageSize >= 0) {
+            query.page(~~page, ~~pageSize)
+        }
+        return await query.query()
     }
 
-    async getArticleByContext(context) {
-        return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', '').query()
+    async getArticleByContext(context, page=-1, pageSize=-1) {
+        const query = this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', '')
+        if (page >= 0 && pageSize >= 0) {
+            query.page(~~page, ~~pageSize)
+        }
+        return await query.query()
     }
     
-    async getArticleByGroup(group) {
-        return await this.ArticleModel.select('*').where('board_id', group).query()
+    async getArticleByGroup(group, page=-1, pageSize=-1) {
+        const query = this.ArticleModel.select('*').where('board_id', group)
+        if (page >= 0 && pageSize >= 0) {
+            query.page(~~page, ~~pageSize)
+        }
+        return await query.query()
     }
 
-    async getArticleByGroupAndAuthor(group, author) {
-        return await this.ArticleModel.select('*').where('author', author).andWhere('board_id', group).query()
+    async getArticleByGroupAndAuthor(group, author, page=-1, pageSize=-1) {
+        const query = this.ArticleModel.select('*').where('author', author).andWhere('board_id', group)
+        if (page >= 0 && pageSize >= 0) {
+            query.page(~~page, ~~pageSize)
+        }
+        return await query.query()
     }
 
-    async getArticleByGroupAndTitle(group, title) {
-        return await this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', group).query()
+    async getArticleByGroupAndTitle(group, title, page=-1, pageSize=-1) {
+        const query = this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', group)
+        if (page >= 0 && pageSize >= 0) {
+            query.page(~~page, ~~pageSize)
+        }
+        return await query.query()
     }
 
-    async getArticleByGroupAndContext(group, context) {
-        return await this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', group).query()   
+    async getArticleByGroupAndContext(group, context, page=-1, pageSize=-1) {
+        const query = this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', group)
+        if (page >= 0 && pageSize >= 0) {
+            query.page(~~page, ~~pageSize)
+        }
+        return await query.query()
     }
 
     async create(data) {

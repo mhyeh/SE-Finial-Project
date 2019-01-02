@@ -10,6 +10,8 @@ export default class Model {
         this.connection = MongoDB
         this.table      = table
         this.lastWhere  = ''
+        this.skip       = -1
+        this.pageSize   = -1
         this.queryObj   = {}
         this.whereObj   = {}
         this.compareOP  = {
@@ -131,6 +133,13 @@ export default class Model {
         return whereObj
     }
 
+    page(pageNum, pageSize) {
+        if (pageNum)  {
+            this.skip = pageNum * pageSize
+        }
+        this.pageSize = pageSize
+    }
+
     raw(obj) {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
@@ -148,7 +157,14 @@ export default class Model {
     query() {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
-                return db.db().collection(this.table).find(this.whereObj, this.queryObj).toArray()
+                const query = db.db().collection(this.table).find(this.whereObj, this.queryObj)
+                if (this.skip >= 0) {
+                    query.skip(this.skip)
+                }
+                if (this.pageSize >= 0) {
+                    query.limit(this.pageSize)
+                }
+                return query.toArray()
             }).then(res => {
                 this.flush()
                 resolve(res)
@@ -209,5 +225,7 @@ export default class Model {
         this.whereObj  = {}
         this.queryObj  = {}
         this.lastWhere = ''
+        this.skip      = -1
+        this.pageSize  = -1
     }
 }

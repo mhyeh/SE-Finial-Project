@@ -317,7 +317,7 @@ Data: { "message": "success" }
 
 ```
 Method: GET
-URL: /article/
+URL: /article/[ page/:page/size/:size ]
 
 Response:
 
@@ -343,7 +343,7 @@ Data: {
 
 ```
 Method: GET
-URL: /article/group/:group/author/:author
+URL: /article/[ page/:page/size/:size ]/group/:group/author/:author
 
 Header: { "authorization": <token> }
 
@@ -357,7 +357,7 @@ Data: 同 get friend and self article 的 Data
 
 ```
 Method: GET
-URL: /article/group/:group/title/:title
+URL: /article/[ page/:page/size/:size ]/group/:group/title/:title
 
 Header: { "authorization": <token> }
 
@@ -371,7 +371,7 @@ Data: 同 get friend and self article 的 Data
 
 ```
 Method: GET
-URL: /article/group/:group/context/:context
+URL: /article/[ page/:page/size/:size ]/group/:group/context/:context
 
 Header: { "authorization": <token> }
 
@@ -385,7 +385,7 @@ Data: 同 get friend and self article 的 Data
 
 ```
 Method: GET
-URL: /article/group/:group
+URL: /article/[ page/:page/size/:size ]/group/:group
 
 Header: { "authorization": <token> }
 
@@ -399,7 +399,7 @@ Data: 同 get friend and self article 的 Data
 
 ```
 Method: GET
-URL: /article/author/:author
+URL: /article/[ page/:page/size/:size ]/author/:author
 
 Response:
 
@@ -411,7 +411,7 @@ Data: 同 get friend and self article 的 Data
 
 ```
 Method: GET
-URL: /article/title/:title
+URL: /article/[ page/:page/size/:size ]/title/:title
 
 Response:
 
@@ -423,7 +423,7 @@ Data: 同 get friend and self article 的 Data
 
 ```
 Method: GET
-URL: /article/context/:context
+URL: /article/[ page/:page/size/:size ]/context/:context
 
 Response:
 

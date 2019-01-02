@@ -24,13 +24,14 @@ const corsConfig = {
 router.use(bodyParser)
 router.use(cors(corsConfig))
 
-router.use('/account',   AccountRouter)
-router.use('/advertise', AdvertiseRouter)
-router.use('/article',   ArticleRouter)
-router.use('/comment',   CommentRouter)
-router.use('/file',      FileRouter)
-router.use('/friend',    FriendRouter)
-router.use('/group',     GroupRouter)
+router.use('/account',                       AccountRouter)
+router.use('/advertise',                     AdvertiseRouter)
+router.use('/article/page/:page/size/:size', ArticleRouter)
+router.use('/article',                       ArticleRouter)
+router.use('/comment',                       CommentRouter)
+router.use('/file',                          FileRouter)
+router.use('/friend',                        FriendRouter)
+router.use('/group',                         GroupRouter)
 
 const server = http.createServer(async (req, res) => {
     const request  = new Request(req)

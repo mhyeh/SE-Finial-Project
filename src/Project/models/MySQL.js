@@ -10,6 +10,7 @@ export default class Model {
         this.queryStr   = ''
         this.whereStr   = ''
         this.lastWhere  = ''
+        this.limit      = ''
         this.whereParam = []
         this.compareOP  = {
             '$gt':  '>',
@@ -131,6 +132,14 @@ export default class Model {
         }
     }
 
+    page(pageNum, pageSize) {
+        this.limit = ' limit '
+        if (pageNum)  {
+            this.limit += pageNum * pageSize + ','
+        }
+        this.limit += pageSize
+    }
+
     async raw(str) {
         this.queryStr = str
         return await this.query()
@@ -138,7 +147,7 @@ export default class Model {
 
     query() {
         return new Promise((resolve, reject) => {
-            this.connection.query(this.queryStr + this.whereStr, this.whereParam, (err, results) => {
+            this.connection.query(this.queryStr + this.whereStr + this.limit, this.whereParam, (err, results) => {
                 this.flush()
                 if (err) {
                     reject(this.table + ' get error')
