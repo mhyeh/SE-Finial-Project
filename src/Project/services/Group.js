@@ -9,7 +9,7 @@ export default class Group {
     }
 
     async getGroupMembers(accountID, id) {
-        if ((await this.CheckState(accountID, id)) === -1) {
+        if ((await this.CheckState(accountID, id)) !== 1) {
             throw errorLog.notInGroup()
         }
         return await this.GroupRepo.getGroupMembers(id, 1)
