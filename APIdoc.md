@@ -851,7 +851,7 @@ Response:
 
 Status Code: 200
 Data: {
-    "members": [
+    "unconfirmMembers": [
         {
             "id":        <group_member id>,
             "account":   <member account id>
