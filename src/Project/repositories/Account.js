@@ -33,7 +33,7 @@ export default class Account {
     async edit(id, data) {
         const promise = []
         const account = await this.getAccountByID(id)
-        if (data.photo && account.photo) {
+        if (utils.hasValue(data.photo, 'string') && utils.hasValue(account.photo, 'string')) {
             promise.push(utils.removeFile(utils.getPath('./uploadedFiles', account.photo)))
         }
         promise.push(this.AccountModel.where('id', id).update(data))
@@ -44,7 +44,7 @@ export default class Account {
         const promise = []
         const [account, groups] = await Promise.all([this.getAccountByID(id), this.GroupRepo.getGroupByAccount(id)])
         
-        if (account.photo) {
+        if (utils.hasValue(account.photo, 'string')) {
             promise.push(utils.removeFile(utils.getPath('./uploadedFiles', account.photo)))
         }
         promise.push(this.AccountModel.where('id', id).del())

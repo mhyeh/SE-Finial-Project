@@ -1,14 +1,16 @@
 import Model from '../models/Model'
 
+import errorLog from '../ErrorLog'
+
 export default class Friend {
     constructor() {
         this.FriendModel = new Model('friends')
     }
 
     async getAllFriends(ID) {
-        const friend = []
-        friend.push(await this.FriendModel.select('account1').where('account1', ID).andWhere('isConfirm', 1).query())
-        friend.push(await this.FriendModel.select('account2').where('account1', ID).andWhere('isConfirm', 1).query())
+        const friends = []
+        friends.push(await this.FriendModel.select('account1').where('account1', ID).andWhere('isConfirm', 1).query())
+        friends.push(await this.FriendModel.select('account2').where('account1', ID).andWhere('isConfirm', 1).query())
         return friends[0].map(friend => friend.account1).concat(friends[1].map(friend => friend.account2))
     }
 
@@ -62,7 +64,7 @@ export default class Friend {
     async delete(id1, id2) {
         const friend = await this.getFriend(id1, id2)
         if (friend === undefined) {
-            throw 'no this friend'
+            throw errorLog.dataNotFound('friend')
         } else {
             await this.FriendModel.where('id', friend.id).del()
         }

@@ -21,7 +21,7 @@ export default class Advertise {
     }
 
     async getAdvertisePos(pos) {
-        return (await this.AdposModel.select('*').where('position', parseInt(pos)).query())[0]
+        return (await this.AdposModel.select('*').where('position', pos).query())[0]
     }
 
     async getAdvertisePosList() {
@@ -42,13 +42,13 @@ export default class Advertise {
     }
 
     async getAdvertiseByPos(pos) {
-        const ad_pos = (await this.AdposModel.select('*').where('position', parseInt(pos)).query())[0]
+        const ad_pos = (await this.AdposModel.select('*').where('position', pos).query())[0]
         return await this.getAdvertiseByID(ad_pos.ad)
     }
 
     async create(pos, data, price) {
         const insertID = await this.AdModel.insert(data)
-        await this.AdposModel.where('position', parseInt(pos)).update({ ad: insertID, price: price })
+        await this.AdposModel.where('position', pos).update({ ad: insertID, price: price })
     }
 
     async edit(id, data) {

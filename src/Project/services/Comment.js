@@ -2,7 +2,8 @@ import AccountRepo  from '../repositories/Account'
 import ArticleRepo  from '../repositories/Article'
 import CommentRepo  from '../repositories/Comment'
 
-import utils from '../Utils'
+import errorLog from '../ErrorLog'
+import utils    from '../Utils'
 
 export default class Comment {
     constructor() {
@@ -14,19 +15,22 @@ export default class Comment {
     async Post(accountID, id, req) {
         const article = await this.ArticleRepo.getArticleByID(id)
         const data    = req.body
-        if (article === undefined) {
-            throw 'article not found'
+        if (!utils.hasValue(article, 'object')) {
+            throw errorLog.dataNotFound('article')
         }
-        if (data.types === undefined) {
-            throw 'no input types'
+        if (!utils.hasValue(data.types, 'number')) {
+            throw errorLog.noInput('types')
         }
+        data.types = parseInt(data.types)
         if (data.types !== 0 && data.types !== 1 && data.types !== 2) {
             throw 'illegal input types'
         }
-        if (data.context === undefined || data.context === '') {
-            throw 'no input context'
+        if (!utils.hasValue(data.context, 'string')) {
+            throw errorLog.noInput('context')
         }
-        utils.checkAllow(data, ['context', 'types'])
+        if (!utils.checkAllow(data, ['context', 'types'])) {
+            throw errorLog.inputNotAccept()
+        }
 
         data.time       = utils.getDateTime()
         data.author     = accountID
@@ -39,17 +43,19 @@ export default class Comment {
     async Edit(accountID, id, req) {
         const comment = await this.CommentRepo.getCommentByID(id)
         const data    = req.body
-        if (comment === undefined) {
-            throw 'comment not found'
+        if (!utils.hasValue(comment, 'object')) {
+            throw errorLog.dataNotFound('comment')
         }
         if (comment.author !== accountID) {
-            throw 'not your comment'
+            throw errorLog.notYourData('comment')
         }
-        if (data.context === undefined || data.context === '') {
-            throw 'no input context'
+        if (!utils.hasValue(data.context, 'string')) {
+            throw errorLog.noInput('context')
         }
-        utils.checkAllow(data, ['context'])
-        
+        if (!utils.checkAllow(data, ['context'])) {
+            throw errorLog.inputNotAccept()
+        }
+
         data.time = utils.getDateTime()
         data.ip   = req.ip
         
@@ -58,11 +64,11 @@ export default class Comment {
 
     async Delete(accountID, id) {
         const comment = await this.CommentRepo.getCommentByID(id)
-        if (comment === undefined) {
-            throw 'comment not found'
+        if (!utils.hasValue(comment, 'object')) {
+            throw errorLog.dataNotFound('comment')
         }
         if (comment.author !== accountID) {
-            throw 'not your comment'
+            throw errorLog.notYourData('comment')
         }
         
         await this.CommentRepo.delete(id)

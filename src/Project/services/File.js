@@ -43,6 +43,10 @@ export default class File {
                         }
                     } else {
                         try {
+                            if (!utils.hasValue(files[idx], 'object') && !utils.hasValue(files[idx], 'array')) {
+                                delete files[idx]
+                                continue
+                            }
                             if (files[idx] instanceof Array) {
                                 for (const file of files[idx]) {
                                     if (!this.checkFileExt(file, ['jpg', 'png'])) {
@@ -63,6 +67,9 @@ export default class File {
                                 if (!this.checkFileExt(files[idx], ['jpg', 'png'])) {
                                     utils.removeFile(files[idx].path)
                                     flag = false
+                                }
+                                if (imgConfig[idx] !== 1) {
+                                    imgConfig[idx] = [files[idx]]
                                 }
                             }
                         } catch (e) {

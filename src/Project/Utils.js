@@ -39,15 +39,12 @@ const getPath = (...arg) => {
 }
 
 const checkAllow = (data, accept) => {
-    try {
-        for (const col in data) {
-            if (!accept.includes(col)) {
-                throw 'not accept'
-            }
+    for (const col in data) {
+        if (!accept.includes(col)) {
+            return false
         }
-    } catch (e) {
-        throw 'not accept'
     }
+    return true
 } 
 
 const removeFile = (path) => {
@@ -99,6 +96,28 @@ const errorHandle = (e, defaultThrow) => {
     }
 }
 
+const hasValue = (v, dataType) => {
+    if (v === undefined) {
+        return false
+    }
+    let flag = false
+    switch (dataType) {
+        case 'string':
+            flag = typeof v === 'string' && v !== ''
+            break
+        case 'number':
+            flag = !isNaN(parseInt(v))
+            break
+        case 'object':
+            flag = isObject(v) && Object.keys(v).length !== 0
+            break
+        case 'array':
+            flag = v instanceof Array && v[0] !== undefined
+            break
+    }
+    return flag
+}
+
 export default {
     hash,
     getDate,
@@ -109,5 +128,6 @@ export default {
     checkAllow,
     removeFile,
     deepMerge,
-    errorHandle
+    errorHandle,
+    hasValue
 }

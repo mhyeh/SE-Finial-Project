@@ -4,7 +4,8 @@ import FriendRepo  from '../repositories/Friend'
 import FileService  from './File'
 import RedisService from './Redis'
 
-import utils from '../Utils'
+import errorLog from '../ErrorLog'
+import utils    from '../Utils'
 
 export default class Account {
     constructor() {
@@ -15,15 +16,15 @@ export default class Account {
     }
 
     async Login(data) {
-        if (data.account === undefined || data.account === '') {
-            throw 'no input account'
+        if (!utils.hasValue(data.account, 'string')) {
+            throw errorLog.noInput('account')
         }
-        if (data.password === undefined || data.password === '') {
-            throw 'no input password'
+        if (!utils.hasValue(data.password, 'string')) {
+            throw errorLog.noInput('password')
         }
         const account = await this.AccountRepo.getAccountByAccount(data.account)
-        if (account === undefined) {
-            throw 'no this account'
+        if (!utils.hasValue(account, 'object')) {
+            throw errorLog.dataNotFound('account')
         }
         const hashPwd = utils.hash(data.password)
         if (hashPwd !== account.password) {
@@ -34,24 +35,26 @@ export default class Account {
             this.RedisService.Store(token, account.id)
             return token
         } catch (e) {
-            throw 'redis error'
+            throw errorLog.redisError()
         }
     }
 
     async Register(data) {
-        if (data.account === undefined || data.account === '') {
-            throw 'no input account'
+        if (!utils.hasValue(data.account, 'string')) {
+            throw errorLog.noInput('account')
         }
-        if (data.password === undefined || data.password === '') {
-            throw 'no input password'
+        if (!utils.hasValue(data.password, 'string')) {
+            throw errorLog.noInput('password')
         }
-        if (data.name === undefined || data.name === '') {
-            throw 'no input name'
+        if (!utils.hasValue(data.name, 'string')) {
+            throw errorLog.noInput('name')
         }
-        utils.checkAllow(data, ['account', 'password', 'name'])
+        if (!utils.checkAllow(data, ['account', 'password', 'name'])) {
+            throw errorLog.inputNotAccept()
+        }
 
         let account = await this.AccountRepo.getAccountByAccount(data.account)
-        if (account !== undefined) {
+        if (utils.hasValue(account, 'object')) {
             throw 'account already exist'
         }
 
@@ -64,7 +67,7 @@ export default class Account {
             this.RedisService.Store(token, account.id)
             return token
         } catch (e) {
-            throw 'redis error'
+            throw errorLog.redisError()
         }
     }
 
@@ -77,25 +80,30 @@ export default class Account {
             if (photo) {
                 await utils.removeFile(photo.path)
             }
-            throw 'not your account'
+            throw errorLog.notYourData('account')
         }
 
-        if (data.password !== undefined && data.password !== '') {
+        if (utils.hasValue(data.password, 'string')) {
             data.password = utils.hash(data.password)
         }
 
-        if (data.birthday !== undefined && data.birthday !== '') {
+        if (utils.hasValue(data.birthday, 'string')) {
             data.birthday = utils.getDate(data.birthday)
         }
 
-        if (data.expire_date !== undefined && data.expire_date !== '') {
+        if (utils.hasValue(data.expire_date, 'string')) {
             data.expire_date = utils.getDate(data.expire_date)
         }
 
-        if (photo !== undefined) {
+        if (utils.hasValue(data.photo, 'object')) {
             data.photo = utils.getBaseName(photo.path)
         }
-        utils.checkAllow(data, ['password', 'name', 'department', 'class', 'birthday', 'sex', 'ID_card', 'address', 'photo', 'passport', 'credit_card', 'cvc', 'expire_date', 'interst'])
+        if (!utils.checkAllow(data, ['password', 'name', 'department', 'class', 'birthday', 'sex', 'ID_card', 'address', 'photo', 'passport', 'credit_card', 'cvc', 'expire_date', 'interst'])) {
+            if (photo) {
+                await utils.removeFile(photo.path)
+            }
+            throw errorLog.inputNotAccept()
+        }
 
         await this.AccountRepo.edit(id, data)
     }
@@ -103,7 +111,7 @@ export default class Account {
     async Delete(token, id) {
         const ID = await this.RedisService.Verify(token)
         if (ID !== id) {
-            throw 'not your account'
+            throw errorLog.notYourData('account')
         }
 
         await this.AccountRepo.delete(id)

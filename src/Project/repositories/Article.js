@@ -17,8 +17,7 @@ export default class Article {
     }
 
     async getDefaultArticles(accountID) {
-        const friendList = await this.FriendRepo.getAllFriends(accountID)
-        const author = friendList.map(friend => friend.id)
+        const author = await this.FriendRepo.getAllFriends(accountID)
         author.push(accountID)
         return await this.ArticleModel.select('*').whereIn('author', author).andWhere('board_id', '').query()
     }
@@ -94,26 +93,23 @@ export default class Article {
     }
 
     async create(data) {
+        if (utils.hasValue(data.image, 'array')) {
+            data.image = JSON.stringify(data.image)
+        }
         await this.ArticleModel.insert(data)
     }
 
     async edit(id, data) {
         const promise = []
-        if (data.image !== undefined && data.image !== 'undefined') {
+        if (utils.hasValue(data.image, 'array')) {
+            data.image = JSON.stringify(data.image)
             const article = await this.getArticleByID(id)
-            if (article.image) {
-                let images
-                try {
-                    images = JSON.parse(article.image)
-                } catch (e) {
-                    throw 'parse json error'
-                }
+            if (utils.hasValue(article.image, 'string')) {
+                const images = JSON.parse(article.image)
                 for (const image of images) {
                     promise.push(utils.removeFile(utils.getPath('uploadedFiles', image)))
                 }
             }
-        } else {
-            delete data.image
         }
         promise.push(this.ArticleModel.where('id', id).update(data))
         await Promise.all(promise)
@@ -124,13 +120,8 @@ export default class Article {
         let   articles = await this.ArticleModel.select('id').where('group', group_id).query()
         
         for (const article of articles) {
-            if (article.image && article.image.length > 2) {
-                let images
-                try {
-                    images = JSON.parse(article.image)
-                } catch (e) {
-                    throw 'parse json error'
-                }
+            if (utils.hasValue(article.image, 'string')) {
+                const images = JSON.parse(article.image)
                 for (const image of images) {
                     promise.push(utils.removeFile(utils.getPath('uploadedFiles', image)))
                 }
@@ -145,13 +136,8 @@ export default class Article {
     async delete(id) {
         const promise = []
         const article = await this.getArticleByID(id)
-        if (article.image && article.image.length > 2) {
-            let images
-            try {
-                images = JSON.parse(article.image)
-            } catch (e) {
-                throw 'parse json error'
-            }
+        if (utils.hasValue(article.image, 'string')) {
+            const images = JSON.parse(article.image)
             for (const image of images) {
                 promise.push(utils.removeFile(utils.getPath('uploadedFiles', image)))
             }

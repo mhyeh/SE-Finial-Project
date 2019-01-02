@@ -2,7 +2,8 @@ import AccountRepo   from '../repositories/Account'
 import AdvertiseRepo from '../repositories/Advertise'
 import FileService   from './File'
 
-import utils from '../Utils'
+import errorLog from '../ErrorLog'
+import utils    from '../Utils'
 
 export default class Advertise {
     constructor() {
@@ -12,6 +13,11 @@ export default class Advertise {
     }
 
     async Create(accountID, pos, req) {
+        if (!utils.hasValue(pos, 'number')) {
+            throw 'illegal pos'
+        }
+        pos = parseInt(pos)
+
         const promise = []
         promise.push(this.AdvertiseRepo.getAdvertisePos(pos))
         promise.push(this.AccountRepo.getAccountByID(accountID))
@@ -22,41 +28,39 @@ export default class Advertise {
         const data  = formdata.fields
         const image = formdata.files.img
 
-        if ((data.context === undefined || data.context === '') && image === undefined) {
-            throw 'no input'
+        if (!utils.hasValue(data.context, 'string') && !utils.hasValue(image, 'object')) {
+            throw errorLog.noInput()
         }
-        try {
-            data.price = parseInt(data.price)
-        } catch (e) {
-            throw 'price should be int'
+
+        if (!utils.hasValue(data.price, 'number')) {
+            await this.removeImg(image)
+            throw errorLog.noInput('price')
         }
-        if (data.price === undefined || typeof data.price !== 'number') {
-            if (image) {
-                await utils.removeFile(image.path)
-            }
-            throw 'no price'
+        data.price = parseInt(data.price)
+
+        if (!utils.hasValue(ad_pos, 'object')) {
+            await this.removeImg(image)
+            throw errorLog.dataNotFound('ad_pos')
         }
-        if (ad_pos.ad !== undefined && ad_pos.ad !== '' && ad_pos.price >= data.price) {
-            if (image) {
-                await utils.removeFile(image.path)
-            }
+        if (utils.hasValue(ad_pos.ad, 'string') && ad_pos.price >= data.price) {
+            await this.removeImg(image)
             throw 'can not buy this'
         }
         if (account.NTUST_coin < data.price) {
-            if (image) {
-                await utils.removeFile(image.path)
-            }
+            await this.removeImg(image)
             throw 'no enough ntust coin'
         }
 
         const price = data.price
         delete data.price
 
-        if (image !== undefined) {
+        if (utils.hasValue(image, 'object')) {
             data.image = utils.getBaseName(image.path)
         }
 
-        utils.checkAllow(data, ['context', 'image'])
+        if (!utils.checkAllow(data, ['context', 'image'])) {
+            throw errorLog.inputNotAccept()
+        }
         
         data.author = accountID
         
@@ -69,37 +73,41 @@ export default class Advertise {
         const data  = formdata.fields
         const image = formdata.files.img
 
-        if ((data.context === undefined || data.context === '') && image === undefined) {
-            throw 'no input'
+        if (!utils.hasValue(data.context, 'string') && !utils.hasValue(image, 'object')) {
+            throw errorLog.noInput()
         }
-        if (advertise === undefined) {
-            if (image) {
-                await utils.removeFile(image.path)
-            }
-            throw 'advertise not found'
+        if (!utils.hasValue(advertise, 'object')) {
+            await this.removeImg(image)
+            throw errorLog.dataNotFound('advertise')
         }
         if (advertise.author !== accountID) {
-            if (image) {
-                await utils.removeFile(image.path)
-            }
-            throw 'not your advertise'
+            await this.removeImg(image)
+            throw errorLog.notYourData('advertise')
         }
 
-        if (image !== undefined) {
+        if (utils.hasValue(image, 'object')) {
             data.image = utils.getBaseName(image.path)
         }
-        utils.checkAllow(data, ['context', 'image'])
+        if (!utils.checkAllow(data, ['context', 'image'])) {
+            throw errorLog.inputNotAccept()
+        }
 
         await this.AdvertiseRepo.edit(id, data)
     }
 
+    async removeImg(image) {
+        if (utils.hasValue(image, 'object')) {
+            await utils.removeFile(image.path)
+        }
+    }
+
     async Delete(accountID, id) {
         const advertise = await this.AdvertiseRepo.getAdvertiseByID(id)
-        if (advertise === undefined) {
-            throw 'advertise not found'
+        if (!utils.hasValue(advertise, 'object')) {
+            throw errorLog.dataNotFound('advertise')
         }
         if (advertise.author !== accountID) {
-            throw 'not your advertise'
+            throw errorLog.notYourData('advertise')
         }
         
         await this.AdvertiseRepo.delete(id)

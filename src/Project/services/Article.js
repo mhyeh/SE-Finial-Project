@@ -3,7 +3,8 @@ import ArticleRepo  from '../repositories/Article'
 import GroupRepo    from '../repositories/Group'
 import FileService  from './File'
 
-import utils from '../Utils'
+import errorLog from '../ErrorLog'
+import utils    from '../Utils'
 
 export default class Article {
     constructor() {
@@ -37,7 +38,7 @@ export default class Article {
         try {
             img = JSON.parse(data.image || '[]')
         } catch (e) {
-            throw 'parse json error'
+            throw errorLog.parseJsonError()
         }
 
         if (data.context && img.length !== 0) {
@@ -49,19 +50,19 @@ export default class Article {
         }
 
         const account = await this.AccountRepo.getAccountByID(data.author)
-        if (account.NTUST_coin !== undefined) {
-            score += account.NTUST_coin
+        if (utils.hasValue(account.NTUST_coin, 'number')) {
+            score += parseInt(account.NTUST_coin)
         }
         await this.AccountRepo.edit(data.author, {NTUST_coin: score})
     }
 
     async Edit(accountID, id, req) {
         const article = await this.ArticleRepo.getArticleByID(id)
-        if (article === undefined) {
-            throw 'article not found'
+        if (!utils.hasValue(article, 'object')) {
+            throw errorLog.dataNotFound('article')
         }
         if (article.author !== accountID) {
-            throw 'not your article'
+            throw errorLog.notYourData('article')
         }
 
         const data = await this.procArticle(req, true)
@@ -75,33 +76,41 @@ export default class Article {
         const images   = formdata.files.imgs
 
         if (isEdit) {
-            if ((data.title === undefined || data.title === '') && (data.context === undefined || data.context === '') && (images === undefined || images === [])) {
-                throw 'no input'
+            if (!utils.hasValue(data.title, 'string') && !utils.hasValue(data.context, 'string') && !utils.hasValue(images, 'array')) {
+                throw errorLog.noInput()
             }
         } else {
-            if (data.title === undefined || data.title === '') {
-                throw 'no input title'
-            }
-            if ((data.context === undefined || data.context === '') && (images === undefined || images === [])) {
-                throw 'no input context / images'
-            }
-        }
-
-        if (images !== undefined && images !== []) {
-            data.image = []
-            if (images instanceof Array) {
-                for (const image of images) {
-                    data.image.push(utils.getBaseName(image.path))
+            if (!utils.hasValue(data.title, 'string')) {
+                if (utils.hasValue(images, 'array')) {
+                    for (const image of images) {
+                        utils.removeFile(image.path)
+                    }
                 }
-            } else {
-                data.image.push(utils.getBaseName(images.path))
+                throw errorLog.noInput('title')
+            }
+            if (!utils.hasValue(data.context, 'string') && !utils.hasValue(images, 'array')) {
+                throw errorLog.noInput('context / image')
             }
         }
-        utils.checkAllow(data, ['title', 'context', 'image'])
 
-        data.image = JSON.stringify(data.image)
-        data.time  = utils.getDateTime()
-        data.ip    = req.ip
+        if (utils.hasValue(images, 'array')) {
+            data.image = []
+            for (const image of images) {
+                data.image.push(utils.getBaseName(image.path))
+            }
+        }
+
+        if (!utils.checkAllow(data, ['title', 'context', 'image'])) {
+            if (utils.hasValue(images, 'array')) {
+                for (const image of images) {
+                    utils.removeFile(image.path)
+                }
+            }
+            throw errorLog.inputNotAccept()
+        }
+
+        data.time = utils.getDateTime()
+        data.ip   = req.ip
 
         return data
     }
@@ -109,11 +118,11 @@ export default class Article {
     async Delete(accountID, id) {
         const article = await this.ArticleRepo.getArticleByID(id)
         let   group
-        if (article.board_id !== '') {
-            group = await this.GroupRepo.getGroupByID(article.board_id)
+        if (!utils.hasValue(article, 'object')) {
+            throw errorLog.dataNotFound('article')
         }
-        if (article === undefined) {
-            throw 'article not found'
+        if (utils.hasValue(article.board_id, 'string')) {
+            group = await this.GroupRepo.getGroupByID(article.board_id)
         }
         if (article.author !== accountID && accountID !== group.leader) {
             throw 'you are not author or group leader'
@@ -122,10 +131,14 @@ export default class Article {
         await this.ArticleRepo.delete(id)
     }
 
-    async auth(accountID, group) {
-        const groupType = (await this.GroupRepo.getGroupByID(group)).type
-        if (groupType === 'Family' && !(await this.GroupRepo.isInGroup(accountID, group))) {
-            throw 'not in group'
+    async auth(accountID, groupID) {
+        const group = await this.GroupRepo.getGroupByID(groupID)
+        if (!utils.hasValue(group, 'object')) {
+            throw errorLog.dataNotFound('group')
+        }
+        const groupType = group.type
+        if (groupType === 'Family' && !(await this.GroupRepo.isInGroup(accountID, groupID))) {
+            throw errorLog.notInGroup()
         }
     }
 }
