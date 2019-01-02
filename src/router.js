@@ -78,9 +78,7 @@ export default class Router {
             }
             if (flag) {
                 for (const param of route.params) {
-                    Object.defineProperty(req.params, String(param.name), {
-                        value: req.path[req.index + param.index]
-                    })
+                    req.params[String(param.name)] = req.path[req.index + param.index]
                 }
                 req.index = index
                 route.fn(req, res)
