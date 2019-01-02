@@ -9,7 +9,7 @@ export default class Friend {
 
     async getAllFriends(ID) {
         const friends = []
-        friends.push(await this.FriendModel.select('account1').where('account1', ID).andWhere('isConfirm', 1).query())
+        friends.push(await this.FriendModel.select('account1').where('account2', ID).andWhere('isConfirm', 1).query())
         friends.push(await this.FriendModel.select('account2').where('account1', ID).andWhere('isConfirm', 1).query())
         return friends[0].map(friend => friend.account1).concat(friends[1].map(friend => friend.account2))
     }

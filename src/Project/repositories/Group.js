@@ -13,6 +13,10 @@ export default class Group {
         return await this.GroupModel.select('*').query()
     }
 
+    async getAllBoards() {
+        return await this.GroupModel.select('*').where('type', 'Board').query()
+    }
+
     async getGroupByID(id) {
         return (await this.GroupModel.select('*').where('id', id).query())[0]
     }

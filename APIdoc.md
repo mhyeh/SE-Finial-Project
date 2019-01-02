@@ -760,6 +760,18 @@ Data: {
 }
 ```
 
+### get all boards
+
+```
+Method: GET
+URL: /group/board
+
+Response:
+
+Status Code: 200
+Data: 同 get all groups 的 Data
+```
+
 ### get groups by name
 
 ```
@@ -784,6 +796,20 @@ Response:
 
 Status Code: 200
 Data: 同 get all groups 的 Data
+```
+
+### get family state (in family or not)
+
+```
+Method: GET
+URL: /group/:id/state
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { state: true / false }
 ```
 
 ### get group members

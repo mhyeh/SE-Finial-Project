@@ -11,9 +11,11 @@ class Group extends Router {
 
     init() {
         this.get('/',                   this.controller.GetAllGroups)
+        this.get('/board',              this.controller.GetAllBoards)
         this.get('/name/:name',         this.controller.GetGroupsByName)
         this.get('/account/:account',   this.controller.GetGroupByAccount)
-        this.get('/:id/member',        this.controller.GetGroupMembers)
+        this.get('/:id/state',          this.controller.GetFamilyStatus)
+        this.get('/:id/member',         this.controller.GetGroupMembers)
         this.get('/:id',                this.controller.GetGroupByID)
         this.post('/',                  this.controller.Create)
         this.post('/:id',               this.controller.Join)

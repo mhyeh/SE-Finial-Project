@@ -1,6 +1,7 @@
 import Model from '../models/Model'
 
-import utils from '../Utils'
+import errorLog from '../ErrorLog'
+import utils    from '../Utils'
 
 export default class Advertise {
     constructor() {
@@ -21,6 +22,10 @@ export default class Advertise {
     }
 
     async getAdvertisePos(pos) {
+        if (!utils.hasValue(pos, 'number')) {
+            throw errorLog.inputNotAccept()
+        }
+        pos = parseInt(pos)
         return (await this.AdposModel.select('*').where('position', pos).query())[0]
     }
 
@@ -42,6 +47,10 @@ export default class Advertise {
     }
 
     async getAdvertiseByPos(pos) {
+        if (!utils.hasValue(pos, 'number')) {
+            throw errorLog.inputNotAccept()
+        }
+        pos = parseInt(pos)
         const ad_pos = (await this.AdposModel.select('*').where('position', pos).query())[0]
         return await this.getAdvertiseByID(ad_pos.ad)
     }

@@ -84,6 +84,8 @@ npm install
 | DELETE | /friend/:id | delete a friend |
 | **Group** |
 | GET | /group | get all groups |
+| GET | /group/board | get all boards |
+| GET | /group/:id/state | get family state (in family or not) |
 | GET | /group/name/:name | get groups by group name |
 | GET | /group/account/:account | get groups by account ID |
 | GET | /group/:id/member | get group members |

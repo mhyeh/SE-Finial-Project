@@ -12,6 +12,8 @@ export default class Group {
         this.RedisService = new RedisService()
 
         this.GetAllGroups      = this.getAllGroups.bind(this)
+        this.GetAllBoards      = this.getAllBoards.bind(this)
+        this.GetFamilyStatus   = this.getFamilyStatus.bind(this)
         this.GetGroupByID      = this.getGroupByID.bind(this)
         this.GetGroupsByName   = this.getGroupsByName.bind(this)
         this.GetGroupByAccount = this.getGroupByAccount.bind(this)
@@ -29,6 +31,23 @@ export default class Group {
             res.status(200).json({ groups: await this.GroupRepo.getAllGroups() })
         } catch (e) {
             res.status(400).json({ error: utils.errorHandle(e, 'get group error') })
+        }
+    }
+
+    async getAllBoards(req, res) {
+        try {
+            res.status(200).json({ boards: await this.GroupRepo.getAllBoards() })
+        } catch (e) {
+            res.status(400).json({ error: utils.errorHandle(e, 'get board error') })
+        }
+    }
+
+    async getFamilyStatus(req, res) {
+        try {
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ state: await this.GroupService.CheckState(ID, req.params.id) })
+        } catch (e) {
+            res.status(400).json({ error: utils.errorHandle(e, 'get status error') })
         }
     }
 
