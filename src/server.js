@@ -8,7 +8,7 @@ import Router     from './router'
 
 import AccountRouter     from './routes/Account'
 import AdvertiseRouter   from './routes/Advertise'
-import ArticlePageRouter from './routes/ArticlePageRouter'
+import ArticlePageRouter from './routes/ArticlePage'
 import ArticleRouter     from './routes/Article'
 import CommentRouter     from './routes/Comment'
 import FileRouter        from './routes/File'

@@ -14,22 +14,16 @@ export default class Article {
         this.FileService  = new FileService()
     }
 
-    async Post(accountID, req) {
-        const data    = await this.procArticle(req)
-        data.author   = accountID
-        data.board_id = ''
-        
-        await Promise.all([this.ArticleRepo.create(data), this.giveCoin(data)]) 
-    }
-
-    async PostInGroup(accountID, groupID, req) {
-        await this.auth(accountID, groupID)
-
+    async Post(accountID, req, groupID='') {
+        if (groupID !== '') {
+            await this.auth(accountID, groupID)
+        }
         const data    = await this.procArticle(req)
         data.author   = accountID
         data.board_id = groupID
-
-        await Promise.all([this.ArticleRepo.create(data), this.giveCoin(data)]) 
+        
+        await this.ArticleRepo.create(data)
+        await this.giveCoin(data)
     }
 
     async giveCoin(data) {
@@ -49,6 +43,15 @@ export default class Article {
             score = img.length * 10
         }
 
+        const articles = await this.ArticleRepo.getArticleByAuthor(data.author)
+        const length   = articles.length
+        if (length >= 2) {
+            const date1 = new Date(articles[length - 2].time);
+            const date2 = new Date(articles[length - 1].time);
+            score = Math.round(score * (date2.getTime() - date1.getTime()) / 1000 / 60 / 30)
+        }
+        score = Math.max(500, score)
+
         const account = await this.AccountRepo.getAccountByID(data.author)
         if (utils.hasValue(account.NTUST_coin, 'number')) {
             score += parseInt(account.NTUST_coin)
@@ -56,7 +59,7 @@ export default class Article {
         await this.AccountRepo.edit(data.author, {NTUST_coin: score})
     }
 
-    async Edit(accountID, id, req) {
+    async Edit(accountID, req, id) {
         const article = await this.ArticleRepo.getArticleByID(id)
         if (!utils.hasValue(article, 'object')) {
             throw errorLog.dataNotFound('article')
@@ -137,7 +140,7 @@ export default class Article {
             throw errorLog.dataNotFound('group')
         }
         const groupType = group.type
-        if (groupType === 'Family' && !(await this.GroupRepo.isInGroup(accountID, groupID))) {
+        if (groupType === 'Family' && (await this.GroupRepo.checkState(accountID, groupID)) !== 1) {
             throw errorLog.notInGroup()
         }
     }

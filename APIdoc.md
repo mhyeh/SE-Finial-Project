@@ -809,7 +809,7 @@ Header: { "authorization": <token> }
 Response:
 
 Status Code: 200
-Data: { state: true / false }
+Data: { state: <state> }
 ```
 
 ### get group members
@@ -818,15 +818,41 @@ Data: { state: true / false }
 Method: GET
 URL: /group/:id/member
 
+Header: { "authorization": <token> }
+
 Response:
 
 Status Code: 200
 Data: {
     "members": [
         {
-            "id":       <group_member id>,
-            "account":  <member account id>
-            "group_id": <group id>
+            "id":        <group_member id>,
+            "account":   <member account id>
+            "group_id":  <group id>
+            "isConfirm": 1
+        }
+    ]
+}
+```
+
+### get unconfirmed members
+
+```
+Method: GET
+URL: /group/:id/unconfirm
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: {
+    "members": [
+        {
+            "id":        <group_member id>,
+            "account":   <member account id>
+            "group_id":  <group id>
+            "isConfirm": 0
         }
     ]
 }
@@ -890,6 +916,19 @@ Data: { "message": "success" }
 ```
 Method: PUT
 URL: /group/:id/leader/:leader
+
+Header: { "authorization": <token> }
+
+Response:
+
+Status Code: 200
+Data: { "message": "success" }
+```
+
+### accept member
+```
+Method: PUT
+URL: /group/:id/accept/:account
 
 Header: { "authorization": <token> }
 

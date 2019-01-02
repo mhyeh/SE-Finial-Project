@@ -97,9 +97,10 @@ CREATE TABLE IF NOT EXISTS `gamble_member` (
 -- 資料導出被取消選擇。
 -- 導出  表 sefin.gp_member 結構
 CREATE TABLE IF NOT EXISTS `gp_member` (
-  `id`       varchar(36) NOT NULL,
-  `account`  varchar(36) NOT NULL,
-  `group_id` varchar(36) NOT NULL,
+  `id`        varchar(36) NOT NULL,
+  `account`   varchar(36) NOT NULL,
+  `group_id`  varchar(36) NOT NULL,
+  `isConfirm` int(1)      NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

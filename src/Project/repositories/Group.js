@@ -31,12 +31,16 @@ export default class Group {
         return await this.GroupModel.select('*').whereIn('id', groups).query()
     }
 
-    async getGroupMembers(id) {
-        return await this.GPMemberModel.select('*').where('group_id', id).query()
+    async getGroupMembers(id, state) {
+        return await this.GPMemberModel.select('*').where('group_id', id).andWhere('isConfirm', state).query()
     }
 
-    async isInGroup(account, group) {
-        return (await this.GPMemberModel.select('*').where('account', account).andWhere('group_id', group).query())[0] !== undefined
+    async checkState(account, group) {
+        const groupMember = (await this.GPMemberModel.select('*').where('account', account).andWhere('group_id', group).query())[0]
+        if (groupMember === undefined) {
+            return -1
+        }
+        return groupMember.isConfirm
     }
 
     async create(data) {
@@ -51,7 +55,11 @@ export default class Group {
     }
 
     async join(id, account) {
-        await this.GPMemberModel.insert({ group_id: id, account: account })
+        await this.GPMemberModel.insert({ group_id: id, account: account, isConfirm: 0 })
+    }
+
+    async accept(id, account) {
+        await this.GPMemberModel.where('group_id', id).andWhere('account', account).update({ isConfirm: 1 })
     }
 
     async leave(id, account) {

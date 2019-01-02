@@ -8,6 +8,22 @@ export default class Group {
         this.GroupRepo = new GroupRepo()
     }
 
+    async getGroupMembers(accountID, id) {
+        if ((await this.CheckState(accountID, id)) === -1) {
+            throw errorLog.notInGroup()
+        }
+        return await this.GroupRepo.getGroupMembers(id, 1)
+    }
+
+    async getUnconfirmMembers(accountID, id) {
+        const group = await this.GroupRepo.getGroupByID(id)
+        if (group.leader !== accountID) {
+            throw errorLog.notGroupLeader()
+        }
+
+        return await this.GroupRepo.getGroupMembers(id, 0)
+    }
+
     async Create(accountID, data) {
         if (!utils.hasValue(data.name, 'string')) {
             throw errorLog.noInput('name')
@@ -33,7 +49,7 @@ export default class Group {
             throw errorLog.dataNotFound('group')
         }
         if (group.leader !== accountID) {
-            throw 'you are not group leader'
+            throw errorLog.notGroupLeader()
         }
         if (!utils.hasValue(data.name, 'string')) {
             throw errorLog.noInput('name')
@@ -53,32 +69,49 @@ export default class Group {
         if (group.type !== 'Family') {
             throw 'not family'
         }
-        return this.GroupRepo.isInGroup(accountID, groupID)
+        return this.GroupRepo.checkState(accountID, groupID)
     }
 
     async Join(accountID, id) {
-        if (await this.CheckState(accountID, id)) {
-            throw 'already in group'
+        if ((await this.CheckState(accountID, id)) !== -1) {
+            throw 'already send join request'
         }
         
         await this.GroupRepo.join(id, accountID)
     }
 
-    async ChangeLeader(id, accountID, newLeader) {
-        if (!(await this.CheckState(newLeader, id))) {
-            throw 'illegal new leader'
+    async Accept(accountID, id, newMember) {
+        const state = await this.CheckState(newMember, id)
+        if (state === -1) {
+            throw errorLog.dataNotFound('newMember')
         }
-        
+        if (state === 1) {
+            throw 'already a member'
+        }
+
         const group = await this.GroupRepo.getGroupByID(id)
         if (group.leader !== accountID) {
-            throw 'you are not group leader'
+            throw errorLog.notGroupLeader()
+        }
+
+        await this.GroupRepo.accept(id, newMember)
+    }
+
+    async ChangeLeader(id, accountID, newLeader) {
+        if ((await this.CheckState(newLeader, id)) !== 1) {
+            throw 'illegal new leader'
+        }
+
+        const group = await this.GroupRepo.getGroupByID(id)
+        if (group.leader !== accountID) {
+            throw errorLog.notGroupLeader()
         }
 
         await this.GroupRepo.edit(id, { leader: newLeader })
     }
 
     async Leave(accountID, id) {
-        if (!(await this.CheckState(accountID, id))) {
+        if ((await this.CheckState(accountID, id)) === -1) {
             throw errorLog.notInGroup()
         }
 
@@ -87,7 +120,7 @@ export default class Group {
         
         const group = await this.GroupRepo.getGroupByID(id)
         if (group.leader === accountID) {
-            const groupMembers = await this.GroupRepo.getGroupMembers(id)
+            const groupMembers = await this.GroupRepo.getGroupMembers(id, 1)
             if (groupMembers.length === 0) {
                 await this.GroupRepo.delete(id)
             } else {
@@ -103,7 +136,7 @@ export default class Group {
             throw errorLog.dataNotFound('group')
         }
         if (group.leader !== accountID) {
-            throw 'you are not group leader'
+            throw errorLog.notGroupLeader()
         }
         
         await this.GroupRepo.delete(id)

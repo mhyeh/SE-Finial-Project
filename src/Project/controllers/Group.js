@@ -11,19 +11,21 @@ export default class Group {
         this.GroupService = new GroupService()
         this.RedisService = new RedisService()
 
-        this.GetAllGroups      = this.getAllGroups.bind(this)
-        this.GetAllBoards      = this.getAllBoards.bind(this)
-        this.GetFamilyStatus   = this.getFamilyStatus.bind(this)
-        this.GetGroupByID      = this.getGroupByID.bind(this)
-        this.GetGroupsByName   = this.getGroupsByName.bind(this)
-        this.GetGroupByAccount = this.getGroupByAccount.bind(this)
-        this.GetGroupMembers   = this.getGroupMembers.bind(this)
-        this.Create            = this.create.bind(this)
-        this.Join              = this.join.bind(this)
-        this.Leave             = this.leave.bind(this)
-        this.Edit              = this.edit.bind(this)
-        this.ChangeLeader      = this.changeLeader.bind(this)
-        this.Delete            = this.delete.bind(this)
+        this.GetAllGroups        = this.getAllGroups.bind(this)
+        this.GetAllBoards        = this.getAllBoards.bind(this)
+        this.GetFamilyStatus     = this.getFamilyStatus.bind(this)
+        this.GetGroupByID        = this.getGroupByID.bind(this)
+        this.GetGroupsByName     = this.getGroupsByName.bind(this)
+        this.GetGroupByAccount   = this.getGroupByAccount.bind(this)
+        this.GetGroupMembers     = this.getGroupMembers.bind(this)
+        this.GetUnconfirmMembers = this.getUnconfirmMembers.bind(this)
+        this.Create              = this.create.bind(this)
+        this.Join                = this.join.bind(this)
+        this.Leave               = this.leave.bind(this)
+        this.Edit                = this.edit.bind(this)
+        this.Accept              = this.accpet.bind(this)
+        this.ChangeLeader        = this.changeLeader.bind(this)
+        this.Delete              = this.delete.bind(this)
     }
     
     async getAllGroups(req, res) {
@@ -78,9 +80,19 @@ export default class Group {
 
     async getGroupMembers(req, res) {
         try {
-            res.status(200).json({ members: await this.GroupRepo.getGroupMembers(req.params.id) })
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ members: await this.GroupService.getGroupMembers(ID, req.params.id) })
         } catch (e) {
-            res.status(400).json({ error: utils.errorHandle(e, 'get group error') })
+            res.status(400).json({ error: utils.errorHandle(e, 'get group member error') })
+        }
+    }
+
+    async getUnconfirmMembers(req, res) {
+        try {
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            res.status(200).json({ unconfirmMembers: await this.GroupService.getUnconfirmMembers(ID, req.params.id) })
+        } catch (e) {
+            res.status(400).json({ error: utils.errorHandle(e, 'get unconfirm member error') })
         }
     }
     
@@ -111,6 +123,16 @@ export default class Group {
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: utils.errorHandle(e, 'join group error') })
+        }
+    }
+
+    async accpet(req, res) {
+        try {
+            const ID = await this.RedisService.Verify(req.header.authorization)
+            await this.GroupService.Accept(ID, req.params.id, req.params.account)
+            res.status(200).json({ message: 'success' })
+        } catch (e) {
+            res.status(400).json({ error: utils.errorHandle(e, 'accpet member error') })
         }
     }
 

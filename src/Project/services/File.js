@@ -69,7 +69,7 @@ export default class File {
                                     flag = false
                                 }
                                 if (imgConfig[idx] !== 1) {
-                                    imgConfig[idx] = [files[idx]]
+                                    files[idx] = [files[idx]]
                                 }
                             }
                         } catch (e) {

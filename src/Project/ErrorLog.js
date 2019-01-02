@@ -26,6 +26,10 @@ const notInGroup = () => {
     return 'not in group'
 }
 
+const notGroupLeader = () => {
+    return 'you are not group leader'
+}
+
 export default {
     noInput,
     dataNotFound,
@@ -33,5 +37,6 @@ export default {
     redisError,
     notYourData,
     parseJsonError,
-    notInGroup
+    notInGroup,
+    notGroupLeader
 }

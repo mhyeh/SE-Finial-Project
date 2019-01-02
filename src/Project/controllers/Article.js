@@ -129,7 +129,7 @@ export default class Article {
     async postInGroup(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            await this.ArticleService.PostInGroup(ID, req.params.id, req)
+            await this.ArticleService.Post(ID, req, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: utils.errorHandle(e, 'psot article error') })
@@ -139,7 +139,7 @@ export default class Article {
     async edit(req, res) {
         try {
             const ID = await this.RedisService.Verify(req.header.authorization)
-            await this.ArticleService.Edit(ID, req.params.id, req)
+            await this.ArticleService.Edit(ID, req, req.params.id)
             res.status(200).json({ message: 'success' })
         } catch (e) {
             res.status(400).json({ error: utils.errorHandle(e, 'edit article error') })

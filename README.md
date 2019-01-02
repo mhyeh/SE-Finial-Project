@@ -85,14 +85,16 @@ npm install
 | **Group** |
 | GET | /group | get all groups |
 | GET | /group/board | get all boards |
-| GET | /group/:id/state | get family state (in family or not) |
+| GET | /group/:id/state | get family state |
 | GET | /group/name/:name | get groups by group name |
 | GET | /group/account/:account | get groups by account ID |
 | GET | /group/:id/member | get group members |
+| GET | /group/:id/unconfirm | get unconfirmed members |
 | GET | /group/:id | get group by ID |
 | POST | /group | create a new group |
 | POST | /group/:id | join a group |
 | PUT | /group/:id/leader/:leader | change group leader |
+| PUT | /group/:id/accept/:account | accept new member |
 | PUT | /group/:id | edit group |
 | DELETE | /group/leave/:id | leave a group |
 | DELETE | /group/:id | delete group |
