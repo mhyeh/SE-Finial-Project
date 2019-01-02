@@ -99,7 +99,7 @@ export default class Account {
             data.expire_date = utils.getDate(data.expire_date)
         }
 
-        if (utils.hasValue(data.photo, 'object')) {
+        if (utils.hasValue(photo, 'object')) {
             data.photo = utils.getBaseName(photo.path)
         }
 

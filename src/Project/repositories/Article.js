@@ -13,7 +13,7 @@ export default class Article {
     }
 
     async getAllArticles(page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').sortBy('time', 1)
+        let query = this.ArticleModel.select('*').sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -23,7 +23,7 @@ export default class Article {
     async getDefaultArticles(accountID, page=-1, pageSize=-1) {
         const author = await this.FriendRepo.getAllFriends(accountID)
         author.push(accountID)
-        let query = this.ArticleModel.select('*').whereIn('author', author).andWhere('board_id', '').sortBy('time', 1)
+        let query = this.ArticleModel.select('*').whereIn('author', author).andWhere('board_id', '').sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -73,7 +73,7 @@ export default class Article {
     }
 
     async getArticleByAuthor(author, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('author', author).andWhere('board_id', '').sortBy('time', 1)
+        let query = this.ArticleModel.select('*').where('author', author).andWhere('board_id', '').sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -81,7 +81,7 @@ export default class Article {
     }
 
     async getArticleByTitle(title, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', '').sortBy('time', 1)
+        let query = this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', '').sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -89,7 +89,7 @@ export default class Article {
     }
 
     async getArticleByContext(context, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', '').sortBy('time', 1)
+        let query = this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', '').sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -97,7 +97,7 @@ export default class Article {
     }
     
     async getArticleByGroup(group, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('board_id', group).sortBy('time', 1)
+        let query = this.ArticleModel.select('*').where('board_id', group).sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query.page(~~page, ~~pageSize)
         }
@@ -105,7 +105,7 @@ export default class Article {
     }
 
     async getArticleByGroupAndAuthor(group, author, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('author', author).andWhere('board_id', group).sortBy('time', 1)
+        let query = this.ArticleModel.select('*').where('author', author).andWhere('board_id', group).sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -113,7 +113,7 @@ export default class Article {
     }
 
     async getArticleByGroupAndTitle(group, title, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', group).sortBy('time', 1)
+        let query = this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', group).sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -121,7 +121,7 @@ export default class Article {
     }
 
     async getArticleByGroupAndContext(group, context, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', group).sortBy('time', 1)
+        let query = this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', group).sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
