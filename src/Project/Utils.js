@@ -88,6 +88,7 @@ const deepMerge = (target, ...sources) => {
 }
 
 const errorHandle = (e, defaultThrow) => {
+    console.log(e)
     switch (typeof e) {
         case 'string':
             return e
@@ -119,9 +120,9 @@ const hasValue = (v, dataType) => {
 }
 
 const trimData = (data) => {
-    for (col in data) {
+    for (const col in data) {
         if (typeof data[col] === 'string') {
-            data[col] = data[col].tirm()
+            data[col] = data[col].trim()
         }
     }
 }

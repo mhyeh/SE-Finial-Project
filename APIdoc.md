@@ -751,10 +751,11 @@ Status Code: 200
 Data: {
     "groups": [
         {
-            id:     <group id>,
-            name    <group name>,
-            leader: <group leader account id>,
-            type:   <group type>
+            id:          <group id>,
+            name         <group name>,
+            leader:      <group leader account id>,
+            type:        <group type>
+            description: <group description>
         }
     ]
 }
@@ -869,10 +870,11 @@ Response:
 Status Code: 200
 Data: { "group": 
     {
-        id:     <group id>,
-        name    <group name>,
-        leader: <group leader account id>,
-        type:   <group type>
+        id:          <group id>,
+        name         <group name>,
+        leader:      <group leader account id>,
+        type:        <group type>
+        description: <group description>
     }
 }
 ```
@@ -889,8 +891,9 @@ Header: {
 }
 
 Body: {
-    name    <group name>,
-    type:   <group type>
+    name          <group name>,
+    type:         <group type>,
+    [description: <group description>]
 }
 
 Response:
@@ -949,7 +952,8 @@ Header: {
 }
 
 Body: {
-    name: <group name>,
+    [name:        <group name>],
+    [description: <group description>],
 }
 
 Response:
