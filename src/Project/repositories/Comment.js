@@ -6,7 +6,7 @@ export default class Comment {
     }
 
     async getAllComments(article) {
-        return await this.CommentModel.select('*').where('article_id', article).query()
+        return await this.CommentModel.select('*').where('article_id', article).sortBy('time', 1).query()
     }
 
     async getCommentByID(id) {

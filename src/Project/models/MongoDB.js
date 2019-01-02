@@ -14,6 +14,7 @@ export default class Model {
         this.pageSize   = -1
         this.queryObj   = {}
         this.whereObj   = {}
+        this.orderBy    = {}
         this.compareOP  = {
             ">":  "$gt",
             ">=": "$gte",
@@ -154,10 +155,17 @@ export default class Model {
         })
     }
 
+    sortBy(col, direct) {
+        this.orderBy[col] = direct
+    }
+
     query() {
         return new Promise((resolve, reject) => {
             this.connection.then(db => {
                 const query = db.db().collection(this.table).find(this.whereObj, this.queryObj)
+                if (Object.keys(this.orderBy).length) {
+                    query.sort(this.orderBy)
+                }
                 if (this.skip >= 0) {
                     query.skip(this.skip)
                 }
@@ -224,6 +232,7 @@ export default class Model {
     flush() {
         this.whereObj  = {}
         this.queryObj  = {}
+        this.orderBy   = {}
         this.lastWhere = ''
         this.skip      = -1
         this.pageSize  = -1

@@ -540,6 +540,7 @@ Data: { "message": "success" }
 ## Comment
 
 ### get all comment by article ID
+
 ```
 Method: GET
 URL: /comment/:id
@@ -563,6 +564,7 @@ Data: {
 ```
 
 ### post comment
+
 ```
 Method: POST
 URL: /comment/:id
@@ -621,6 +623,7 @@ Data: { "message": "success" }
 ## File
 
 ### get file by file path
+
 ```
 Method: GET
 URL: /file/:filePath
@@ -903,6 +906,7 @@ Data: { "message": "success" }
 ```
 
 ### join group
+
 ```
 Method: POST
 URL: /group/:id
@@ -916,6 +920,7 @@ Data: { "message": "success" }
 ```
 
 ### change group leader
+
 ```
 Method: PUT
 URL: /group/:id/leader/:leader
@@ -929,6 +934,7 @@ Data: { "message": "success" }
 ```
 
 ### accept member
+
 ```
 Method: PUT
 URL: /group/:id/accept/:account
@@ -942,6 +948,7 @@ Data: { "message": "success" }
 ```
 
 ### edit group
+
 ```
 Method: PUT
 URL: /group/:id
@@ -963,6 +970,7 @@ Data: { "message": "success" }
 ```
 
 ### leave group
+
 ```
 Method: DELETE
 URL: /group/leave/:id

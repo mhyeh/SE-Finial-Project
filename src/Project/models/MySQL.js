@@ -11,6 +11,7 @@ export default class Model {
         this.whereStr   = ''
         this.lastWhere  = ''
         this.limit      = ''
+        this.orderby    = ''
         this.whereParam = []
         this.compareOP  = {
             '$gt':  '>',
@@ -145,9 +146,13 @@ export default class Model {
         return await this.query()
     }
 
+    sortBy(col, direct) {
+        this.orderby = ` order by \`${col}\` ${direct === 1 ? 'asc' : 'desc'}`
+    }
+
     query() {
         return new Promise((resolve, reject) => {
-            this.connection.query(this.queryStr + this.whereStr + this.limit, this.whereParam, (err, results) => {
+            this.connection.query(this.queryStr + this.whereStr + this.limit + this.orderby, this.whereParam, (err, results) => {
                 this.flush()
                 if (err) {
                     reject(this.table + ' get error')
@@ -222,6 +227,7 @@ export default class Model {
         this.queryStr   = ''
         this.whereStr   = ''
         this.lastWhere  = ''
+        this.orderby    = ''
         this.whereParam = []
     }
 }

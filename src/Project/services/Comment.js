@@ -62,7 +62,6 @@ export default class Comment {
 
         utils.filterData(data)
 
-        data.time = utils.getDateTime()
         data.ip   = req.ip
         
         await this.CommentRepo.edit(id, data)

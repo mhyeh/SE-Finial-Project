@@ -103,6 +103,7 @@ export default class Article {
             for (const image of images) {
                 data.image.push(utils.getBaseName(image.path))
             }
+            data.image = JSON.stringify(data.image)
         }
 
         utils.filterData(data)

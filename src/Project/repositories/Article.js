@@ -17,7 +17,7 @@ export default class Article {
         if (page >= 0 && pageSize >= 0) {
             query.page(~~page, ~~pageSize)
         }
-        return await query.query()
+        return await query.sortBy('time', 1).query()
     }
 
     async getDefaultArticles(accountID, page=-1, pageSize=-1) {
@@ -25,7 +25,7 @@ export default class Article {
         author.push(accountID)
         const query = this.ArticleModel.select('*').whereIn('author', author).andWhere('board_id', '')
         if (page >= 0 && pageSize >= 0) {
-            query.page(~~page, ~~pageSize)
+            query.sortBy('time', 1).page(~~page, ~~pageSize)
         }
         return await query.query()
     }
@@ -77,7 +77,7 @@ export default class Article {
         if (page >= 0 && pageSize >= 0) {
             query.page(~~page, ~~pageSize)
         }
-        return await query.query()
+        return await query.sortBy('time', 1).query()
     }
 
     async getArticleByTitle(title, page=-1, pageSize=-1) {
@@ -85,7 +85,7 @@ export default class Article {
         if (page >= 0 && pageSize >= 0) {
             query.page(~~page, ~~pageSize)
         }
-        return await query.query()
+        return await query.sortBy('time', 1).query()
     }
 
     async getArticleByContext(context, page=-1, pageSize=-1) {
@@ -93,7 +93,7 @@ export default class Article {
         if (page >= 0 && pageSize >= 0) {
             query.page(~~page, ~~pageSize)
         }
-        return await query.query()
+        return await query.sortBy('time', 1).query()
     }
     
     async getArticleByGroup(group, page=-1, pageSize=-1) {
@@ -101,7 +101,7 @@ export default class Article {
         if (page >= 0 && pageSize >= 0) {
             query.page(~~page, ~~pageSize)
         }
-        return await query.query()
+        return await query.sortBy('time', 1).query()
     }
 
     async getArticleByGroupAndAuthor(group, author, page=-1, pageSize=-1) {
@@ -109,7 +109,7 @@ export default class Article {
         if (page >= 0 && pageSize >= 0) {
             query.page(~~page, ~~pageSize)
         }
-        return await query.query()
+        return await query.sortBy('time', 1).query()
     }
 
     async getArticleByGroupAndTitle(group, title, page=-1, pageSize=-1) {
@@ -117,7 +117,7 @@ export default class Article {
         if (page >= 0 && pageSize >= 0) {
             query.page(~~page, ~~pageSize)
         }
-        return await query.query()
+        return await query.sortBy('time', 1).query()
     }
 
     async getArticleByGroupAndContext(group, context, page=-1, pageSize=-1) {
@@ -125,13 +125,10 @@ export default class Article {
         if (page >= 0 && pageSize >= 0) {
             query.page(~~page, ~~pageSize)
         }
-        return await query.query()
+        return await query.sortBy('time', 1).query()
     }
 
     async create(data) {
-        if (utils.hasValue(data.image, 'array')) {
-            data.image = JSON.stringify(data.image)
-        }
         await this.ArticleModel.insert(data)
     }
 
