@@ -103,11 +103,15 @@ export default class Group {
     }
 
     async ChangeLeader(id, accountID, newLeader) {
-        if ((await this.CheckState(newLeader, id)) !== 1) {
+        const group = await this.GroupRepo.getGroupByID(id)
+        if (!utils.hasValue(group, 'object')) {
+            throw errorLog.dataNotFound('group')
+        }
+
+        if (group.type === 'Family' && (await this.CheckState(newLeader, id)) !== 1) {
             throw 'illegal new leader'
         }
 
-        const group = await this.GroupRepo.getGroupByID(id)
         if (group.leader !== accountID) {
             throw errorLog.notGroupLeader()
         }
@@ -119,7 +123,6 @@ export default class Group {
         if ((await this.CheckState(accountID, id)) === -1) {
             throw errorLog.notInGroup()
         }
-
         
         await this.GroupRepo.leave(id, accountID)
         

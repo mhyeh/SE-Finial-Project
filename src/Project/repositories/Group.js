@@ -46,7 +46,7 @@ export default class Group {
     async create(data) {
         const groupID = await this.GroupModel.insert(data)
         if (data.type === 'Family') {
-            await this.GPMemberModel.insert({account: data.leader, group_id: groupID})
+            await this.GPMemberModel.insert({account: data.leader, group_id: groupID, isConfirm: 1})
         }
     }
 

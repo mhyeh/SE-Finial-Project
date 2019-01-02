@@ -43,14 +43,17 @@ export default class Article {
             score = img.length * 10
         }
 
+        if (score > 500) {
+            score = 500
+        }
+
         const articles = await this.ArticleRepo.getArticleByAuthor(data.author)
         const length   = articles.length
         if (length >= 2) {
             const date1 = new Date(articles[length - 2].time);
             const date2 = new Date(articles[length - 1].time);
-            score = Math.round(score * (date2.getTime() - date1.getTime()) / 1000 / 60 / 30)
+            score = ~~(score * Math.min(Math.abs(date2.getTime() - date1.getTime()) / 1000 / 60 / 60, 1))
         }
-        score = Math.max(500, score)
 
         const account = await this.AccountRepo.getAccountByID(data.author)
         if (utils.hasValue(account.NTUST_coin, 'number')) {
@@ -107,7 +110,6 @@ export default class Article {
         }
 
         utils.filterData(data)
-
 
         if (!utils.checkAllow(data, ['title', 'context', 'image'])) {
             if (utils.hasValue(images, 'array')) {
