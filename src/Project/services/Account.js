@@ -135,7 +135,7 @@ export default class Account {
             if (accountList[r].id === ID || accountList[r].isFriend == 1) {
                 continue
             }
-            if (await this.FriendRepo.getFriend(ID, accountList[r])) {
+            if ((await this.FriendRepo.checkState(ID, accountList[r].id)) !==  -1) {
                 accountList[r].isFriend = 1
                 count++
                 if (count === accountList.length - 1) {

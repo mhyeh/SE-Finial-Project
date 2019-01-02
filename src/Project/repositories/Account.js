@@ -11,23 +11,23 @@ export default class Account {
     }
 
     async getAllAccounts() {
-        return await this.AccountModel.select('*').query()
+        return await (new Model('account')).select('*').query()
     }
 
     async getAccountByID(id) {
-        return (await this.AccountModel.select('*').where('id', id).query())[0]
+        return (await (new Model('account')).select('*').where('id', id).query())[0]
     }
 
     async getAccountByAccount(account) {
-        return (await this.AccountModel.select('*').where('account', account).query())[0]
+        return (await (new Model('account')).select('*').where('account', account).query())[0]
     }
 
     async getAccountsByName(name) {
-        return await this.AccountModel.select('*').where('name', 'like', name).query()
+        return await (new Model('account')).select('*').where('name', 'like', name).query()
     }
 
     async create(data) {
-        await this.AccountModel.insert(data)
+        await (new Model('account')).insert(data)
     }
 
     async edit(id, data) {
@@ -36,7 +36,7 @@ export default class Account {
         if (utils.hasValue(data.photo, 'string') && utils.hasValue(account.photo, 'string')) {
             promise.push(utils.removeFile(utils.getPath('./uploadedFiles', account.photo)))
         }
-        promise.push(this.AccountModel.where('id', id).update(data))
+        promise.push((new Model('account')).where('id', id).update(data))
         await Promise.all(promise)
     }
 
@@ -47,7 +47,7 @@ export default class Account {
         if (utils.hasValue(account.photo, 'string')) {
             promise.push(utils.removeFile(utils.getPath('./uploadedFiles', account.photo)))
         }
-        promise.push(this.AccountModel.where('id', id).del())
+        promise.push((new Model('account')).where('id', id).del())
         for (const group of groups) {
             promise.push(this.GroupRepo.leave(group.id, id))
         }

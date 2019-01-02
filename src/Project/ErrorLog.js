@@ -3,7 +3,7 @@ const noInput = (col='') => {
 }
 
 const dataNotFound = (dataName) => {
-    return `data ${dataname} not found`
+    return `data ${dataName} not found`
 }
 
 const inputNotAccept = () => {

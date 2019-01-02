@@ -6,22 +6,22 @@ export default class Comment {
     }
 
     async getAllComments(article) {
-        return await this.CommentModel.select('*').where('article_id', article).sortBy('time', 1).query()
+        return await (new Model('comment')).select('*').where('article_id', article).sortBy('time', 1).query()
     }
 
     async getCommentByID(id) {
-        return (await this.CommentModel.select('*').where('id', id).query())[0]
+        return (await (new Model('comment')).select('*').where('id', id).query())[0]
     }
 
     async post(data) {
-        await this.CommentModel.insert(data)
+        await (new Model('comment')).insert(data)
     }
 
     async edit(id, data) {
-        await this.CommentModel.where('id', id).update(data)
+        await (new Model('comment')).where('id', id).update(data)
     }
 
     async delete(id) {
-        await this.CommentModel.where('id', id).del()
+        await (new Model('comment')).where('id', id).del()
     }
 }

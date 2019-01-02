@@ -13,7 +13,7 @@ export default class Article {
     }
 
     async getAllArticles(page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').sortBy('time', -1)
+        let query = (new Model('article')).select('*').sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -23,7 +23,7 @@ export default class Article {
     async getDefaultArticles(accountID, page=-1, pageSize=-1) {
         const author = await this.FriendRepo.getAllFriends(accountID)
         author.push(accountID)
-        let query = this.ArticleModel.select('*').whereIn('author', author).andWhere('board_id', '').sortBy('time', -1)
+        let query = (new Model('article')).select('*').whereIn('author', author).andWhere('board_id', '').sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -32,9 +32,9 @@ export default class Article {
 
     async getRecommandArticles() {
         if (this.ArticleModel.db === 'mongo') {
-            let groups   = await this.GroupModel.select('id').where('type', 'Board').query()
+            let groups   = await (new Model('group')).select('id').where('type', 'Board').query()
             groups       = groups.map(group => group.id)
-            let articles = await this.ArticleModel.raw([
+            let articles = await (new Model('article')).raw([
                 { $lookup: { from: 'comment', localField: 'id', foreignField: 'article_id', as: 'comment' } },
                 { $unwind: { path: '$comment', preserveNullAndEmptyArrays: true } },
                 { $project: {'id': 1, 'board_id': 1, 'types': '$comment.types' } },
@@ -52,9 +52,9 @@ export default class Article {
                 { $limit: 10 }
             ])
             articles = articles.map(article => article.id)
-            return await this.ArticleModel.whereIn('id', articles).query()
+            return await (new Model('article')).whereIn('id', articles).query()
         } else {
-            return await this.ArticleModel.raw('select `article`.* from `article`                                      \
+            return await (new Model('article')).raw('select `article`.* from `article`                                      \
                                                 left join `comment` on                                                 \
                                                     `article`.`id` = `comment`.`article_id` and                        \
                                                     `comment`.`types` in (0, 1) and (                                  \
@@ -69,11 +69,11 @@ export default class Article {
     }
 
     async getArticleByID(id) {
-        return (await this.ArticleModel.select('*').where('id', id).query())[0]
+        return (await (new Model('article')).select('*').where('id', id).query())[0]
     }
 
     async getArticleByAuthor(author, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('author', author).andWhere('board_id', '').sortBy('time', -1)
+        let query = (new Model('article')).select('*').where('author', author).andWhere('board_id', '').sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -81,7 +81,7 @@ export default class Article {
     }
 
     async getArticleByTitle(title, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', '').sortBy('time', -1)
+        let query = (new Model('article')).select('*').where('title', 'like', title).andWhere('board_id', '').sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -89,7 +89,7 @@ export default class Article {
     }
 
     async getArticleByContext(context, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', '').sortBy('time', -1)
+        let query = (new Model('article')).select('*').where('context', 'like', context).andWhere('board_id', '').sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -97,7 +97,7 @@ export default class Article {
     }
     
     async getArticleByGroup(group, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('board_id', group).sortBy('time', -1)
+        let query = (new Model('article')).select('*').where('board_id', group).sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query.page(~~page, ~~pageSize)
         }
@@ -105,7 +105,7 @@ export default class Article {
     }
 
     async getArticleByGroupAndAuthor(group, author, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('author', author).andWhere('board_id', group).sortBy('time', -1)
+        let query = (new Model('article')).select('*').where('author', author).andWhere('board_id', group).sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -113,7 +113,7 @@ export default class Article {
     }
 
     async getArticleByGroupAndTitle(group, title, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('title', 'like', title).andWhere('board_id', group).sortBy('time', -1)
+        let query = (new Model('article')).select('*').where('title', 'like', title).andWhere('board_id', group).sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -121,7 +121,7 @@ export default class Article {
     }
 
     async getArticleByGroupAndContext(group, context, page=-1, pageSize=-1) {
-        let query = this.ArticleModel.select('*').where('context', 'like', context).andWhere('board_id', group).sortBy('time', -1)
+        let query = (new Model('article')).select('*').where('context', 'like', context).andWhere('board_id', group).sortBy('time', -1)
         if (page >= 0 && pageSize >= 0) {
             query = query.page(~~page, ~~pageSize)
         }
@@ -129,7 +129,7 @@ export default class Article {
     }
 
     async create(data) {
-        await this.ArticleModel.insert(data)
+        await (new Model('article')).insert(data)
     }
 
     async edit(id, data) {
@@ -144,13 +144,13 @@ export default class Article {
                 }
             }
         }
-        promise.push(this.ArticleModel.where('id', id).update(data))
+        promise.push((new Model('article')).where('id', id).update(data))
         await Promise.all(promise)
     }
 
     async deletebyGroup(group_id) {
         const promise  = []
-        let   articles = await this.ArticleModel.select('id').where('group', group_id).query()
+        let   articles = await (new Model('article')).select('id').where('group', group_id).query()
         
         for (const article of articles) {
             if (utils.hasValue(article.image, 'string')) {
@@ -161,8 +161,8 @@ export default class Article {
             }
         }
         articles = articles.map(article => article.id)
-        promise.push(this.ArticleModel.where('board_id', group_id).del())
-        promise.push(this.CommentModel.whereIn('article_id', articles).del())
+        promise.push((new Model('article')).where('board_id', group_id).del())
+        promise.push((new Model('comment')).whereIn('article_id', articles).del())
         await Promise.all(promise)
     }
 
@@ -175,8 +175,8 @@ export default class Article {
                 promise.push(utils.removeFile(utils.getPath('uploadedFiles', image)))
             }
         }
-        promise.push(this.ArticleModel.where('id', id).del())
-        promise.push(this.CommentModel.where('article_id', id).del())
+        promise.push((new Model('article')).where('id', id).del())
+        promise.push((new Model('comment')).where('article_id', id).del())
         await Promise.all(promise)
     }
 }
